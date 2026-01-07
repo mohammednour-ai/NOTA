@@ -1,0 +1,42 @@
+# ===========================================
+# SCENTMATCH - ENVIRONMENT CONFIGURATION
+# ===========================================
+
+# ===========================================
+# ANTHROPIC CLAUDE API (REQUIRED)
+# ===========================================
+# Get your API key from: https://console.anthropic.com
+# This is REQUIRED for the AI recommendations to work
+ANTHROPIC_API_KEY=sk-ant-your-api-key-here
+
+# ===========================================
+# AMAZON ASSOCIATES (OPTIONAL)
+# ===========================================
+# Sign up at: https://affiliate-program.amazon.com
+# These improve affiliate link quality but are optional
+AMAZON_ACCESS_KEY=your_amazon_access_key
+AMAZON_SECRET_KEY=your_amazon_secret_key
+AMAZON_ASSOCIATE_TAG=yourtag-20
+
+# ===========================================
+# SHARESALE AFFILIATE (OPTIONAL)
+# ===========================================
+# Sign up at: https://www.shareasale.com
+# Optional but recommended for better affiliate coverage
+SHARESALE_TOKEN=your_sharesale_token
+SHARESALE_SECRET=your_sharesale_secret
+SHARESALE_AFFILIATE_ID=your_affiliate_id
+
+# ===========================================
+# SERVER CONFIGURATION
+# ===========================================
+PORT=3000
+
+# ===========================================
+# INSTRUCTIONS
+# ===========================================
+# 1. Copy this file to .env (remove .example extension)
+# 2. Add your Anthropic API key (this is the only required field)
+# 3. Optionally add affiliate API keys for better results
+# 4. Never commit the .env file to version control
+# 5. Restart the server after changing these values

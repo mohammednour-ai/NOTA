@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScentMatch E2E Visual Testing Suite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .test-container {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+        }
+
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .control-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .control-group label {
+            font-weight: 600;
+            min-width: 120px;
+        }
+
+        button {
+            background: #ff6b9d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #ff5087;
+        }
+
+        button.secondary {
+            background: #e0e0e0;
+            color: #1a1a1a;
+        }
+
+        button.secondary:hover {
+            background: #d0d0d0;
+        }
+
+        button.success {
+            background: #4caf50;
+        }
+
+        button.success:hover {
+            background: #45a049;
+        }
+
+        button.danger {
+            background: #f44336;
+        }
+
+        button.danger:hover {
+            background: #da190b;
+        }
+
+        select {
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .iframe-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .device-frame {
+            margin: 0 auto;
+            border: 3px solid #333;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        iframe {
+            display: block;
+            border: none;
+            background: white;
+        }
+
+        .test-results {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .test-results h2 {
+            margin-bottom: 15px;
+            color: #1a1a1a;
+        }
+
+        .test-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            border-left: 4px solid #e0e0e0;
+            background: #f9f9f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .test-item.running {
+            border-color: #2196f3;
+            background: #e3f2fd;
+        }
+
+        .test-item.pass {
+            border-color: #4caf50;
+            background: #e8f5e9;
+        }
+
+        .test-item.fail {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+
+        .test-status {
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .test-status.running {
+            background: #2196f3;
+            color: white;
+        }
+
+        .test-status.pass {
+            background: #4caf50;
+            color: white;
+        }
+
+        .test-status.fail {
+            background: #f44336;
+            color: white;
+        }
+
+        .test-status.pending {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .test-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .summary-card h3 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .summary-card p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .summary-card.total h3 { color: #2196f3; }
+        .summary-card.passed h3 { color: #4caf50; }
+        .summary-card.failed h3 { color: #f44336; }
+        .summary-card.running h3 { color: #ff9800; }
+
+        .log-console {
+            background: #1a1a1a;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 2px 0;
+        }
+
+        .log-entry.info { color: #0ff; }
+        .log-entry.success { color: #0f0; }
+        .log-entry.error { color: #f00; }
+        .log-entry.warning { color: #ff0; }
+
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #e0e0e0;
+            border-top: 2px solid #2196f3;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .screenshot-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .screenshot {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .screenshot:hover {
+            transform: scale(1.05);
+            border-color: #ff6b9d;
+        }
+
+        .screenshot img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .screenshot p {
+            padding: 8px;
+            background: #f5f5f5;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🧪 ScentMatch E2E Visual Testing Suite</h1>
+            <p>Comprehensive automated testing with visual regression and iframe support</p>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="control-group">
+                <label>Device:</label>
+                <select id="deviceSelect" onchange="changeDevice()">
+                    <option value="desktop">Desktop (1920x1080)</option>
+                    <option value="laptop">Laptop (1366x768)</option>
+                    <option value="tablet">Tablet (768x1024)</option>
+                    <option value="mobile">Mobile (375x667)</option>
+                    <option value="iphone">iPhone 12 (390x844)</option>
+                    <option value="ipad">iPad (810x1080)</option>
+                </select>
+
+                <button onclick="runAllTests()" class="success">Run All Tests</button>
+                <button onclick="runVisualTests()">Visual Tests</button>
+                <button onclick="runFunctionalTests()">Functional Tests</button>
+                <button onclick="clearResults()" class="secondary">Clear Results</button>
+                <button onclick="exportReport()" class="secondary">Export Report</button>
+                <button onclick="takeScreenshot()">Screenshot</button>
+            </div>
+
+            <div class="control-group">
+                <label>Test URL:</label>
+                <input type="text" id="testUrl" value="/" style="flex: 1; padding: 8px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 0.95rem;">
+                <button onclick="reloadIframe()">Reload</button>
+            </div>
+        </div>
+
+        <!-- Test Summary -->
+        <div class="test-summary">
+            <div class="summary-card total">
+                <h3 id="totalTests">0</h3>
+                <p>Total Tests</p>
+            </div>
+            <div class="summary-card passed">
+                <h3 id="passedTests">0</h3>
+                <p>Passed</p>
+            </div>
+            <div class="summary-card failed">
+                <h3 id="failedTests">0</h3>
+                <p>Failed</p>
+            </div>
+            <div class="summary-card running">
+                <h3 id="runningTests">0</h3>
+                <p>Running</p>
+            </div>
+        </div>
+
+        <!-- iframe Container -->
+        <div class="iframe-container">
+            <h2 style="margin-bottom: 15px;">Application Under Test</h2>
+            <div class="device-frame" id="deviceFrame">
+                <iframe id="testFrame" src="/" width="1920" height="1080"></iframe>
+            </div>
+        </div>
+
+        <!-- Test Results -->
+        <div class="test-results">
+            <h2>Test Results</h2>
+            <div id="testList">
+                <p style="color: #666; font-style: italic;">Click "Run All Tests" to start testing...</p>
+            </div>
+
+            <!-- Console Log -->
+            <div class="log-console" id="logConsole">
+                <div class="log-entry info">E2E Testing Suite Ready...</div>
+                <div class="log-entry info">Waiting for test execution...</div>
+            </div>
+
+            <!-- Screenshot Gallery -->
+            <div id="screenshotGallery" class="screenshot-gallery"></div>
+        </div>
+    </div>
+
+    <script>
+        // Test Configuration
+        const config = {
+            baseUrl: '/',
+            timeout: 5000,
+            retries: 2
+        };
+
+        // Test state
+        let testResults = [];
+        let currentDevice = 'desktop';
+        let screenshots = [];
+
+        // Device configurations
+        const devices = {
+            desktop: { width: 1920, height: 1080 },
+            laptop: { width: 1366, height: 768 },
+            tablet: { width: 768, height: 1024 },
+            mobile: { width: 375, height: 667 },
+            iphone: { width: 390, height: 844 },
+            ipad: { width: 810, height: 1080 }
+        };
+
+        // Change device
+        function changeDevice() {
+            const select = document.getElementById('deviceSelect');
+            currentDevice = select.value;
+            const device = devices[currentDevice];
+            
+            const iframe = document.getElementById('testFrame');
+            const frame = document.getElementById('deviceFrame');
+            
+            iframe.width = device.width;
+            iframe.height = device.height;
+            frame.style.width = device.width + 'px';
+            
+            log(`Device changed to ${currentDevice} (${device.width}x${device.height})`, 'info');
+        }
+
+        // Reload iframe
+        function reloadIframe() {
+            const url = document.getElementById('testUrl').value;
+            document.getElementById('testFrame').src = url;
+            log(`Reloading iframe: ${url}`, 'info');
+        }
+
+        // Logging function
+        function log(message, type = 'info') {
+            const console = document.getElementById('logConsole');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${message}`;
+            console.appendChild(entry);
+            console.scrollTop = console.scrollHeight;
+        }
+
+        // Update summary
+        function updateSummary() {
+            const total = testResults.length;
+            const passed = testResults.filter(t => t.status === 'pass').length;
+            const failed = testResults.filter(t => t.status === 'fail').length;
+            const running = testResults.filter(t => t.status === 'running').length;
+
+            document.getElementById('totalTests').textContent = total;
+            document.getElementById('passedTests').textContent = passed;
+            document.getElementById('failedTests').textContent = failed;
+            document.getElementById('runningTests').textContent = running;
+        }
+
+        // Add test result
+        function addTestResult(name, status, details = '') {
+            const existing = testResults.find(t => t.name === name);
+            if (existing) {
+                existing.status = status;
+                existing.details = details;
+            } else {
+                testResults.push({ name, status, details, timestamp: new Date() });
+            }
+            renderTestResults();
+            updateSummary();
+        }
+
+        // Render test results
+        function renderTestResults() {
+            const container = document.getElementById('testList');
+            container.innerHTML = '';
+
+            testResults.forEach(test => {
+                const div = document.createElement('div');
+                div.className = `test-item ${test.status}`;
+                div.innerHTML = `
+                    <div>
+                        <strong>${test.name}</strong>
+                        ${test.details ? `<br><small style="color: #666;">${test.details}</small>` : ''}
+                    </div>
+                    <span class="test-status ${test.status}">
+                        ${test.status}
+                        ${test.status === 'running' ? '<span class="spinner"></span>' : ''}
+                    </span>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Wait helper
+        function wait(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Get iframe document
+        function getIframeDoc() {
+            const iframe = document.getElementById('testFrame');
+            return iframe.contentDocument || iframe.contentWindow.document;
+        }
+
+        // Get iframe window
+        function getIframeWindow() {
+            return document.getElementById('testFrame').contentWindow;
+        }
+
+        // Test: Page Load
+        async function testPageLoad() {
+            const testName = 'TC-001: Page Load';
+            addTestResult(testName, 'running');
+            log(`Running ${testName}...`, 'info');
+
+            try {
+                await wait(1000);
+                const doc = getIframeDoc();
+                
+                const hero = doc.getElementById('hero');
+                const logo = doc.querySelector('.logo h1');
+                const button = doc.querySelector('.cta-button');
+
+                if (hero && logo && button) {
+                    addTestResult(testName, 'pass', 'All elements loaded successfully');
+                    log(`${testName} PASSED`, 'success');
+                    return true;
+                } else {
+                    throw new Error('Missing required elements');
+                }
+            } catch (error) {
+                addTestResult(testName, 'fail', error.message);
+                log(`${testName} FAILED: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        // Test: Button Styling
+        async function testButtonStyling() {
+            const testName = 'TC-002: Hero Button Styling';
+            addTestResult(testName, 'running');
+            log(`Running ${testName}...`, 'info');
+
+            try {
+                const doc = getIframeDoc();
+                const button = doc.querySelector('.cta-button');
+                const styles = getIframeWindow().getComputedStyle(button);
+
+                const bgColor = styles.backgroundColor;
+                const borderRadius = styles.borderRadius;
+                const textTransform = styles.textTransform;
+
+                // Check if background is pink (approximate RGB)
+                const isPink = bgColor.includes('255, 107, 157') || bgColor.includes('#ff6b9d');
+                const isRounded = parseInt(borderRadius) === 8;
+                const isUppercase = textTransform === 'uppercase';
+
+                if (isPink && isRounded && isUppercase) {
+                    addTestResult(testName, 'pass', `BG: ${bgColor}, Radius: ${borderRadius}`);
+                    log(`${testName} PASSED`, 'success');
+                    return true;
+                } else {
+                    throw new Error(`Style mismatch - BG: ${bgColor}, Radius: ${borderRadius}`);
+                }
+            } catch (error) {
+                addTestResult(testName, 'fail', error.message);
+                log(`${testName} FAILED: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        // Test: Start Quiz
+        async function testStartQuiz() {
+            const testName = 'TC-004: Start Quiz';
+            addTestResult(testName, 'running');
+            log(`Running ${testName}...`, 'info');
+
+            try {
+                const doc = getIframeDoc();
+                const button = doc.querySelector('.cta-button');
+                
+                button.click();
+                await wait(500);
+
+                const quiz = doc.getElementById('quiz');
+                const hero = doc.getElementById('hero');
+                const progressBar = doc.getElementById('progressBar');
+
+                if (quiz.classList.contains('active') && !hero.classList.contains('active')) {
+                    addTestResult(testName, 'pass', 'Quiz started successfully');
+                    log(`${testName} PASSED`, 'success');
+                    return true;
+                } else {
+                    throw new Error('Quiz did not start properly');
+                }
+            } catch (error) {
+                addTestResult(testName, 'fail', error.message);
+                log(`${testName} FAILED: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        // Test: Single Choice Q1 to Q2
+        async function testSingleChoice() {
+            const testName = 'TC-006: Single-Choice Q1→Q2 Auto-Advance';
+            addTestResult(testName, 'running');
+            log(`Running ${testName}...`, 'info');
+
+            try {
+                const doc = getIframeDoc();
+                
+                // Verify we're on Q1
+                let currentQ = doc.getElementById('currentQuestion').textContent;
+                if (currentQ !== '1') {
+                    throw new Error(`Expected Q1, but on Q${currentQ}`);
+                }
+                
+                // Click first option on Q1
+                const firstOption = doc.querySelector('.option');
+                if (!firstOption) {
+                    throw new Error('No option found on Q1');
+                }
+                
+                log('Clicking Q1 option...', 'info');
+                firstOption.click();
+                await wait(700); // Wait for auto-advance (500ms + buffer)
+
+                // Should now be on Q2
+                currentQ = doc.getElementById('currentQuestion').textContent;
+                if (currentQ === '2') {
+                    addTestResult(testName, 'pass', `Successfully advanced Q1→Q2`);
+                    log(`${testName} PASSED`, 'success');
+                    return true;
+                } else {
+                    throw new Error(`Failed to advance: Still on Q${currentQ}, expected Q2`);
+                }
+            } catch (error) {
+                addTestResult(testName, 'fail', error.message);
+                log(`${testName} FAILED: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        // Test: Q2 Special Characters
+        async function testQ2SpecialChars() {
+            const testName = 'TC-007: Q2 Auto-Advance (Special Chars)';
+            addTestResult(testName, 'running');
+            log(`Running ${testName}...`, 'info');
+
+            try {
+                const doc = getIframeDoc();
+                
+                // Should be on Q2 after previous test
+                let currentQ = doc.getElementById('currentQuestion').textContent;
+                if (currentQ !== '2') {
+                    // Navigate to Q2 if not there
+                    log('Not on Q2, reloading and navigating...', 'warning');
+                    reloadIframe();
+                    await wait(2000);
+                    
+                    const startButton = doc.querySelector('.cta-button');
+                    startButton.click();
+                    await wait(500);
+                    
+                    // Click Q1 to get to Q2
+                    doc.querySelector('.option').click();
+                    await wait(700);
+                }
+                
+                // Now on Q2 - click an option with special chars (e.g., "18-25")
+                const q2Option = doc.querySelector('.option');
+                if (!q2Option) {
+                    throw new Error('No option found on Q2');
+                }
+                
+                log('Clicking Q2 option with special chars...', 'info');
+                q2Option.click();
+                await wait(700);
+
+                // Should now be on Q3
+                currentQ = doc.getElementById('currentQuestion').textContent;
+                if (currentQ === '3') {
+                    addTestResult(testName, 'pass', `Q2→Q3 advanced successfully`);
+                    log(`${testName} PASSED`, 'success');
+                    return true;
+                } else {
+                    throw new Error(`Failed to advance: On Q${currentQ}, expected Q3`);
+                }
+            } catch (error) {
+                addTestResult(testName, 'fail', error.message);
+                log(`${testName} FAILED: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        // Test: Multiple Choice Selection
+        async function testMultipleChoice() {
+            const testName = 'TC-008: Multiple-Choice Selection';
+            addTestResult(testName, 'running');
+            log(`Running ${testName}...`, 'info');
+
+            try {
+                const doc = getIframeDoc();
+                
+                // Should be on Q3 (multiple choice) after previous tests
+                let currentQ = doc.getElementById('currentQuestion').textContent;
+                if (currentQ !== '3') {
+                    throw new Error(`Expected Q3, but on Q${currentQ}`);
+                }
+                
+                // Check for hint text
+                const hintText = doc.querySelector('.hint-text');
+                if (!hintText || !hintText.textContent.includes('Select all that apply')) {
+                    throw new Error('Multiple choice hint not found');
+                }
+                
+                // Select first option
+                const firstOption = doc.querySelector('.option');
+                firstOption.click();
+                await wait(300);
+                
+                // Check it's selected
+                if (!firstOption.classList.contains('selected')) {
+                    throw new Error('Option not selected');
+                }
+                
+                // Select second option
+                const allOptions = doc.querySelectorAll('.option');
+                if (allOptions.length < 2) {
+                    throw new Error('Not enough options found');
+                }
+                allOptions[1].click();
+                await wait(300);
+                
+                // Both should be selected
+                const selectedCount = doc.querySelectorAll('.option.selected').length;
+                if (selectedCount >= 2) {
+                    addTestResult(testName, 'pass', `Multiple selection works (${selectedCount} selected)`);
+                    log(`${testName} PASSED`, 'success');
+                    return true;
+                } else {
+                    throw new Error(`Only ${selectedCount} options selected, expected 2+`);
+                }
+            } catch (error) {
+                addTestResult(testName, 'fail', error.message);
+                log(`${testName} FAILED: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        // Test: Navigation (Previous/Next)
+        async function testNavigation() {
+            const testName = 'TC-009: Navigation Previous/Next';
+            addTestResult(testName, 'running');
+            log(`Running ${testName}...`, 'info');
+
+            try {
+                const doc = getIframeDoc();
+                
+                // Should be on Q3
+                let currentQ = doc.getElementById('currentQuestion').textContent;
+                if (currentQ !== '3') {
+                    throw new Error(`Expected Q3, but on Q${currentQ}`);
+                }
+                
+                // Click Next button
+                const nextBtn = doc.getElementById('nextBtn');
+                if (!nextBtn) {
+                    throw new Error('Next button not found');
+                }
+                
+                nextBtn.click();
+                await wait(500);
+                
+                // Should be on Q4
+                currentQ = doc.getElementById('currentQuestion').textContent;
+                if (currentQ !== '4') {
+                    throw new Error(`After Next: On Q${currentQ}, expected Q4`);
+                }
+                
+                // Click Previous button
+                const prevBtn = doc.getElementById('prevBtn');
+                if (!prevBtn) {
+                    throw new Error('Previous button not found');
+                }
+                
+                prevBtn.click();
+                await wait(500);
+                
+                // Should be back on Q3
+                currentQ = doc.getElementById('currentQuestion').textContent;
+                if (currentQ === '3') {
+                    addTestResult(testName, 'pass', `Navigation Q3→Q4→Q3 works`);
+                    log(`${testName} PASSED`, 'success');
+                    return true;
+                } else {
+                    throw new Error(`After Previous: On Q${currentQ}, expected Q3`);
+                }
+            } catch (error) {
+                addTestResult(testName, 'fail', error.message);
+                log(`${testName} FAILED: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        // Test: Progress Bar
+        async function testProgressBar() {
+            const testName = 'TC-015: Progress Bar Accuracy';
+            addTestResult(testName, 'running');
+            log(`Running ${testName}...`, 'info');
+
+            try {
+                // Reload to get clean state
+                reloadIframe();
+                await wait(2000);
+                
+                // Start quiz fresh
+                const doc = getIframeDoc();
+                const startButton = doc.querySelector('.cta-button');
+                if (startButton) {
+                    startButton.click();
+                    await wait(500);
+                }
+                
+                const currentQ = parseInt(doc.getElementById('currentQuestion').textContent);
+                const totalQ = parseInt(doc.getElementById('totalQuestions').textContent);
+                const progressBar = doc.getElementById('progressBar');
+                const width = parseFloat(progressBar.style.width);
+                const expected = (currentQ / totalQ) * 100;
+
+                if (Math.abs(width - expected) < 1) {
+                    addTestResult(testName, 'pass', `Progress: ${width.toFixed(1)}% (Q${currentQ}/${totalQ})`);
+                    log(`${testName} PASSED`, 'success');
+                    return true;
+                } else {
+                    throw new Error(`Progress mismatch: ${width}% vs ${expected}%`);
+                }
+            } catch (error) {
+                addTestResult(testName, 'fail', error.message);
+                log(`${testName} FAILED: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        // Test: No Emojis
+        async function testNoEmojis() {
+            const testName = 'TC-040: No Emojis (Visual)';
+            addTestResult(testName, 'running');
+            log(`Running ${testName}...`, 'info');
+
+            try {
+                const doc = getIframeDoc();
+                const logo = doc.querySelector('.logo h1').textContent;
+                const svgIcons = doc.querySelectorAll('.feature-icon svg');
+
+                const hasEmoji = /[\u{1F300}-\u{1F9FF}]/u.test(logo);
+                const hasSvgIcons = svgIcons.length >= 3;
+
+                if (!hasEmoji && hasSvgIcons) {
+                    addTestResult(testName, 'pass', `SVG icons: ${svgIcons.length}, No emojis`);
+                    log(`${testName} PASSED`, 'success');
+                    return true;
+                } else {
+                    throw new Error('Emojis found or missing SVG icons');
+                }
+            } catch (error) {
+                addTestResult(testName, 'fail', error.message);
+                log(`${testName} FAILED: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        // Test: Color Scheme
+        async function testColorScheme() {
+            const testName = 'TC-038: Color Consistency';
+            addTestResult(testName, 'running');
+            log(`Running ${testName}...`, 'info');
+
+            try {
+                const doc = getIframeDoc();
+                const button = doc.querySelector('.cta-button');
+                const styles = getIframeWindow().getComputedStyle(button);
+                const bgColor = styles.backgroundColor;
+
+                // Check for pink color (no purple)
+                const hasPurple = bgColor.includes('139, 127, 191') || bgColor.includes('102, 126, 234');
+                const hasPink = bgColor.includes('255, 107, 157');
+
+                if (!hasPurple && hasPink) {
+                    addTestResult(testName, 'pass', `Primary color: ${bgColor}`);
+                    log(`${testName} PASSED`, 'success');
+                    return true;
+                } else {
+                    throw new Error(`Wrong color scheme: ${bgColor}`);
+                }
+            } catch (error) {
+                addTestResult(testName, 'fail', error.message);
+                log(`${testName} FAILED: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        // Test: Border Radius
+        async function testBorderRadius() {
+            const testName = 'TC-041: Border Radius (8px, not pills)';
+            addTestResult(testName, 'running');
+            log(`Running ${testName}...`, 'info');
+
+            try {
+                const doc = getIframeDoc();
+                const button = doc.querySelector('.cta-button');
+                const styles = getIframeWindow().getComputedStyle(button);
+                const borderRadius = parseInt(styles.borderRadius);
+
+                if (borderRadius === 8) {
+                    addTestResult(testName, 'pass', `Border radius: ${borderRadius}px`);
+                    log(`${testName} PASSED`, 'success');
+                    return true;
+                } else if (borderRadius >= 25) {
+                    throw new Error(`Still using pill shape: ${borderRadius}px`);
+                } else {
+                    throw new Error(`Wrong border radius: ${borderRadius}px`);
+                }
+            } catch (error) {
+                addTestResult(testName, 'fail', error.message);
+                log(`${testName} FAILED: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        // Test: Typography
+        async function testTypography() {
+            const testName = 'TC-039: System Fonts (No Google Fonts)';
+            addTestResult(testName, 'running');
+            log(`Running ${testName}...`, 'info');
+
+            try {
+                const doc = getIframeDoc();
+                const body = doc.body;
+                const styles = getIframeWindow().getComputedStyle(body);
+                const fontFamily = styles.fontFamily;
+
+                const hasSystemFont = fontFamily.includes('system-ui') || 
+                                     fontFamily.includes('Segoe UI') || 
+                                     fontFamily.includes('Roboto');
+                const hasGoogleFont = fontFamily.includes('Playfair') || 
+                                     fontFamily.includes('Inter');
+
+                if (hasSystemFont && !hasGoogleFont) {
+                    addTestResult(testName, 'pass', `Font: ${fontFamily.substring(0, 50)}...`);
+                    log(`${testName} PASSED`, 'success');
+                    return true;
+                } else {
+                    throw new Error(`Wrong fonts: ${fontFamily}`);
+                }
+            } catch (error) {
+                addTestResult(testName, 'fail', error.message);
+                log(`${testName} FAILED: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        // Run all tests
+        async function runAllTests() {
+            log('Starting full E2E test suite...', 'info');
+            clearResults();
+            
+            // Reload page first
+            reloadIframe();
+            await wait(2000);
+
+            const tests = [
+                testPageLoad,
+                testButtonStyling,
+                testColorScheme,
+                testBorderRadius,
+                testTypography,
+                testNoEmojis,
+                testStartQuiz,
+                testSingleChoice,      // Q1 → Q2
+                testQ2SpecialChars,    // Q2 → Q3
+                testMultipleChoice,    // Q3 selection
+                testNavigation,        // Q3 → Q4 → Q3
+                testProgressBar        // Reload and check
+            ];
+
+            for (const test of tests) {
+                try {
+                    await test();
+                } catch (error) {
+                    log(`Test error: ${error.message}`, 'error');
+                }
+                await wait(1000);
+            }
+
+            log('Test suite completed!', 'success');
+            
+            const passed = testResults.filter(t => t.status === 'pass').length;
+            const total = testResults.length;
+            log(`Results: ${passed}/${total} tests passed`, passed === total ? 'success' : 'warning');
+        }
+
+        // Run visual tests only
+        async function runVisualTests() {
+            log('Running visual regression tests...', 'info');
+            clearResults();
+            reloadIframe();
+            await wait(2000);
+
+            await testColorScheme();
+            await wait(500);
+            await testBorderRadius();
+            await wait(500);
+            await testTypography();
+            await wait(500);
+            await testNoEmojis();
+
+            log('Visual tests completed!', 'success');
+        }
+
+        // Run functional tests only
+        async function runFunctionalTests() {
+            log('Running functional tests...', 'info');
+            clearResults();
+            reloadIframe();
+            await wait(2000);
+
+            await testPageLoad();
+            await wait(500);
+            await testStartQuiz();
+            await wait(500);
+            await testSingleChoice();
+            await wait(500);
+            await testQ2SpecialChars();
+            await wait(500);
+            await testMultipleChoice();
+            await wait(500);
+            await testNavigation();
+            await wait(500);
+            await testProgressBar();
+
+            log('Functional tests completed!', 'success');
+        }
+
+        // Clear results
+        function clearResults() {
+            testResults = [];
+            renderTestResults();
+            updateSummary();
+            log('Results cleared', 'info');
+        }
+
+        // Take screenshot
+        function takeScreenshot() {
+            const iframe = document.getElementById('testFrame');
+            const timestamp = new Date().toISOString();
+            
+            // In a real implementation, you'd use html2canvas or similar
+            log(`Screenshot captured: ${timestamp}`, 'success');
+            
+            // Add to gallery (placeholder)
+            const gallery = document.getElementById('screenshotGallery');
+            const placeholder = document.createElement('div');
+            placeholder.className = 'screenshot';
+            placeholder.innerHTML = `
+                <div style="background: #e0e0e0; height: 150px; display: flex; align-items: center; justify-content: center;">
+                    <span style="color: #666;">Screenshot ${screenshots.length + 1}</span>
+                </div>
+                <p>${new Date().toLocaleTimeString()}</p>
+            `;
+            gallery.appendChild(placeholder);
+            screenshots.push({ timestamp, device: currentDevice });
+        }
+
+        // Export report
+        function exportReport() {
+            const report = {
+                timestamp: new Date().toISOString(),
+                device: currentDevice,
+                results: testResults,
+                summary: {
+                    total: testResults.length,
+                    passed: testResults.filter(t => t.status === 'pass').length,
+                    failed: testResults.filter(t => t.status === 'fail').length
+                }
+            };
+
+            const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `test-report-${Date.now()}.json`;
+            a.click();
+
+            log('Test report exported', 'success');
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            log('E2E Testing Suite Initialized', 'success');
+            log('Application loaded in iframe', 'info');
+            changeDevice(); // Set initial device
+        });
+    </script>
+</body>
+</html>

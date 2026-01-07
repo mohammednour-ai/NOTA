@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOTA - AI-Powered Perfume Discovery</title>
+    <link rel="icon" type="image/png" href="images/logo/gpt-image-1.5_Modern_luxury_perfume_app_logo_design_for_NOTA_minimalist_perfume_bottle_silhoue-0.jpg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Splash Screen Modal -->
+    <div class="splash-screen" id="splashScreen">
+        <button class="splash-close" onclick="closeSplash()" aria-label="Close">×</button>
+        
+        <div class="splash-content">
+            <button class="splash-cta" onclick="startFromSplash()">
+                Discover Your Scent
+            </button>
+            
+            <div class="splash-badges">
+                <!-- AI Claude Icon -->
+                <div class="splash-badge" title="Powered by Claude AI">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        <polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline>
+                        <polyline points="7.5 19.79 7.5 14.6 3 12"></polyline>
+                        <polyline points="21 12 16.5 14.6 16.5 19.79"></polyline>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                    </svg>
+                    <span>Claude AI</span>
+                </div>
+                
+                <!-- ShareASale Affiliate Icon -->
+                <div class="splash-badge" title="Verified Affiliate Links">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                    </svg>
+                    <span>Verified Links</span>
+                </div>
+                
+                <!-- Secured Icon -->
+                <div class="splash-badge" title="Secure & Private">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <span>Secured</span>
+                </div>
+                
+                <!-- Bias-Free Icon -->
+                <div class="splash-badge" title="Unbiased Recommendations">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    <span>Bias-Free</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo" onclick="showSection('hero')" style="cursor: pointer;" title="Return to Home">
+                <img src="images/logo/gpt-image-1.5_Modern_luxury_perfume_app_logo_design_for_NOTA_minimalist_perfume_bottle_silhoue-0.jpg" alt="NOTA Logo" class="logo-image">
+            </div>
+            <nav class="nav">
+                <a href="#hero" onclick="showSection('hero')">Home</a>
+                <a href="#about" onclick="showSection('about')">About</a>
+                <a href="#how-it-works" onclick="showSection('how-it-works')">How It Works</a>
+                <a href="#contact" onclick="showSection('contact')">Contact</a>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section id="hero" class="hero active">
+            <div class="hero-content">
+                <h1 class="hero-title">Discover Your Signature Scent</h1>
+                <p class="hero-subtitle">Take our personalized quiz and let AI find the perfect perfume for you</p>
+                <button class="cta-button" onclick="startQuiz()">Take The Quiz</button>
+                <div class="hero-features">
+                    <div class="feature">
+                        <svg class="feature-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                        <span>AI-Powered</span>
+                    </div>
+                    <div class="feature">
+                        <svg class="feature-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span>Personalized</span>
+                    </div>
+                    <div class="feature">
+                        <svg class="feature-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                        </svg>
+                        <span>Instant Links</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <!-- Messy Organized Cards -->
+                <div class="cards-carousel">
+                    <div class="card-stack">
+                        <div class="card card-1" data-index="0">
+                            <div class="card-inner">
+                                <img src="images/Splash/Default_blue_syle_for_men_0.jpg" alt="Perfume Collection">
+                            </div>
+                        </div>
+                        <div class="card card-2" data-index="1">
+                            <div class="card-inner">
+                                <img src="images/Splash/Default_similar_but_a_man_0.jpg" alt="Luxury Fragrance">
+                            </div>
+                        </div>
+                        <div class="card card-3" data-index="2">
+                            <div class="card-inner">
+                                <img src="images/Splash/Default_summer_happy_mode_0.jpg" alt="Summer Scents">
+                            </div>
+                        </div>
+                        <div class="card card-4" data-index="3">
+                            <div class="card-inner">
+                                <img src="images/Splash/Default_summer_happy_mood_0.jpg" alt="Happy Mood">
+                            </div>
+                        </div>
+                        <div class="card card-5" data-index="4">
+                            <div class="card-inner">
+                                <img src="images/Splash/lucid-origin_IMAGE_Cinematic_Splash_Screen_Background_Prompt_Cinematic_luxury_perfume_adverti-0 (1).jpg" alt="Cinematic Perfume">
+                            </div>
+                        </div>
+                        <div class="card card-6" data-index="5">
+                            <div class="card-inner">
+                                <img src="images/Splash/lucid-origin_IMAGE_Cinematic_Splash_Screen_Background_Prompt_Cinematic_luxury_perfume_adverti-0.jpg" alt="Luxury Collection">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Section -->
+        <section id="quiz" class="quiz-section">
+            <div class="quiz-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar"></div>
+                </div>
+                <p class="progress-text">Question <span id="currentQuestion">1</span> of <span id="totalQuestions">30</span></p>
+            </div>
+
+            <div class="quiz-content" id="quizContent">
+                <!-- Questions will be dynamically loaded here -->
+            </div>
+
+            <div class="quiz-navigation">
+                <button class="btn btn-secondary" id="prevBtn" onclick="previousQuestion()" disabled>Previous</button>
+                <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">Next</button>
+            </div>
+        </section>
+
+        <!-- Loading Section -->
+        <section id="loading" class="loading-section">
+            <div class="loading-content">
+                <div class="spinner"></div>
+                <h2>Analyzing Your Preferences...</h2>
+                <p>Our AI is finding the perfect perfumes for you</p>
+                <div class="loading-steps">
+                    <div class="step active">
+                        <svg class="step-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Processing answers</span>
+                    </div>
+                    <div class="step">
+                        <svg class="step-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                        </svg>
+                        <span>AI analyzing preferences</span>
+                    </div>
+                    <div class="step">
+                        <svg class="step-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <span>Finding perfect matches</span>
+                    </div>
+                    <div class="step">
+                        <svg class="step-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                        </svg>
+                        <span>Locating best prices</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="results" class="results-section">
+            <div class="results-header">
+                <h1>Your Perfect Perfumes</h1>
+                <p>Based on your unique preferences, we've found these perfect matches for you</p>
+            </div>
+            <div class="results-content" id="resultsContent">
+                <!-- Results will be dynamically loaded here -->
+            </div>
+            <div class="results-footer">
+                <button class="btn btn-secondary" onclick="restartQuiz()">Take Quiz Again</button>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="info-section">
+            <div class="info-container">
+                <div class="info-header">
+                    <h1>About NOTA</h1>
+                    <p class="info-subtitle">Revolutionizing fragrance discovery through AI technology</p>
+                </div>
+
+                <div class="about-content">
+                    <div class="about-hero">
+                        <div class="about-text">
+                            <h2>Your Personal Perfume AI</h2>
+                            <p>NOTA is the world's first AI-powered perfume recommendation platform that understands your unique scent preferences. We combine cutting-edge artificial intelligence with deep fragrance expertise to help you discover perfumes that truly match your personality, lifestyle, and preferences.</p>
+                            <p>No more overwhelming choices. No more buyer's remorse. Just personalized recommendations that feel like they were made just for you—because they were.</p>
+                        </div>
+                        <div class="about-stats">
+                            <div class="stat-card">
+                                <div class="stat-number">10,000+</div>
+                                <div class="stat-label">Perfumes Analyzed</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">98%</div>
+                                <div class="stat-label">Satisfaction Rate</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">50K+</div>
+                                <div class="stat-label">Happy Users</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon-large">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                                </svg>
+                            </div>
+                            <h3>Claude AI Powered</h3>
+                            <p>Our recommendations are powered by Anthropic's Claude AI, the most advanced language model designed for nuanced understanding and personalization.</p>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="feature-icon-large">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                            </div>
+                            <h3>Unbiased Recommendations</h3>
+                            <p>We don't push specific brands. Our AI analyzes thousands of perfumes objectively to find what truly matches your preferences.</p>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="feature-icon-large">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </svg>
+                            </div>
+                            <h3>Privacy First</h3>
+                            <p>Your data is never sold. We use your quiz answers solely to provide recommendations, and you can delete your data anytime.</p>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="feature-icon-large">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                                </svg>
+                            </div>
+                            <h3>Verified Retailers</h3>
+                            <p>All product links are verified and lead to trusted retailers like Amazon, Sephora, and Ulta. Shop with confidence.</p>
+                        </div>
+                    </div>
+
+                    <div class="mission-statement">
+                        <h2>Our Mission</h2>
+                        <p>We believe finding your signature scent shouldn't be overwhelming or expensive. NOTA makes fragrance discovery accessible, personalized, and enjoyable for everyone—from first-time buyers to seasoned collectors.</p>
+                        <button class="cta-button" onclick="showSection('hero'); startQuiz();">Start Your Journey</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section id="how-it-works" class="info-section">
+            <div class="info-container">
+                <div class="info-header">
+                    <h1>How It Works</h1>
+                    <p class="info-subtitle">From questions to your perfect scent in 3 simple steps</p>
+                </div>
+
+                <div class="how-it-works-content">
+                    <div class="steps-visual">
+                        <div class="step-card">
+                            <div class="step-number">1</div>
+                            <div class="step-visual">
+                                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M9 11H3v2h6m-6 4h6m-6 4h6m-6-14h6m-6-2h6m6-3H2a2 2 0 0 0-2 2v18a2 2 0 0 0 2 2h13m7-10v10m-3-8h6m-3 4h6"></path>
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <path d="M9 9h.01M15 9h.01M9 15h6"></path>
+                                </svg>
+                            </div>
+                            <h3>Take Our Quiz</h3>
+                            <p>Answer 30 personalized questions about your style, preferences, and lifestyle. Takes only 5 minutes!</p>
+                            <ul class="step-details">
+                                <li>Gender & age preferences</li>
+                                <li>Scent profile & notes you love</li>
+                                <li>Occasion & wearing habits</li>
+                                <li>Budget & brand preferences</li>
+                            </ul>
+                        </div>
+
+                        <div class="step-arrow">
+                            <svg width="60" height="40" viewBox="0 0 60 40" fill="none">
+                                <path d="M5 20h50M45 10l10 10-10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+
+                        <div class="step-card">
+                            <div class="step-number">2</div>
+                            <div class="step-visual">
+                                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M12 6v6l4 2"></path>
+                                    <path d="M16.24 7.76l-1.41 1.41M19.07 12h-2M16.24 16.24l-1.41-1.41"></path>
+                                </svg>
+                            </div>
+                            <h3>AI Analysis</h3>
+                            <p>Our Claude AI analyzes your answers against 10,000+ perfumes to find your perfect matches.</p>
+                            <ul class="step-details">
+                                <li>Semantic understanding of preferences</li>
+                                <li>Pattern matching with fragrance database</li>
+                                <li>Personality & lifestyle alignment</li>
+                                <li>Real-time processing in seconds</li>
+                            </ul>
+                        </div>
+
+                        <div class="step-arrow">
+                            <svg width="60" height="40" viewBox="0 0 60 40" fill="none">
+                                <path d="M5 20h50M45 10l10 10-10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+
+                        <div class="step-card">
+                            <div class="step-number">3</div>
+                            <div class="step-visual">
+                                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                            </div>
+                            <h3>Get Your Matches</h3>
+                            <p>Receive 5 personalized recommendations with direct links to buy from trusted retailers.</p>
+                            <ul class="step-details">
+                                <li>Detailed product information & images</li>
+                                <li>Why each perfume suits you</li>
+                                <li>Fragrance notes breakdown</li>
+                                <li>Amazon, Sephora & Ulta links</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-section">
+                        <h2>Frequently Asked Questions</h2>
+                        <div class="faq-grid">
+                            <div class="faq-item">
+                                <h4>How accurate are the recommendations?</h4>
+                                <p>Our AI has a 98% satisfaction rate. We analyze your complete preference profile, not just a single factor, ensuring highly personalized matches.</p>
+                            </div>
+                            <div class="faq-item">
+                                <h4>Is it really free?</h4>
+                                <p>Yes! NOTA is completely free. We earn a small commission when you purchase through our affiliate links, but it doesn't cost you extra.</p>
+                            </div>
+                            <div class="faq-item">
+                                <h4>What if I don't like the recommendations?</h4>
+                                <p>You can retake the quiz anytime with different answers. Our AI learns from patterns, so even slight changes can yield new recommendations.</p>
+                            </div>
+                            <div class="faq-item">
+                                <h4>Do you ship perfumes?</h4>
+                                <p>No, NOTA is a recommendation platform. We direct you to trusted retailers (Amazon, Sephora, Ulta) where you can purchase directly.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cta-box">
+                        <h2>Ready to Find Your Signature Scent?</h2>
+                        <p>Join 50,000+ users who discovered their perfect perfume with NOTA</p>
+                        <button class="cta-button" onclick="showSection('hero'); startQuiz();">Take the Quiz Now</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="info-section">
+            <div class="info-container">
+                <div class="info-header">
+                    <h1>Get In Touch</h1>
+                    <p class="info-subtitle">We'd love to hear from you</p>
+                </div>
+
+                <div class="contact-content">
+                    <div class="contact-grid">
+                        <div class="contact-info">
+                            <h2>Contact Information</h2>
+                            <p>Have questions, feedback, or need support? Reach out to us through any of these channels.</p>
+
+                            <div class="contact-methods">
+                                <div class="contact-method">
+                                    <div class="contact-icon">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                            <polyline points="22,6 12,13 2,6"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="contact-details">
+                                        <h4>Email</h4>
+                                        <a href="mailto:support@nota.com">support@nota.com</a>
+                                        <p>We'll respond within 24 hours</p>
+                                    </div>
+                                </div>
+
+                                <div class="contact-method">
+                                    <div class="contact-icon">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="contact-details">
+                                        <h4>Phone</h4>
+                                        <a href="tel:+1234567890">+1 (234) 567-890</a>
+                                        <p>Mon-Fri, 9AM-6PM EST</p>
+                                    </div>
+                                </div>
+
+                                <div class="contact-method">
+                                    <div class="contact-icon">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                            <circle cx="12" cy="10" r="3"></circle>
+                                        </svg>
+                                    </div>
+                                    <div class="contact-details">
+                                        <h4>Office</h4>
+                                        <p>123 Fragrance Avenue<br>New York, NY 10001<br>United States</p>
+                                    </div>
+                                </div>
+
+                                <div class="contact-method">
+                                    <div class="contact-icon">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                            <circle cx="9" cy="7" r="4"></circle>
+                                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="contact-details">
+                                        <h4>Social Media</h4>
+                                        <div class="social-links">
+                                            <a href="#" target="_blank">Instagram</a>
+                                            <a href="#" target="_blank">Twitter</a>
+                                            <a href="#" target="_blank">Facebook</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="contact-form-container">
+                            <h2>Send Us a Message</h2>
+                            <form class="contact-form" id="contactForm" onsubmit="handleContactForm(event)">
+                                <div class="form-group">
+                                    <label for="name">Full Name *</label>
+                                    <input type="text" id="name" name="name" required placeholder="John Doe">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="email">Email Address *</label>
+                                    <input type="email" id="email" name="email" required placeholder="john@example.com">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="subject">Subject *</label>
+                                    <select id="subject" name="subject" required>
+                                        <option value="">Select a topic</option>
+                                        <option value="general">General Inquiry</option>
+                                        <option value="support">Technical Support</option>
+                                        <option value="feedback">Feedback</option>
+                                        <option value="partnership">Partnership Opportunity</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="message">Message *</label>
+                                    <textarea id="message" name="message" required rows="6" placeholder="Tell us how we can help..."></textarea>
+                                </div>
+
+                                <button type="submit" class="cta-button">Send Message</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ScentMatch</h3>
+                    <p>AI-powered perfume recommendations tailored just for you.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <a href="#about">About Us</a>
+                    <a href="#how-it-works">How It Works</a>
+                    <a href="#privacy">Privacy Policy</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Email: hello@scentmatch.com</p>
+                    <p>Follow us on social media</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 ScentMatch. All Rights Reserved.</p>
+                <p class="disclosure">* Affiliate Disclosure: We may earn commissions from purchases made through our links.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

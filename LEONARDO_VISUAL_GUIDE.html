@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leonardo.ai Image Generation Guide - ScentMatch</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+        }
+        .section {
+            background: #f9f9f9;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #ff6b9d;
+        }
+        .section h2 {
+            color: #ff6b9d;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+        .prompt-box {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+        .negative-prompt {
+            background: #4a1a1a;
+        }
+        .settings {
+            background: #e3f2fd;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        .settings strong {
+            color: #1976d2;
+        }
+        .priority {
+            display: inline-block;
+            background: #ff6b9d;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+        .checklist {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        .checklist-item {
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            background: #f5f5f5;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+        }
+        .checklist-item::before {
+            content: "☐";
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            color: #ff6b9d;
+        }
+        .steps {
+            counter-reset: step-counter;
+            list-style: none;
+        }
+        .steps li {
+            counter-increment: step-counter;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            background: white;
+            border-radius: 8px;
+            position: relative;
+            padding-left: 4rem;
+        }
+        .steps li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #ff6b9d;
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .folder-structure {
+            background: #f5f5f5;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 1rem 0;
+        }
+        .highlight {
+            background: #fff3cd;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .button {
+            display: inline-block;
+            background: #ff6b9d;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            text-align: center;
+            margin: 1rem 0.5rem;
+            transition: transform 0.2s;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.4);
+        }
+        .tip {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+        .warning {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Leonardo.ai Image Generation Guide</h1>
+        <p class="subtitle">Generate Custom Graphics for ScentMatch Platform</p>
+
+        <!-- Quick Start -->
+        <div class="section">
+            <h2>🚀 Quick Start</h2>
+            <ol class="steps">
+                <li>Go to <a href="https://leonardo.ai" target="_blank">leonardo.ai</a> and sign up (FREE)</li>
+                <li>Get 150 free credits daily (enough for all images!)</li>
+                <li>Click "Image Generation" → "Create New Image"</li>
+                <li>Copy prompts below and generate!</li>
+            </ol>
+        </div>
+
+        <!-- Image 1: Hero Background -->
+        <div class="section">
+            <h2>🏆 Image 1: Hero Background <span class="priority">PRIORITY 1</span></h2>
+            <p><strong>What it's for:</strong> Main background image for homepage hero section</p>
+            
+            <h3>📝 Prompt (Copy This):</h3>
+            <div class="prompt-box">
+Elegant luxury perfume bottles on pure white background, minimalist product photography, soft pink and gold accents, professional studio lighting, soft shadows, clean aesthetic, high-end cosmetics, feminine and sophisticated, soft focus background, pastel pink tones, commercial photography style, 4K quality, bokeh effect
+            </div>
+
+            <h3>❌ Negative Prompt:</h3>
+            <div class="prompt-box negative-prompt">
+cluttered, busy, dark, grungy, low quality, blurry, text, watermark, logos, messy, chaotic
+            </div>
+
+            <div class="settings">
+                <strong>Settings:</strong><br>
+                • Model: <span class="highlight">Leonardo Phoenix</span><br>
+                • Aspect Ratio: <span class="highlight">16:9</span> (landscape)<br>
+                • Resolution: 1536x1024px<br>
+                • Number of Images: 4<br>
+                • Prompt Magic: ON<br>
+                • Alchemy: ON
+            </div>
+
+            <div class="tip">
+                💡 <strong>Tip:</strong> This is your most important image! Take time to pick the best one from 4 options.
+            </div>
+
+            <p><strong>Save as:</strong> <code>hero-perfume-bg.jpg</code> → <code>D:\Lab2\public\images\hero\</code></p>
+        </div>
+
+        <!-- Image 2: Logo Icon -->
+        <div class="section">
+            <h2>💼 Image 2: Logo Icon <span class="priority">PRIORITY 2</span></h2>
+            <p><strong>What it's for:</strong> Replace text logo with elegant perfume bottle icon</p>
+            
+            <h3>📝 Prompt (Copy This):</h3>
+            <div class="prompt-box">
+Minimalist perfume bottle icon, simple line art, modern logo design, elegant silhouette, pink and black color scheme, vector style illustration, clean geometric shapes, luxury fragrance symbol, monochrome design, white background, professional branding, scalable icon
+            </div>
+
+            <h3>❌ Negative Prompt:</h3>
+            <div class="prompt-box negative-prompt">
+complex, detailed, realistic, 3D, shadows, gradients, cluttered, busy, photograph
+            </div>
+
+            <div class="settings">
+                <strong>Settings:</strong><br>
+                • Model: <span class="highlight">Leonardo Diffusion XL</span><br>
+                • Aspect Ratio: <span class="highlight">1:1</span> (square)<br>
+                • Resolution: 1024x1024px<br>
+                • Number of Images: 4<br>
+                • Prompt Magic: ON
+            </div>
+
+            <p><strong>Save as:</strong> <code>logo-icon.png</code> → <code>D:\Lab2\public\images\logo\</code></p>
+        </div>
+
+        <!-- Image 3: Loading Graphic -->
+        <div class="section">
+            <h2>⏳ Image 3: Loading Animation Graphic <span class="priority">PRIORITY 3</span></h2>
+            <p><strong>What it's for:</strong> Display during AI analysis (while waiting for recommendations)</p>
+            
+            <h3>📝 Prompt (Copy This):</h3>
+            <div class="prompt-box">
+Elegant perfume bottle illustration, outlined style, soft pink and white color palette, simple clean lines, floating perfume bottle, minimal design, luxury cosmetics, transparent background style, modern illustration, delicate and feminine, centered composition, high contrast
+            </div>
+
+            <h3>❌ Negative Prompt:</h3>
+            <div class="prompt-box negative-prompt">
+complex, busy, dark, grungy, realistic photo, cluttered background, text
+            </div>
+
+            <div class="settings">
+                <strong>Settings:</strong><br>
+                • Model: <span class="highlight">Leonardo Diffusion XL</span><br>
+                • Aspect Ratio: <span class="highlight">1:1</span> (square)<br>
+                • Resolution: 1024x1024px<br>
+                • Number of Images: 4
+            </div>
+
+            <p><strong>Save as:</strong> <code>loading-perfume.png</code> → <code>D:\Lab2\public\images\loading\</code></p>
+        </div>
+
+        <!-- Folder Structure -->
+        <div class="section">
+            <h2>📁 Where to Save Files</h2>
+            <div class="folder-structure">
+D:\Lab2\public\images\
+  ├── hero\
+  │   └── hero-perfume-bg.jpg
+  ├── logo\
+  │   └── logo-icon.png
+  └── loading\
+      └── loading-perfume.png
+            </div>
+            <div class="tip">
+                ✅ <strong>Folders already created!</strong> Just download and place files in the correct folders.
+            </div>
+        </div>
+
+        <!-- Checklist -->
+        <div class="section">
+            <h2>✅ Checklist</h2>
+            <div class="checklist">
+                <div class="checklist-item">Sign up at leonardo.ai (free account)</div>
+                <div class="checklist-item">Generate Hero Background with prompt #1</div>
+                <div class="checklist-item">Download best image → save as hero-perfume-bg.jpg</div>
+                <div class="checklist-item">Generate Logo Icon with prompt #2</div>
+                <div class="checklist-item">Download best image → save as logo-icon.png</div>
+                <div class="checklist-item">Generate Loading Graphic with prompt #3</div>
+                <div class="checklist-item">Download best image → save as loading-perfume.png</div>
+                <div class="checklist-item">Place all files in correct folders</div>
+                <div class="checklist-item">Tell AI assistant "images ready"</div>
+            </div>
+        </div>
+
+        <!-- Credits Info -->
+        <div class="section">
+            <h2>💰 Credits Needed</h2>
+            <p><strong>Free Account:</strong> 150 credits/day</p>
+            <p><strong>These 3 images:</strong> ~12-15 credits total</p>
+            <div class="tip">
+                💡 You have MORE than enough free credits for all images!
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="https://leonardo.ai" target="_blank" class="button">🚀 Go to Leonardo.ai</a>
+            <a href="LEONARDO_AI_PROMPTS.md" class="button" style="background: #667eea;">📖 View Full Guide</a>
+        </div>
+
+        <div class="warning" style="margin-top: 2rem;">
+            <strong>⚡ After Generation:</strong> Tell me "images ready" and I'll immediately integrate them into your platform with beautiful styling!
+        </div>
+    </div>
+</body>
+</html>

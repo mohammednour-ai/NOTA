@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Theme System - ScentMatch</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+        }
+        .theme-demo {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        .theme-box {
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .theme-box h3 {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .theme-box p {
+            color: rgba(255,255,255,0.9);
+            margin: 0.5rem 0;
+        }
+        .neutral { background: linear-gradient(135deg, #c77dff, #e0c3fc); }
+        .male { background: linear-gradient(135deg, #2196F3, #90caf9); }
+        .female { background: linear-gradient(135deg, #ff6b9d, #ffd6e0); }
+        .progression {
+            margin: 3rem 0;
+        }
+        .progress-bar-demo {
+            height: 60px;
+            border-radius: 8px;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .progress-neutral { background: linear-gradient(90deg, #c77dff 0%, #c77dff 100%); }
+        .progress-male-start { background: linear-gradient(90deg, #c77dff 0%, #6b8bd9 100%); }
+        .progress-male-mid { background: linear-gradient(90deg, #9e87eb 0%, #5298eb 100%); }
+        .progress-male-end { background: linear-gradient(90deg, #6b8bd9 0%, #2196F3 100%); }
+        .progress-female-start { background: linear-gradient(90deg, #c77dff 0%, #e373ba 100%); }
+        .progress-female-mid { background: linear-gradient(90deg, #d975d8 0%, #ff6b9d 100%); }
+        .progress-female-end { background: linear-gradient(90deg, #e373ba 0%, #ff6b9d 100%); }
+        .progress-label {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .section {
+            background: #f9f9f9;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        .section h2 {
+            color: #ff6b9d;
+            margin-bottom: 1rem;
+        }
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+        .timeline-q { border-left-color: #c77dff; }
+        .timeline-m { border-left-color: #2196F3; }
+        .timeline-f { border-left-color: #ff6b9d; }
+        .color-swatch {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            margin-right: 1rem;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Dynamic Gender-Based Theme System</h1>
+        <p class="subtitle">Gradual color transition from neutral to personalized</p>
+
+        <!-- Theme Options -->
+        <div class="theme-demo">
+            <div class="theme-box neutral">
+                <h3>Start (Neutral)</h3>
+                <p><strong>Purple</strong></p>
+                <p>#c77dff</p>
+                <p>Mix of Pink + Blue</p>
+                <p>Gender-neutral harmony</p>
+            </div>
+            <div class="theme-box male">
+                <h3>Male Theme</h3>
+                <p><strong>Blue</strong></p>
+                <p>#2196F3</p>
+                <p>Material Design Blue</p>
+                <p>Professional & Trusted</p>
+            </div>
+            <div class="theme-box female">
+                <h3>Female Theme</h3>
+                <p><strong>Pink</strong></p>
+                <p>#ff6b9d</p>
+                <p>Vibrant Pink</p>
+                <p>Warm & Inviting</p>
+            </div>
+        </div>
+
+        <!-- Female Progression -->
+        <div class="section">
+            <h2>👩 Female User Journey (Purple → Pink)</h2>
+            <div class="timeline">
+                <div class="timeline-item timeline-f">
+                    <div class="color-swatch" style="background: #c77dff;"></div>
+                    <div>
+                        <strong>Q1: Gender Selection</strong>
+                        <p>Selects "Female" → Theme begins transition</p>
+                        <p style="color: #c77dff;">● Purple 100%</p>
+                    </div>
+                </div>
+                <div class="progress-bar-demo progress-female-start">
+                    <div class="progress-label">Q1-Q10 (0-33% Progress)</div>
+                </div>
+                
+                <div class="timeline-item timeline-f">
+                    <div class="color-swatch" style="background: linear-gradient(135deg, #c77dff, #ff6b9d);"></div>
+                    <div>
+                        <strong>Q15: Halfway Point</strong>
+                        <p>50% Purple, 50% Pink</p>
+                        <p style="color: #d975d8;">● Mixed Color</p>
+                    </div>
+                </div>
+                <div class="progress-bar-demo progress-female-mid">
+                    <div class="progress-label">Q11-Q20 (33-67% Progress)</div>
+                </div>
+                
+                <div class="timeline-item timeline-f">
+                    <div class="color-swatch" style="background: #ff6b9d;"></div>
+                    <div>
+                        <strong>Q30 & Results</strong>
+                        <p>Fully personalized pink theme</p>
+                        <p style="color: #ff6b9d;">● Pink 100%</p>
+                    </div>
+                </div>
+                <div class="progress-bar-demo progress-female-end">
+                    <div class="progress-label">Q21-Q30 & Results (67-100%)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Male Progression -->
+        <div class="section" style="background: #e3f2fd;">
+            <h2 style="color: #2196F3;">👨 Male User Journey (Purple → Blue)</h2>
+            <div class="timeline">
+                <div class="timeline-item timeline-m">
+                    <div class="color-swatch" style="background: #c77dff;"></div>
+                    <div>
+                        <strong>Q1: Gender Selection</strong>
+                        <p>Selects "Male" → Theme begins transition</p>
+                        <p style="color: #c77dff;">● Purple 100%</p>
+                    </div>
+                </div>
+                <div class="progress-bar-demo progress-male-start">
+                    <div class="progress-label">Q1-Q10 (0-33% Progress)</div>
+                </div>
+                
+                <div class="timeline-item timeline-m">
+                    <div class="color-swatch" style="background: linear-gradient(135deg, #c77dff, #2196F3);"></div>
+                    <div>
+                        <strong>Q15: Halfway Point</strong>
+                        <p>50% Purple, 50% Blue</p>
+                        <p style="color: #9e87eb;">● Mixed Color</p>
+                    </div>
+                </div>
+                <div class="progress-bar-demo progress-male-mid">
+                    <div class="progress-label">Q11-Q20 (33-67% Progress)</div>
+                </div>
+                
+                <div class="timeline-item timeline-m">
+                    <div class="color-swatch" style="background: #2196F3;"></div>
+                    <div>
+                        <strong>Q30 & Results</strong>
+                        <p>Fully personalized blue theme</p>
+                        <p style="color: #2196F3;">● Blue 100%</p>
+                    </div>
+                </div>
+                <div class="progress-bar-demo progress-male-end">
+                    <div class="progress-label">Q21-Q30 & Results (67-100%)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How It Works -->
+        <div class="section">
+            <h2>⚙️ How It Works</h2>
+            <ol style="line-height: 2; padding-left: 2rem;">
+                <li><strong>Q1:</strong> User selects gender → System detects choice</li>
+                <li><strong>Q2-Q30:</strong> Each question advances theme by ~3.3%</li>
+                <li><strong>Math:</strong> Progress = (Current Q / Total Q) × 100</li>
+                <li><strong>Color Mix:</strong> Neutral + (Target - Neutral) × Progress</li>
+                <li><strong>Smooth:</strong> 0.8s CSS transitions on all elements</li>
+                <li><strong>Result:</strong> Fully personalized visual experience!</li>
+            </ol>
+        </div>
+
+        <!-- Benefits -->
+        <div class="section" style="background: #f0f9ff;">
+            <h2 style="color: #2196F3;">✨ Benefits</h2>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem;">
+                <div style="background: white; padding: 1rem; border-radius: 8px;">
+                    <strong>🎨 Inclusive Design</strong>
+                    <p style="color: #666; font-size: 0.9rem;">Starts neutral, respects all identities</p>
+                </div>
+                <div style="background: white; padding: 1rem; border-radius: 8px;">
+                    <strong>💎 Personalized</strong>
+                    <p style="color: #666; font-size: 0.9rem;">Gradual adaptation to user preference</p>
+                </div>
+                <div style="background: white; padding: 1rem; border-radius: 8px;">
+                    <strong>🎯 Professional</strong>
+                    <p style="color: #666; font-size: 0.9rem;">Smooth transitions, award-winning UX</p>
+                </div>
+                <div style="background: white; padding: 1rem; border-radius: 8px;">
+                    <strong>⚡ Performance</strong>
+                    <p style="color: #666; font-size: 0.9rem;">GPU-accelerated, no lag</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: linear-gradient(135deg, #c77dff, #ff6b9d); border-radius: 12px; color: white;">
+            <h2 style="color: white;">🎉 Try It Now!</h2>
+            <p style="font-size: 1.2rem; margin: 1rem 0;">Start the quiz and watch the theme adapt to YOU!</p>
+            <p>Select "Female" or "Male" in Q1 and see the magic happen! ✨</p>
+        </div>
+    </div>
+</body>
+</html>

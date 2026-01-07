@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinematic Splash Screen - Leonardo.ai Prompt</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+        }
+        .hero-preview {
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.8), rgba(102, 126, 234, 0.8)),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23f5f5f5" width="1200" height="600"/><text x="600" y="300" font-size="48" fill="%23999" text-anchor="middle">Cinematic Image Here</text></svg>');
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px;
+            padding: 4rem 2rem;
+            margin: 2rem 0;
+            color: white;
+            text-align: center;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .close-btn {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+        .splash-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .splash-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+            max-width: 600px;
+        }
+        .feature-item {
+            background: rgba(255,255,255,0.15);
+            padding: 1rem;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+        .cta-button {
+            background: white;
+            color: #ff6b9d;
+            padding: 1.2rem 3rem;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            margin: 1rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+        .section {
+            background: #f9f9f9;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #ff6b9d;
+        }
+        .prompt-box {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .option-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .option-card:hover {
+            border-color: #ff6b9d;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(255, 107, 157, 0.2);
+        }
+        .option-card h3 {
+            color: #ff6b9d;
+            margin-bottom: 0.5rem;
+        }
+        .recommended {
+            border-color: #ff6b9d;
+            background: #fff5f8;
+        }
+        .recommended::before {
+            content: "⭐ RECOMMENDED";
+            display: block;
+            color: #ff6b9d;
+            font-weight: bold;
+            font-size: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+        .button {
+            display: inline-block;
+            background: #ff6b9d;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            text-align: center;
+            margin: 1rem 0.5rem;
+            transition: transform 0.2s;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 Cinematic Splash Screen</h1>
+        <p class="subtitle">Create a Stunning First Impression</p>
+
+        <!-- Preview -->
+        <div class="hero-preview">
+            <div class="close-btn">×</div>
+            <div class="splash-title">✨ Discover Your Signature Scent</div>
+            <div class="splash-subtitle">AI-powered perfume matching tailored to your unique preferences</div>
+            <div class="features">
+                <div class="feature-item">✨ 30-Second Quiz</div>
+                <div class="feature-item">🤖 Claude AI Magic</div>
+                <div class="feature-item">🎁 Shopping Links</div>
+                <div class="feature-item">💝 5 Perfect Matches</div>
+            </div>
+            <button class="cta-button">Begin Your Scent Journey</button>
+            <p style="opacity: 0.8; margin-top: 1rem; font-size: 0.9rem;">or continue to homepage</p>
+        </div>
+
+        <!-- Choose Your Style -->
+        <div class="section">
+            <h2>🎨 Choose Your Cinematic Style</h2>
+            <div class="options">
+                <div class="option-card recommended">
+                    <h3>Option A</h3>
+                    <p><strong>Elegant Lifestyle</strong></p>
+                    <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">
+                        Vanity table, morning light, roses & pearls, dreamy aesthetic
+                    </p>
+                </div>
+                <div class="option-card">
+                    <h3>Option B</h3>
+                    <p><strong>Abstract Luxury</strong></p>
+                    <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">
+                        Flowing silk, floating bottle, particles of light, ethereal
+                    </p>
+                </div>
+                <div class="option-card">
+                    <h3>Option C</h3>
+                    <p><strong>Dramatic Beauty</strong></p>
+                    <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">
+                        Crystal bottle, black marble, dramatic lighting, high contrast
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prompt for Option A (RECOMMENDED) -->
+        <div class="section">
+            <h2>📝 Leonardo.ai Prompt - Option A (Recommended)</h2>
+            
+            <h3>✅ Main Prompt (Copy This):</h3>
+            <div class="prompt-box">
+Cinematic perfume commercial scene, elegant vanity table with luxury perfume bottles, soft morning light through window, pink roses and pearls, high-end lifestyle photography, editorial fashion style, dreamy bokeh background, soft pink and cream tones, glamorous beauty editorial, professional color grading, sophisticated aesthetic, 4K cinematic quality
+            </div>
+
+            <h3>❌ Negative Prompt:</h3>
+            <div class="prompt-box" style="background: #4a1a1a;">
+busy, cluttered, text, logos, watermarks, low quality, amateur, messy, dark, grungy, faces, celebrity, recognizable person
+            </div>
+
+            <h3>⚙️ Settings:</h3>
+            <div style="background: #e3f2fd; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                <strong>Model:</strong> <span style="color: #ff6b9d; font-weight: bold;">Leonardo Kino</span> (CINEMATIC!)<br>
+                <strong>Aspect Ratio:</strong> 16:9 (landscape for desktop)<br>
+                <strong>Resolution:</strong> 1536x1024px<br>
+                <strong>Number of Images:</strong> 4<br>
+                <strong>Prompt Magic:</strong> ON<br>
+                <strong>Alchemy:</strong> ON<br>
+                <strong>Cinematic Mode:</strong> ON (if available)
+            </div>
+
+            <p><strong>Save as:</strong> <code>splash-screen-cinematic.jpg</code></p>
+            <p><strong>Location:</strong> <code>D:\Lab2\public\images\hero\</code></p>
+        </div>
+
+        <!-- What You'll Get -->
+        <div class="section">
+            <h2>🌟 What You'll Get</h2>
+            <p style="margin-bottom: 1rem;">A sophisticated splash screen that:</p>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                <div style="background: white; padding: 1rem; border-radius: 8px;">
+                    ✨ <strong>Makes incredible first impression</strong><br>
+                    <span style="color: #666; font-size: 0.9rem;">Cinematic quality sets luxury tone</span>
+                </div>
+                <div style="background: white; padding: 1rem; border-radius: 8px;">
+                    🎯 <strong>Converts visitors to users</strong><br>
+                    <span style="color: #666; font-size: 0.9rem;">Clear CTA drives engagement</span>
+                </div>
+                <div style="background: white; padding: 1rem; border-radius: 8px;">
+                    📱 <strong>Works on all devices</strong><br>
+                    <span style="color: #666; font-size: 0.9rem;">Responsive and optimized</span>
+                </div>
+                <div style="background: white; padding: 1rem; border-radius: 8px;">
+                    ⚡ <strong>Shows only once per session</strong><br>
+                    <span style="color: #666; font-size: 0.9rem;">Smart UX, not annoying</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Steps -->
+        <div class="section">
+            <h2>✅ Quick Steps</h2>
+            <ol style="line-height: 2; padding-left: 2rem;">
+                <li>Go to <a href="https://leonardo.ai" target="_blank">leonardo.ai</a></li>
+                <li>Select <strong>Leonardo Kino</strong> model</li>
+                <li>Copy the prompt above</li>
+                <li>Set aspect ratio to <strong>16:9</strong></li>
+                <li>Generate 4 images</li>
+                <li>Download the best one</li>
+                <li>Save as <code>splash-screen-cinematic.jpg</code></li>
+                <li>Tell me <strong>"splash image ready"</strong></li>
+            </ol>
+        </div>
+
+        <!-- CTA -->
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="https://leonardo.ai" target="_blank" class="button">🚀 Go to Leonardo.ai</a>
+            <a href="SPLASH_SCREEN_PROMPT.md" class="button" style="background: #667eea;">📖 View Full Guide</a>
+        </div>
+
+        <div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 1.5rem; border-radius: 8px; margin-top: 2rem;">
+            <strong>💡 Pro Tip:</strong> The <strong>Leonardo Kino</strong> model is specifically designed for cinematic, editorial-style images. It will give you that premium, magazine-quality aesthetic!
+        </div>
+    </div>
+</body>
+</html>
