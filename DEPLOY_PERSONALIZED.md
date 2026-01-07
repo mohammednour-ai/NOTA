@@ -12,7 +12,7 @@ Copy and paste these commands in PowerShell:
 cd d:\Lab2
 
 # Add your GitHub repository as remote
-git remote add origin https://github.com/mohammednour-ai/nota-life.git
+git remote add origin https://github.com/mohammednour-ai/NOTA.git
 
 # Push your code to GitHub
 git branch -M main
@@ -28,7 +28,7 @@ git push -u origin main
 Before running the commands above, create your repository:
 
 1. Go to: https://github.com/new
-2. Repository name: `nota-life`
+2. Repository name: `NOTA`
 3. Make it **Private** (recommended)
 4. **Do NOT** check any initialization options
 5. Click "Create repository"
@@ -45,7 +45,7 @@ Before running the commands above, create your repository:
 2. **Create New Project**
    - Click "New Project"
    - Select "Deploy from GitHub repo"
-   - Choose `mohammednour-ai/nota-life`
+   - Choose `mohammednour-ai/NOTA`
    - Railway will auto-detect and start deploying
 
 3. **Add Environment Variables**
@@ -107,13 +107,13 @@ Test checklist:
 
 ## Your GitHub Repository URL
 
-Your repo will be at: **https://github.com/mohammednour-ai/nota-life**
+Your repo will be at: **https://github.com/mohammednour-ai/NOTA**
 
 ---
 
 ## Quick Links
 
-- **GitHub Repo**: https://github.com/mohammednour-ai/nota-life (create this first!)
+- **GitHub Repo**: https://github.com/mohammednour-ai/NOTA (create this first!)
 - **Railway**: https://railway.app
 - **GoDaddy**: https://www.godaddy.com
 - **Anthropic API**: https://console.anthropic.com
@@ -126,7 +126,7 @@ Your repo will be at: **https://github.com/mohammednour-ai/nota-life**
 ```powershell
 # Step 1: Push to GitHub (after creating the repo)
 cd d:\Lab2
-git remote add origin https://github.com/mohammednour-ai/nota-life.git
+git remote add origin https://github.com/mohammednour-ai/NOTA.git
 git branch -M main
 git push -u origin main
 ```
@@ -144,7 +144,7 @@ That's it! Then follow the Railway and DNS steps above.
 
 **Repository doesn't exist?**
 - Make sure you created the repo first at: https://github.com/new
-- Name must be exactly: `nota-life`
+- Name must be exactly: `NOTA`
 
 **Need more help?**
 - Visual Guide: Open `DEPLOYMENT_VISUAL_GUIDE.html`
@@ -169,7 +169,7 @@ That's it! Then follow the Railway and DNS steps above.
 
 ## 🎯 Ready? Start Now!
 
-1. **First**: Create your GitHub repo at https://github.com/new
+1. **First**: Create your GitHub repo at https://github.com/new (name it: NOTA)
 2. **Then**: Run the PowerShell commands above
 3. **Next**: Deploy to Railway
 4. **Finally**: Connect your domain
