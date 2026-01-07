@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOTA Life - Visual Deployment Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+        }
+        .progress {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .progress-bar {
+            background: #e0e0e0;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            height: 100%;
+            width: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transition: width 0.3s ease;
+        }
+        .step {
+            background: white;
+            padding: 30px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .step::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+        }
+        .step-number {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 50px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-right: 15px;
+            float: left;
+        }
+        .step h2 {
+            color: #2d2a4a;
+            margin-bottom: 15px;
+            padding-left: 65px;
+            font-size: 1.8rem;
+        }
+        .step-content {
+            clear: both;
+            padding-top: 10px;
+        }
+        .step-content p {
+            margin-bottom: 15px;
+            color: #555;
+        }
+        .step-content ol, .step-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+            color: #555;
+        }
+        .step-content li {
+            margin-bottom: 10px;
+        }
+        .code-box {
+            background: #2d2a4a;
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            position: relative;
+        }
+        .code-box::before {
+            content: 'Copy';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 5px solid;
+        }
+        .alert-success {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        .alert-warning {
+            background: #fff3cd;
+            border-color: #ffc107;
+            color: #856404;
+        }
+        .alert-info {
+            background: #d1ecf1;
+            border-color: #17a2b8;
+            color: #0c5460;
+        }
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 10px 10px 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        .button-secondary {
+            background: linear-gradient(135deg, #555, #333);
+        }
+        .checklist {
+            list-style: none;
+            margin-left: 0;
+        }
+        .checklist li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .checklist li::before {
+            content: '☐';
+            margin-right: 10px;
+            font-size: 1.2rem;
+            color: #667eea;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .status-ready {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .timeline-item {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            margin: 5px;
+            border-radius: 10px;
+            min-width: 150px;
+        }
+        .timeline-item strong {
+            display: block;
+            color: #667eea;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            .step {
+                padding: 20px;
+            }
+            .timeline {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 NOTA Life Deployment</h1>
+            <p>Get your app live on www.nota-life.com</p>
+        </div>
+
+        <div class="progress">
+            <h3 style="margin-bottom: 15px; color: #2d2a4a;">Overall Progress</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar">50% Complete</div>
+            </div>
+            <p style="color: #666; margin-top: 10px;">✅ Code Ready | ✅ Git Initialized | ⏳ Awaiting Deployment</p>
+        </div>
+
+        <div class="alert alert-success">
+            <strong>✅ Great News!</strong> Your app is fully configured and ready for deployment. All the hard work is done - just follow these simple steps!
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <strong>5 min</strong>
+                <span>GitHub Setup</span>
+            </div>
+            <div class="timeline-item">
+                <strong>10 min</strong>
+                <span>Railway Deploy</span>
+            </div>
+            <div class="timeline-item">
+                <strong>5 min</strong>
+                <span>DNS Config</span>
+            </div>
+            <div class="timeline-item">
+                <strong>1-2 hrs</strong>
+                <span>DNS Wait</span>
+            </div>
+            <div class="timeline-item">
+                <strong>5 min</strong>
+                <span>Testing</span>
+            </div>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="step">
+            <div class="step-number">1</div>
+            <h2>Create GitHub Repository <span class="status-badge status-pending">Action Required</span></h2>
+            <div class="step-content">
+                <p>First, let's get your code on GitHub so Railway can deploy it.</p>
+                
+                <ol>
+                    <li>Click the button below to create a new GitHub repository</li>
+                    <li>Name it: <strong>nota-life</strong></li>
+                    <li>Make it <strong>Private</strong> (recommended)</li>
+                    <li><strong>DO NOT</strong> check any initialization options (README, .gitignore, license)</li>
+                    <li>Click "Create repository"</li>
+                </ol>
+
+                <a href="https://github.com/new" target="_blank" class="button">Create GitHub Repo →</a>
+
+                <div class="alert alert-info">
+                    <strong>💡 Tip:</strong> Keep the GitHub page open - you'll need to copy commands from there in the next step.
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step">
+            <div class="step-number">2</div>
+            <h2>Push Code to GitHub <span class="status-badge status-pending">Action Required</span></h2>
+            <div class="step-content">
+                <p>Now let's upload your code to GitHub. Open PowerShell in your project folder and run these commands:</p>
+                
+                <div class="code-box">
+# Navigate to your project<br>
+cd d:\Lab2<br>
+<br>
+# Add GitHub as remote (replace YOUR_USERNAME!)<br>
+git remote add origin https://github.com/YOUR_USERNAME/nota-life.git<br>
+<br>
+# Push your code<br>
+git branch -M main<br>
+git push -u origin main
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>⚠️ Important:</strong> Replace <code>YOUR_USERNAME</code> with your actual GitHub username!
+                </div>
+
+                <p><strong>Expected result:</strong> You should see output showing files being uploaded, ending with something like "Branch 'main' set up to track remote branch 'main'"</p>
+            </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step">
+            <div class="step-number">3</div>
+            <h2>Deploy to Railway <span class="status-badge status-pending">Action Required</span></h2>
+            <div class="step-content">
+                <p>Railway will host your app. It's fast, reliable, and handles SSL automatically.</p>
+                
+                <h3 style="color: #667eea; margin: 20px 0 10px 0;">3.1 Sign Up for Railway</h3>
+                <ol>
+                    <li>Click the button below to go to Railway</li>
+                    <li>Click "Login" → "Login with GitHub"</li>
+                    <li>Authorize Railway to access your GitHub</li>
+                </ol>
+                <a href="https://railway.app" target="_blank" class="button">Go to Railway →</a>
+
+                <h3 style="color: #667eea; margin: 20px 0 10px 0;">3.2 Create New Project</h3>
+                <ol>
+                    <li>Click "New Project"</li>
+                    <li>Select "Deploy from GitHub repo"</li>
+                    <li>Choose your <strong>nota-life</strong> repository</li>
+                    <li>Railway will auto-detect it's a Node.js app and start building</li>
+                    <li>Wait 2-5 minutes for the first deployment</li>
+                </ol>
+
+                <h3 style="color: #667eea; margin: 20px 0 10px 0;">3.3 Add Environment Variables</h3>
+                <p>Your app needs your Anthropic API key to work:</p>
+                <ol>
+                    <li>Click on your service name</li>
+                    <li>Go to "Variables" tab</li>
+                    <li>Click "New Variable" and add these three:</li>
+                </ol>
+
+                <div class="code-box">
+ANTHROPIC_API_KEY=sk-ant-your-actual-key-here<br>
+PORT=3000<br>
+NODE_ENV=production
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>⚠️ Critical:</strong> Replace <code>sk-ant-your-actual-key-here</code> with your real Anthropic API key! Get it from <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>
+                </div>
+
+                <h3 style="color: #667eea; margin: 20px 0 10px 0;">3.4 Get Your Railway URL</h3>
+                <ol>
+                    <li>Go to "Settings" tab</li>
+                    <li>Under "Domains" section, you'll see your Railway URL</li>
+                    <li>It looks like: <code>nota-life-production.up.railway.app</code></li>
+                    <li>Click it to test - your app should be live! 🎉</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step">
+            <div class="step-number">4</div>
+            <h2>Connect Your Domain <span class="status-badge status-pending">Action Required</span></h2>
+            <div class="step-content">
+                <p>Now let's make your app accessible at www.nota-life.com</p>
+                
+                <h3 style="color: #667eea; margin: 20px 0 10px 0;">4.1 Add Custom Domain in Railway</h3>
+                <ol>
+                    <li>In Railway, stay in "Settings" → "Domains"</li>
+                    <li>Click "+ Custom Domain"</li>
+                    <li>Enter: <code>www.nota-life.com</code></li>
+                    <li>Railway will show you a CNAME record - <strong>COPY THIS!</strong></li>
+                    <li>It looks like: <code>your-app.up.railway.app</code></li>
+                </ol>
+
+                <h3 style="color: #667eea; margin: 20px 0 10px 0;">4.2 Configure DNS in GoDaddy</h3>
+                <ol>
+                    <li>Click the button below to go to GoDaddy</li>
+                    <li>Login and go to "My Products"</li>
+                    <li>Find your domain and click "DNS"</li>
+                    <li>Click "Add" to create a new record</li>
+                    <li>Fill in:
+                        <ul>
+                            <li><strong>Type:</strong> CNAME</li>
+                            <li><strong>Name:</strong> www</li>
+                            <li><strong>Value:</strong> [paste the Railway URL you copied]</li>
+                            <li><strong>TTL:</strong> 600 seconds</li>
+                        </ul>
+                    </li>
+                    <li>Click "Save"</li>
+                </ol>
+
+                <a href="https://www.godaddy.com" target="_blank" class="button">Go to GoDaddy →</a>
+
+                <div class="alert alert-info">
+                    <strong>⏳ Wait Time:</strong> DNS changes take 10 minutes to 2 hours to propagate. Usually it's ready within 1 hour. You can check progress at <a href="https://dnschecker.org" target="_blank">dnschecker.org</a>
+                </div>
+
+                <h3 style="color: #667eea; margin: 20px 0 10px 0;">4.3 Optional: Root Domain Forwarding</h3>
+                <p>If you want <code>nota-life.com</code> (without www) to work too:</p>
+                <ol>
+                    <li>In GoDaddy, go to "Forwarding"</li>
+                    <li>Set up domain forwarding</li>
+                    <li>Forward <code>nota-life.com</code> → <code>www.nota-life.com</code></li>
+                    <li>Use "Permanent (301)" redirect</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="step">
+            <div class="step-number">5</div>
+            <h2>Test Everything <span class="status-badge status-pending">After DNS</span></h2>
+            <div class="step-content">
+                <p>Once DNS has propagated (1-2 hours), test your live site thoroughly:</p>
+                
+                <ul class="checklist">
+                    <li>Visit https://www.nota-life.com and verify it loads</li>
+                    <li>Check that HTTPS works (secure padlock icon)</li>
+                    <li>Test the splash screen loads correctly</li>
+                    <li>Click "Get Started" and verify quiz begins</li>
+                    <li>Answer all 30 questions</li>
+                    <li>Verify results page shows recommendations</li>
+                    <li>Check that images display properly</li>
+                    <li>Test on mobile device</li>
+                    <li>Test on different browsers (Chrome, Firefox, Safari)</li>
+                    <li>Share with a friend and get feedback</li>
+                </ul>
+
+                <a href="https://www.nota-life.com" target="_blank" class="button" style="margin-top: 20px;">Open Your Live Site →</a>
+            </div>
+        </div>
+
+        <!-- Troubleshooting -->
+        <div class="step" style="background: #fff9e6;">
+            <div class="step-number" style="background: #ffc107;">?</div>
+            <h2>Troubleshooting</h2>
+            <div class="step-content">
+                <h3 style="color: #d9534f; margin: 15px 0 10px 0;">App Won't Start on Railway</h3>
+                <p><strong>Solution:</strong></p>
+                <ol>
+                    <li>Click your service → "Deployments"</li>
+                    <li>Click latest deployment → "View Logs"</li>
+                    <li>Look for error messages (usually missing environment variables)</li>
+                    <li>Verify <code>ANTHROPIC_API_KEY</code> is set correctly</li>
+                </ol>
+
+                <h3 style="color: #d9534f; margin: 15px 0 10px 0;">Domain Not Working</h3>
+                <p><strong>Solution:</strong></p>
+                <ol>
+                    <li>Check DNS at <a href="https://dnschecker.org" target="_blank">dnschecker.org</a></li>
+                    <li>Enter <code>www.nota-life.com</code> and check CNAME record</li>
+                    <li>If not propagated, wait longer (can take up to 48 hours)</li>
+                    <li>Clear browser cache or try incognito mode</li>
+                    <li>Verify CNAME value in GoDaddy matches Railway URL exactly</li>
+                </ol>
+
+                <h3 style="color: #d9534f; margin: 15px 0 10px 0;">API Errors</h3>
+                <p><strong>Solution:</strong></p>
+                <ol>
+                    <li>Check your Anthropic API key is correct</li>
+                    <li>Verify your Anthropic account has credits</li>
+                    <li>Test locally first with <code>npm start</code></li>
+                    <li>Check Railway logs for specific error messages</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Success -->
+        <div class="alert alert-success" style="font-size: 1.1rem; padding: 30px; margin-top: 30px;">
+            <h2 style="margin-bottom: 15px;">🎉 You're Almost There!</h2>
+            <p style="margin-bottom: 15px;">Follow these 5 steps and your NOTA Life app will be live on the internet for everyone to use!</p>
+            <p><strong>Estimated Time:</strong> 30 minutes of work + 1-2 hours waiting for DNS</p>
+            <p><strong>Next Action:</strong> Create your GitHub repository (Step 1)</p>
+        </div>
+
+        <div style="text-align: center; margin: 40px 0; color: white;">
+            <p style="font-size: 1.2rem; margin-bottom: 15px;">Need more details?</p>
+            <p>Check <code>DEPLOYMENT_CHECKLIST.md</code> or <code>DEPLOYMENT_GUIDE.md</code> for comprehensive documentation</p>
+        </div>
+    </div>
+
+    <script>
+        // Simple progress tracker
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('NOTA Life - Ready for deployment!');
+            console.log('Follow the visual guide to deploy your app.');
+        });
+    </script>
+</body>
+</html>

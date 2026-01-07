@@ -1,269 +1,342 @@
-# 🌸 ScentMatch - AI-Powered Perfume Recommendation Platform
+# 🌸 NOTA Life - AI-Powered Perfume Recommendation Platform
 
-A beautiful, modern perfume recommendation platform inspired by Function of Beauty's quiz interface. Get personalized perfume recommendations powered by Claude AI with direct affiliate shopping links.
+<div align="center">
+
+![NOTA Life](public/images/logo/nota2.jpg)
+
+**Discover your perfect scent with AI**
+
+[Live Demo](https://www.nota-life.com) • [Documentation](#documentation) • [Deployment Guide](#deployment)
+
+</div>
+
+---
+
+## 🚀 Quick Start
+
+### Local Development
+
+```bash
+# Install dependencies
+npm install
+
+# Create .env file with your API key
+echo "ANTHROPIC_API_KEY=sk-ant-your-key" > .env
+echo "PORT=3000" >> .env
+
+# Start the server
+npm start
+
+# Open your browser
+# Navigate to http://localhost:3000
+```
+
+### Deploy to Production
+
+Your app is **ready to deploy**! Follow the [Visual Deployment Guide](DEPLOYMENT_VISUAL_GUIDE.html):
+
+1. **Create GitHub Repository** (5 minutes)
+2. **Deploy to Railway** (10 minutes)
+3. **Connect Domain** (5 minutes)
+4. **Wait for DNS** (1-2 hours)
+5. **Go Live!** 🎉
+
+**Detailed Guides:**
+- 📖 [Deployment Checklist](DEPLOYMENT_CHECKLIST.md) - Complete step-by-step guide
+- 🎯 [Quick Deploy](DEPLOY_NOW.md) - TL;DR version
+- 📚 [Full Guide](DEPLOYMENT_GUIDE.md) - Comprehensive documentation
+- 🎨 [Visual Guide](DEPLOYMENT_VISUAL_GUIDE.html) - Interactive HTML guide
+
+---
 
 ## ✨ Features
 
-- **30-Question Personalized Quiz** - Comprehensive questionnaire covering preferences, occasions, notes, and style
-- **AI-Powered Recommendations** - Claude 3.5 Sonnet analyzes your preferences to suggest perfect perfumes
-- **Affiliate Integration** - Direct shopping links to Amazon, ShareASale, and other affiliate platforms
-- **Beautiful UI** - Modern, responsive design inspired by Function of Beauty
-- **Real-time Progress** - Track your quiz progress with animated UI elements
+### Core Features
+- 🤖 **AI-Powered Recommendations** - Claude 3 Haiku analyzes 30 personalized questions
+- 🎨 **Beautiful UI/UX** - Modern, responsive design inspired by premium beauty brands
+- 🌈 **Dynamic Theming** - Color themes progress through the quiz journey
+- 📱 **Mobile Responsive** - Optimized for all devices
+- 🔗 **Affiliate Integration** - Amazon & ShareASale product links
+- 🎯 **Personalized Results** - Custom recommendations based on preferences
 
-## 🚀 Getting Started
+### User Experience
+- ✨ Stunning splash screen with gradient animations
+- 🎭 30 carefully crafted questions covering:
+  - Personal style & preferences
+  - Fragrance notes & families
+  - Occasion & lifestyle
+  - Budget & brand preferences
+- 🎪 3D carousel showcase for recommendations
+- 💳 Direct purchase links to retailers
+- 📊 Detailed perfume information
 
-### Prerequisites
+---
 
-- Node.js (v14 or higher)
-- npm or yarn
-- Anthropic API Key (Claude)
-- (Optional) Affiliate API keys for Amazon, ShareASale
+## 🛠️ Technology Stack
 
-### Installation
+**Backend:**
+- Node.js + Express
+- Anthropic Claude API (AI recommendations)
+- CORS & Body Parser middleware
 
-1. Clone the repository:
-```bash
-git clone <your-repo-url>
-cd Lab2
-```
+**Frontend:**
+- Pure HTML5, CSS3, JavaScript (ES6+)
+- Responsive design
+- CSS animations & transitions
+- Progressive color theming
 
-2. Install dependencies:
-```bash
-npm install
-```
+**Deployment:**
+- Railway (recommended)
+- Vercel / Render (alternatives)
+- GoDaddy DNS
+- Automatic SSL via Railway
 
-3. Create a `.env` file in the root directory:
-```bash
-cp .env.example .env
-```
+**APIs:**
+- Anthropic Claude 3 Haiku
+- Amazon Product API (future)
+- ShareASale API (future)
 
-4. Edit `.env` and add your API keys:
-```env
-# Required
-ANTHROPIC_API_KEY=your_anthropic_api_key_here
-
-# Optional (for better affiliate integration)
-AMAZON_ACCESS_KEY=your_amazon_access_key
-AMAZON_SECRET_KEY=your_amazon_secret_key
-AMAZON_ASSOCIATE_TAG=your_associate_tag
-
-SHARESALE_TOKEN=your_sharesale_token
-SHARESALE_SECRET=your_sharesale_secret
-SHARESALE_AFFILIATE_ID=your_affiliate_id
-
-PORT=3000
-```
-
-### Getting API Keys
-
-#### Anthropic Claude API (Required)
-1. Go to [console.anthropic.com](https://console.anthropic.com)
-2. Sign up or log in
-3. Navigate to API Keys section
-4. Create a new API key
-5. Copy and paste into your `.env` file
-
-#### Amazon Associates (Optional)
-1. Sign up at [affiliate-program.amazon.com](https://affiliate-program.amazon.com)
-2. Apply for Amazon Product Advertising API access
-3. Get your Access Key, Secret Key, and Associate Tag
-4. Add to `.env` file
-
-#### ShareASale (Optional)
-1. Sign up at [shareasale.com](https://www.shareasale.com)
-2. Apply for merchant programs related to beauty/perfume
-3. Get your API credentials from Settings
-4. Add to `.env` file
-
-### Running the Application
-
-1. Start the server:
-```bash
-npm start
-```
-
-For development with auto-reload:
-```bash
-npm run dev
-```
-
-2. Open your browser and navigate to:
-```
-http://localhost:3000
-```
+---
 
 ## 📁 Project Structure
 
 ```
-Lab2/
-├── public/
-│   ├── index.html      # Main HTML file
-│   ├── styles.css      # Styling (Function of Beauty inspired)
-│   └── script.js       # Frontend JavaScript
-├── server.js           # Express backend server
-├── questions.json      # 30 quiz questions
-├── package.json        # Dependencies
-├── .env.example        # Environment variables template
-├── .gitignore         # Git ignore file
-└── README.md          # This file
+d:\Lab2\
+├── public/                      # Frontend files
+│   ├── index.html              # Main quiz application
+│   ├── script.js               # Quiz logic & API calls
+│   ├── styles.css              # Styling & animations
+│   ├── demo-data.js            # Demo recommendations
+│   └── images/                 # Assets
+│       ├── Splash/             # Splash screen images
+│       └── logo/               # Logo files
+├── server.js                   # Express server
+├── perfume-database.js         # Perfume data & search
+├── questions.json              # Quiz questions
+├── package.json                # Dependencies
+├── railway.json                # Railway config
+├── Procfile                    # Process definition
+├── .env                        # Environment variables (create this)
+├── .gitignore                  # Git ignore rules
+│
+├── DEPLOYMENT_GUIDE.md         # Comprehensive deployment guide
+├── DEPLOYMENT_CHECKLIST.md     # Step-by-step checklist
+├── DEPLOY_NOW.md               # Quick reference
+├── DEPLOYMENT_VISUAL_GUIDE.html # Interactive guide
+│
+├── README.md                   # This file
+├── QUICKSTART.md               # Quick start guide
+└── SETUP.html                  # Setup instructions
 ```
-
-## 🎨 Design Features
-
-### Inspired by Function of Beauty
-- Clean, modern layout with premium feel
-- Gradient animations and smooth transitions
-- Card-based quiz interface
-- Progress tracking with visual feedback
-- Mobile-responsive design
-
-### Color Scheme
-- Primary: `#2d2a4a` (Deep purple)
-- Secondary: `#8b7fbf` (Lavender)
-- Accent: `#e6b8c7` (Soft pink)
-- Background: `#f8f6f4` (Warm white)
-
-## 🤖 How It Works
-
-1. **Quiz Flow**
-   - User answers 30 personalized questions
-   - Questions cover gender, age, occasions, seasons, fragrance families, notes, style, and budget
-   - Answers are stored and validated in real-time
-
-2. **AI Analysis**
-   - All answers are sent to Claude 3.5 Sonnet API
-   - Claude analyzes preferences and recommends 5 specific perfumes
-   - Each recommendation includes brand, name, description, matching reasons, and key notes
-
-3. **Affiliate Search**
-   - Recommended perfumes are searched across affiliate platforms
-   - Amazon and ShareASale links are generated
-   - Users can click to purchase with affiliate attribution
-
-4. **Results Display**
-   - Beautiful cards show each perfume recommendation
-   - Direct shopping links with platform badges
-   - Option to retake quiz for new recommendations
-
-## 🔧 Customization
-
-### Adding More Questions
-Edit `questions.json` to add or modify quiz questions:
-
-```json
-{
-  "id": 31,
-  "question": "Your question here?",
-  "type": "single",  // or "multiple" or "text"
-  "options": ["Option 1", "Option 2", "Option 3"]
-}
-```
-
-### Adding More Affiliate Platforms
-Edit `server.js` and add new search functions:
-
-```javascript
-async function searchNewPlatform(query) {
-  // Implement your affiliate API logic
-  return {
-    platform: 'Platform Name',
-    url: 'affiliate-link',
-    price: 'Price info'
-  };
-}
-```
-
-### Customizing Styles
-Edit `public/styles.css` to change colors, fonts, and layouts:
-
-```css
-:root {
-    --primary-color: #your-color;
-    --secondary-color: #your-color;
-    /* etc. */
-}
-```
-
-## 🌐 API Endpoints
-
-### GET `/api/questions`
-Returns all quiz questions
-
-### POST `/api/analyze`
-- Body: `{ "answers": { ... } }`
-- Returns: Claude AI recommendations
-
-### POST `/api/search-affiliates`
-- Body: `{ "perfumes": [...] }`
-- Returns: Affiliate links for each perfume
-
-## 📱 Mobile Support
-
-The platform is fully responsive and works beautifully on:
-- Desktop (1920px+)
-- Laptop (1024px - 1919px)
-- Tablet (768px - 1023px)
-- Mobile (320px - 767px)
-
-## 🔒 Security Notes
-
-- Never commit your `.env` file
-- Keep API keys secure and rotate regularly
-- Use environment variables for all sensitive data
-- Implement rate limiting for production use
-
-## 🚀 Deployment
-
-### Heroku
-```bash
-heroku create your-app-name
-heroku config:set ANTHROPIC_API_KEY=your_key
-git push heroku main
-```
-
-### Vercel
-```bash
-vercel
-# Follow prompts and add environment variables in dashboard
-```
-
-### DigitalOcean/AWS
-1. Set up Node.js server
-2. Install dependencies
-3. Configure environment variables
-4. Set up reverse proxy (nginx)
-5. Enable SSL
-
-## 📄 License
-
-This project is provided as-is for educational and commercial use.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 💡 Future Enhancements
-
-- [ ] User accounts and saved results
-- [ ] Email recommendations
-- [ ] More affiliate platforms (Sephora, Ulta, FragranceX)
-- [ ] Social sharing
-- [ ] Admin dashboard for analytics
-- [ ] Multi-language support
-- [ ] Advanced filtering options
-- [ ] Price comparison across platforms
-- [ ] User reviews and ratings integration
-
-## 📧 Support
-
-For issues, questions, or suggestions, please open an issue on GitHub.
-
-## 🙏 Acknowledgments
-
-- Inspired by [Function of Beauty](https://functionofbeauty.com)
-- Powered by [Anthropic Claude AI](https://www.anthropic.com)
-- Built with Express.js and vanilla JavaScript
 
 ---
 
-**Affiliate Disclosure**: This platform uses affiliate links. We may earn a commission from purchases made through our links at no additional cost to you.
+## 🔑 Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+# Required
+ANTHROPIC_API_KEY=sk-ant-your-key-here
+PORT=3000
+NODE_ENV=production
+
+# Optional (for affiliate features)
+AMAZON_ASSOCIATE_TAG=your-tag-20
+SHARESALE_AFFILIATE_ID=your-id
+```
+
+**Get Your Anthropic API Key:**
+1. Visit [console.anthropic.com](https://console.anthropic.com)
+2. Sign up or log in
+3. Go to "API Keys"
+4. Create a new key
+5. Copy and paste into `.env`
+
+---
+
+## 📖 Documentation
+
+### User Guides
+- [Setup Instructions](SETUP.html) - Initial setup
+- [Quick Start](QUICKSTART.md) - Get started in 5 minutes
+- [Project Status](PROJECT_STATUS.md) - Current features
+
+### Deployment
+- [Visual Deployment Guide](DEPLOYMENT_VISUAL_GUIDE.html) - **Start here!**
+- [Deployment Checklist](DEPLOYMENT_CHECKLIST.md) - Complete guide
+- [Quick Deploy](DEPLOY_NOW.md) - TL;DR version
+- [Full Guide](DEPLOYMENT_GUIDE.md) - Detailed documentation
+
+### Development
+- [Testing Guide](E2E_TESTING_GUIDE.md) - Testing scenarios
+- [UI/UX Improvements](UI_UX_IMPROVEMENTS.md) - Design system
+- [Splash Screen Guide](SPLASH_SCREEN_GUIDE.html) - Splash screen docs
+
+---
+
+## 🌐 Deployment
+
+### Current Status: ✅ Ready to Deploy!
+
+Your app is fully configured and ready for production deployment.
+
+### Quick Deploy Steps
+
+1. **Push to GitHub**
+```bash
+git remote add origin https://github.com/YOUR_USERNAME/nota-life.git
+git branch -M main
+git push -u origin main
+```
+
+2. **Deploy to Railway**
+   - Sign up at [railway.app](https://railway.app)
+   - Connect your GitHub repo
+   - Add environment variables
+   - Deploy automatically
+
+3. **Connect Domain**
+   - Add custom domain in Railway: `www.nota-life.com`
+   - Update CNAME in GoDaddy DNS
+   - Wait for DNS propagation (1-2 hours)
+
+4. **Go Live!**
+   - Test at https://www.nota-life.com
+   - SSL automatically configured
+   - Ready for users! 🎉
+
+**Need Help?** Check [DEPLOYMENT_VISUAL_GUIDE.html](DEPLOYMENT_VISUAL_GUIDE.html)
+
+---
+
+## 💰 Cost Estimate
+
+### Monthly Costs
+- **Railway Hosting**: $5-15/month (first $5 free)
+- **Domain**: Already purchased (yearly renewal)
+- **Anthropic API**: ~$0.01-0.05 per quiz completion
+- **SSL Certificate**: Free (via Railway)
+
+**Total Estimated**: $5-20/month for moderate traffic
+
+---
+
+## 🧪 Testing
+
+### Run Tests
+```bash
+# Start server
+npm start
+
+# Open test suite
+http://localhost:3000/test
+```
+
+### Manual Testing
+See [E2E_TESTING_GUIDE.md](E2E_TESTING_GUIDE.md) for comprehensive test scenarios.
+
+### Test Checklist
+- [ ] Splash screen loads correctly
+- [ ] Quiz questions progress smoothly
+- [ ] All 30 questions display
+- [ ] Results page shows recommendations
+- [ ] Images load properly
+- [ ] Mobile responsive
+- [ ] API returns valid results
+
+---
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+**App won't start:**
+```bash
+# Check if API key is set
+echo $ANTHROPIC_API_KEY  # Linux/Mac
+echo %ANTHROPIC_API_KEY% # Windows
+
+# Verify dependencies
+npm install
+
+# Check logs
+npm start
+```
+
+**API errors:**
+- Verify API key is correct (starts with `sk-ant-`)
+- Check Anthropic account has credits
+- Review server logs for details
+
+**Deployment issues:**
+- See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)
+- Check Railway logs in dashboard
+- Verify environment variables are set
+
+---
+
+## 🚀 Features Roadmap
+
+### Current Features
+- ✅ 30-question personalized quiz
+- ✅ AI-powered recommendations
+- ✅ Beautiful splash screen
+- ✅ 3D carousel results display
+- ✅ Affiliate product links
+- ✅ Mobile responsive design
+- ✅ Production-ready deployment config
+
+### Future Enhancements
+- 🔄 User accounts & saved results
+- 🔄 Social sharing capabilities
+- 🔄 Advanced filtering options
+- 🔄 Real-time inventory checking
+- 🔄 Email recommendations
+- 🔄 Analytics dashboard
+- 🔄 A/B testing
+- 🔄 Multi-language support
+
+---
+
+## 📝 License
+
+ISC License - Feel free to modify and use for your purposes.
+
+---
+
+## 🤝 Contributing
+
+This is a personal project, but suggestions are welcome! Feel free to:
+- Open issues for bugs
+- Suggest new features
+- Improve documentation
+
+---
+
+## 📧 Support
+
+- **Documentation**: Check the `docs/` folder
+- **Deployment Issues**: See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)
+- **Railway Help**: [docs.railway.app](https://docs.railway.app)
+- **GoDaddy DNS**: [godaddy.com/help](https://www.godaddy.com/help)
+
+---
+
+## 🎉 Ready to Launch!
+
+Your NOTA Life app is **production-ready** and configured for deployment. Follow the [Visual Deployment Guide](DEPLOYMENT_VISUAL_GUIDE.html) to get it live on **www.nota-life.com** in about 30 minutes!
+
+**Quick Links:**
+- 🎨 [Visual Guide](DEPLOYMENT_VISUAL_GUIDE.html) - Interactive deployment guide
+- ✅ [Checklist](DEPLOYMENT_CHECKLIST.md) - Step-by-step process
+- 🚀 [Quick Deploy](DEPLOY_NOW.md) - Fast reference
+- 📚 [Full Docs](DEPLOYMENT_GUIDE.md) - Everything you need
+
+---
+
+<div align="center">
+
+**Made with ❤️ for perfume lovers everywhere**
+
+</div>
