@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const Anthropic = require('@anthropic-ai/sdk');
 const axios = require('axios');
 require('dotenv').config();
-const { perfumeDatabase, findPerfume, generateAmazonSearchLink } = require('./perfume-database');
+const { perfumeDatabase, findPerfume, generateAmazonSearchLink, generateAllMarketplaceLinks } = require('./perfume-database');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -80,6 +80,7 @@ Please analyze these preferences and recommend 5 perfumes. For each perfume, pro
 2. Brief description (2-3 sentences)
 3. Why it matches their preferences
 4. Key notes
+5. Match percentage (how well it matches user preferences, 75-99%)
 
 Format your response as a JSON array with this structure:
 [
@@ -88,9 +89,12 @@ Format your response as a JSON array with this structure:
     "name": "Perfume Name",
     "description": "Description here",
     "why": "Why it matches",
-    "notes": ["note1", "note2", "note3"]
+    "notes": ["note1", "note2", "note3"],
+    "matchPercentage": 95
   }
-]`;
+]
+
+Order recommendations from highest match percentage to lowest.`;
 
     // Try Claude 3 Haiku - most widely available and fastest
     const message = await anthropic.messages.create({
@@ -133,7 +137,7 @@ Format your response as a JSON array with this structure:
 
 app.post('/api/search-affiliates', async (req, res) => {
   try {
-    const { perfumes } = req.body;
+    const { perfumes, country } = req.body;
     
     // Validate input
     if (!perfumes || !Array.isArray(perfumes)) {
@@ -142,6 +146,12 @@ app.post('/api/search-affiliates', async (req, res) => {
         results: []
       });
     }
+    
+    // Determine user's country (default to US if not provided)
+    const userCountry = (country || 'US').toUpperCase();
+    const isCanada = userCountry === 'CA';
+    
+    console.log(`🌍 Generating links for country: ${userCountry}`);
     
     const results = perfumes.map(perfume => {
       const productData = findPerfume(perfume.brand, perfume.name);
@@ -163,8 +173,14 @@ app.post('/api/search-affiliates', async (req, res) => {
           }))
         };
       } else {
-        // Not in database - generate search links
-        const amazonSearchLink = generateAmazonSearchLink(perfume.brand, perfume.name);
+        // Not in database - generate search links based on user's country
+        const amazonLink = generateAmazonSearchLink(perfume.brand, perfume.name, userCountry);
+        
+        // Determine appropriate Sephora link
+        const sephoraUrl = isCanada
+          ? `https://www.sephora.com/ca/en/search?keyword=${encodeURIComponent(perfume.brand + ' ' + perfume.name)}`
+          : `https://www.sephora.com/search?keyword=${encodeURIComponent(perfume.brand + ' ' + perfume.name)}`;
+        
         return {
           brand: perfume.brand,
           name: perfume.name,
@@ -175,13 +191,14 @@ app.post('/api/search-affiliates', async (req, res) => {
           image: null,
           affiliateLinks: [
             {
-              platform: 'Amazon Search',
-              url: amazonSearchLink,
-              price: 'Search on Amazon'
+              platform: isCanada ? 'Amazon Canada' : 'Amazon',
+              url: amazonLink,
+              price: isCanada ? 'Search on Amazon.ca' : 'Search on Amazon.com',
+              country: userCountry
             },
             {
-              platform: 'Sephora Search',
-              url: `https://www.sephora.com/search?keyword=${encodeURIComponent(perfume.brand + ' ' + perfume.name)}`,
+              platform: 'Sephora',
+              url: sephoraUrl,
               price: 'Search on Sephora'
             }
           ]
@@ -189,7 +206,7 @@ app.post('/api/search-affiliates', async (req, res) => {
       }
     });
 
-    res.json({ results });
+    res.json({ results, country: userCountry });
   } catch (error) {
     console.error('Error searching affiliates:', error);
     res.status(500).json({ 
@@ -232,7 +249,7 @@ function parseTextRecommendations(text) {
 async function searchAmazon(query) {
   // Simplified Amazon affiliate link generator
   // In production, use Amazon Product Advertising API
-  const associateTag = process.env.AMAZON_ASSOCIATE_TAG || 'yourtag-20';
+  const associateTag = process.env.AMAZON_ASSOCIATE_TAG || 'nota0c-20';
   const searchUrl = `https://www.amazon.com/s?k=${encodeURIComponent(query)}&tag=${associateTag}`;
   return searchUrl;
 }

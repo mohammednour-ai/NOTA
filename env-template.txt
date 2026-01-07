@@ -13,10 +13,9 @@ ANTHROPIC_API_KEY=sk-ant-your-api-key-here
 # AMAZON ASSOCIATES (OPTIONAL)
 # ===========================================
 # Sign up at: https://affiliate-program.amazon.com
-# These improve affiliate link quality but are optional
-AMAZON_ACCESS_KEY=your_amazon_access_key
-AMAZON_SECRET_KEY=your_amazon_secret_key
-AMAZON_ASSOCIATE_TAG=yourtag-20
+# Replace with your actual Amazon Associate tags for each marketplace
+AMAZON_ASSOCIATE_TAG=nota0c-20
+AMAZON_ASSOCIATE_TAG_CA=nota0c-20
 
 # ===========================================
 # SHARESALE AFFILIATE (OPTIONAL)

@@ -4,6 +4,62 @@ let currentQuestionIndex = 0;
 let answers = {};
 let userGender = null; // Track user's gender choice
 let themeProgress = 0; // 0 = neutral, 1 = fully gendered
+let userCountry = 'US'; // Default to US, will be detected
+
+// Detect user's country
+async function detectUserCountry() {
+    try {
+        // Try to detect from timezone
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        
+        // Common North American timezones
+        const canadianTimezones = [
+            'America/Toronto', 'America/Vancouver', 'America/Montreal', 
+            'America/Edmonton', 'America/Calgary', 'America/Winnipeg',
+            'America/Halifax', 'America/St_Johns'
+        ];
+        
+        if (canadianTimezones.some(tz => timezone.includes(tz))) {
+            userCountry = 'CA';
+            console.log('🇨🇦 Detected country: Canada');
+            return 'CA';
+        }
+        
+        // Try IP-based geolocation API (free, no key needed)
+        try {
+            const response = await fetch('https://ipapi.co/json/', { timeout: 2000 });
+            const data = await response.json();
+            
+            if (data.country_code) {
+                const countryCode = data.country_code.toUpperCase();
+                if (countryCode === 'CA') {
+                    userCountry = 'CA';
+                    console.log('🇨🇦 Detected country: Canada (IP)');
+                } else if (countryCode === 'US') {
+                    userCountry = 'US';
+                    console.log('🇺🇸 Detected country: USA (IP)');
+                } else {
+                    // Default to US for other countries
+                    userCountry = 'US';
+                    console.log(`🌍 Detected country: ${countryCode}, defaulting to US`);
+                }
+                return userCountry;
+            }
+        } catch (geoError) {
+            console.log('Geolocation API failed, using timezone detection');
+        }
+        
+        // Default to US
+        userCountry = 'US';
+        console.log('🇺🇸 Default country: USA');
+        return 'US';
+        
+    } catch (error) {
+        console.error('Country detection error:', error);
+        userCountry = 'US';
+        return 'US';
+    }
+}
 
 // Header scroll effect for glassmorphism
 window.addEventListener('scroll', () => {
@@ -132,6 +188,9 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('DOMContentLoaded', async () => {
     // Initialize splash screen
     initSplashScreen();
+    
+    // Detect user's country
+    await detectUserCountry();
     
     // Initialize 3D Card Carousel
     init3DCarousel();
@@ -649,13 +708,16 @@ async function submitQuiz() {
             throw new Error('Invalid response format from AI');
         }
         
-        // Search for affiliate links
+        // Search for affiliate links with user's country
         const affiliateResponse = await fetch('/api/search-affiliates', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ perfumes: analyzeData.recommendations })
+            body: JSON.stringify({ 
+                perfumes: analyzeData.recommendations,
+                country: userCountry  // Send detected country
+            })
         });
         
         const affiliateData = await affiliateResponse.json();
@@ -713,23 +775,37 @@ function displayResults(perfumes) {
     
     perfumes.forEach((perfume, index) => {
         // Find Amazon link
-        const amazonLink = perfume.affiliateLinks?.find(link => 
+        const amazonLink = perfume.affiliateLinks?.find(link =>
             link.platform.toLowerCase().includes('amazon')
         );
         
+        // Get match percentage (default to calculated value if not provided)
+        const matchPercentage = perfume.matchPercentage || (98 - (index * 3));
+
         html += `
             <div class="perfume-item">
                 <div class="perfume-rank">${index + 1}</div>
                 <div class="perfume-content">
-                    <h3>${perfume.brand} - ${perfume.name}</h3>
-                    <p class="perfume-description">${perfume.description}</p>
+                    <div class="perfume-header">
+                        <h3>${perfume.brand} - ${perfume.name}</h3>
+                        <div class="match-badge">
+                            <div class="match-percentage">${matchPercentage}%</div>
+                            <div class="match-label">Match</div>
+                        </div>
+                    </div>
                     
+                    <div class="match-bar-container">
+                        <div class="match-bar" style="width: ${matchPercentage}%"></div>
+                    </div>
+                    
+                    <p class="perfume-description">${perfume.description}</p>
+
                     ${perfume.why ? `
                         <div class="why-match">
                             <strong>Why it matches:</strong> ${perfume.why}
                         </div>
                     ` : ''}
-                    
+
                     ${perfume.notes && perfume.notes.length > 0 ? `
                         <div class="perfume-notes">
                             <strong>Key Notes:</strong> ${perfume.notes.join(', ')}
