@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Modal Debugger - NOTA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .section {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #667eea;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 1rem;
+            transition: transform 0.2s;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+        }
+
+        .button-danger {
+            background: linear-gradient(135deg, #f44336, #e91e63);
+        }
+
+        .button-success {
+            background: linear-gradient(135deg, #4caf50, #8bc34a);
+        }
+
+        .output {
+            background: #1a1a1a;
+            color: #4caf50;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: monospace;
+            margin-top: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .output div {
+            margin-bottom: 0.5rem;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .status-good {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-bad {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .status-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .info-box {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .info-box strong {
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Email Modal Debugger</h1>
+        <p class="subtitle">Test and fix the email capture modal</p>
+
+        <!-- Status Check -->
+        <div class="section">
+            <h2>📊 Current Status</h2>
+            <button class="button" onclick="checkStatus()">Check Email Modal Status</button>
+            <div id="statusOutput" class="output" style="display: none;"></div>
+        </div>
+
+        <!-- Clear Actions -->
+        <div class="section">
+            <h2>🗑️ Clear localStorage</h2>
+            <p style="margin-bottom: 1rem; color: #666;">
+                If the email modal isn't showing, it's probably because an email is already saved.
+            </p>
+            <button class="button button-danger" onclick="clearEmail()">Clear Email Only</button>
+            <button class="button button-danger" onclick="clearAll()">Clear All localStorage</button>
+            <div id="clearOutput" class="output" style="display: none;"></div>
+        </div>
+
+        <!-- Test Actions -->
+        <div class="section">
+            <h2>🧪 Test Email Modal</h2>
+            <button class="button button-success" onclick="testModal()">Open Email Modal (Test)</button>
+            <button class="button button-success" onclick="testSubmitFlow()">Simulate Quiz Submission</button>
+            <div id="testOutput" class="output" style="display: none;"></div>
+        </div>
+
+        <!-- Go to App -->
+        <div class="section">
+            <h2>🚀 Ready to Test?</h2>
+            <div class="info-box">
+                <strong>Steps:</strong>
+                <ol style="margin-left: 1.5rem; margin-top: 0.5rem; color: #666;">
+                    <li>Click "Clear All localStorage" above</li>
+                    <li>Click "Go to NOTA App" below</li>
+                    <li>Take the quiz</li>
+                    <li>Email modal should appear before results!</li>
+                </ol>
+            </div>
+            <button class="button" onclick="goToApp()">Go to NOTA App</button>
+        </div>
+    </div>
+
+    <script>
+        function log(output, message, type = 'info') {
+            const outputEl = document.getElementById(output);
+            outputEl.style.display = 'block';
+            
+            const colors = {
+                info: '#4caf50',
+                error: '#f44336',
+                warning: '#ff9800',
+                success: '#00bcd4'
+            };
+            
+            const div = document.createElement('div');
+            div.style.color = colors[type] || colors.info;
+            div.textContent = message;
+            outputEl.appendChild(div);
+        }
+
+        function clearOutput(outputId) {
+            const outputEl = document.getElementById(outputId);
+            outputEl.innerHTML = '';
+            outputEl.style.display = 'none';
+        }
+
+        function checkStatus() {
+            clearOutput('statusOutput');
+            
+            log('statusOutput', '=== EMAIL MODAL STATUS CHECK ===', 'info');
+            
+            // Check email in storage
+            const email = localStorage.getItem('userEmail');
+            if (email) {
+                log('statusOutput', `❌ Email found in storage: ${email}`, 'error');
+                log('statusOutput', '→ Modal will NOT show (email already captured)', 'warning');
+                log('statusOutput', '→ Click "Clear Email Only" to test modal', 'warning');
+            } else {
+                log('statusOutput', '✅ No email in storage', 'success');
+                log('statusOutput', '→ Modal SHOULD show on quiz completion', 'success');
+            }
+            
+            // Check other storage
+            const referralCode = localStorage.getItem('referralCode');
+            const userName = localStorage.getItem('userName');
+            
+            log('statusOutput', '', 'info');
+            log('statusOutput', 'Other localStorage items:', 'info');
+            log('statusOutput', `  - referralCode: ${referralCode || 'none'}`, 'info');
+            log('statusOutput', `  - userName: ${userName || 'none'}`, 'info');
+            
+            // Storage size
+            const allKeys = Object.keys(localStorage);
+            log('statusOutput', '', 'info');
+            log('statusOutput', `Total items in localStorage: ${allKeys.length}`, 'info');
+        }
+
+        function clearEmail() {
+            clearOutput('clearOutput');
+            
+            const email = localStorage.getItem('userEmail');
+            if (email) {
+                localStorage.removeItem('userEmail');
+                log('clearOutput', `✅ Email cleared: ${email}`, 'success');
+                log('clearOutput', '→ Refresh NOTA app and take quiz', 'success');
+                log('clearOutput', '→ Email modal should now appear!', 'success');
+            } else {
+                log('clearOutput', '⚠️ No email found in storage', 'warning');
+                log('clearOutput', '→ Modal should already be working', 'info');
+            }
+        }
+
+        function clearAll() {
+            clearOutput('clearOutput');
+            
+            const count = localStorage.length;
+            localStorage.clear();
+            
+            log('clearOutput', `✅ Cleared ${count} items from localStorage`, 'success');
+            log('clearOutput', '→ All data reset', 'success');
+            log('clearOutput', '→ Go to NOTA app and take quiz', 'success');
+            log('clearOutput', '→ Email modal should appear!', 'success');
+        }
+
+        function testModal() {
+            clearOutput('testOutput');
+            
+            log('testOutput', '🧪 Opening NOTA app to test modal...', 'info');
+            log('testOutput', '', 'info');
+            
+            // Open app with localStorage cleared
+            const email = localStorage.getItem('userEmail');
+            if (email) {
+                log('testOutput', `⚠️ Warning: Email exists (${email})`, 'warning');
+                log('testOutput', '→ Modal won\'t show unless you clear it first', 'warning');
+            } else {
+                log('testOutput', '✅ No email in storage', 'success');
+                log('testOutput', '→ Modal should show after quiz completion', 'success');
+            }
+            
+            log('testOutput', '', 'info');
+            log('testOutput', '→ Opening NOTA app in 2 seconds...', 'info');
+            
+            setTimeout(() => {
+                window.open('http://localhost:3001', '_blank');
+            }, 2000);
+        }
+
+        function testSubmitFlow() {
+            clearOutput('testOutput');
+            
+            log('testOutput', '🎯 Simulating quiz submission flow...', 'info');
+            log('testOutput', '', 'info');
+            
+            const email = localStorage.getItem('userEmail');
+            
+            log('testOutput', 'Step 1: Check for existing email', 'info');
+            if (email) {
+                log('testOutput', `  ❌ Email found: ${email}`, 'error');
+                log('testOutput', '  → Would skip email modal', 'warning');
+                log('testOutput', '  → Would show results directly', 'warning');
+            } else {
+                log('testOutput', '  ✅ No email found', 'success');
+                log('testOutput', '  → Would show email modal', 'success');
+                log('testOutput', '  → User enters email', 'success');
+                log('testOutput', '  → Modal closes, results show', 'success');
+            }
+            
+            log('testOutput', '', 'info');
+            log('testOutput', 'Expected behavior:', 'info');
+            log('testOutput', '  1. User completes quiz', 'info');
+            log('testOutput', '  2. submitQuiz() checks localStorage', 'info');
+            log('testOutput', '  3. If no email → show modal', 'info');
+            log('testOutput', '  4. User enters email → save to localStorage', 'info');
+            log('testOutput', '  5. Show results', 'info');
+        }
+
+        function goToApp() {
+            window.open('http://localhost:3001', '_blank');
+        }
+
+        // Auto-check status on page load
+        window.addEventListener('load', () => {
+            checkStatus();
+        });
+    </script>
+</body>
+</html>

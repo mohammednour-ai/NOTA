@@ -50,6 +50,81 @@ app.get('/api/questions', (req, res) => {
   res.json(questions);
 });
 
+// URL Shortening endpoint
+app.post('/api/shorten-url', async (req, res) => {
+  try {
+    const { url } = req.body;
+    
+    if (!url) {
+      return res.status(400).json({ error: 'URL is required' });
+    }
+    
+    // Use TinyURL API (free, no key required)
+    try {
+      const response = await axios.get(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`);
+      const shortUrl = response.data;
+      
+      if (shortUrl && shortUrl.startsWith('http')) {
+        return res.json({ 
+          shortUrl: shortUrl,
+          originalUrl: url,
+          service: 'tinyurl'
+        });
+      }
+    } catch (tinyUrlError) {
+      console.error('TinyURL error:', tinyUrlError.message);
+    }
+    
+    // Fallback: Return original URL
+    res.json({ 
+      shortUrl: url,
+      originalUrl: url,
+      service: 'fallback'
+    });
+    
+  } catch (error) {
+    console.error('Error shortening URL:', error);
+    res.status(500).json({ 
+      error: 'Failed to shorten URL',
+      shortUrl: req.body.url // Fallback to original URL
+    });
+  }
+});
+
+// Share image endpoint (stores base64 image temporarily)
+app.post('/api/share-image', async (req, res) => {
+  try {
+    const { imageData } = req.body;
+    
+    if (!imageData) {
+      return res.status(400).json({ error: 'Image data is required' });
+    }
+    
+    // For now, return the data URL itself
+    // In production, you would:
+    // 1. Decode base64
+    // 2. Save to cloud storage (AWS S3, Cloudinary, etc.)
+    // 3. Return public URL
+    
+    // Simple implementation: return data URL
+    res.json({ 
+      imageUrl: imageData,
+      stored: false,
+      message: 'Using data URL (upgrade to cloud storage for production)'
+    });
+    
+    // TODO: Implement cloud storage
+    // Example with Cloudinary:
+    // const cloudinary = require('cloudinary').v2;
+    // const uploadResult = await cloudinary.uploader.upload(imageData);
+    // res.json({ imageUrl: uploadResult.secure_url, stored: true });
+    
+  } catch (error) {
+    console.error('Error processing share image:', error);
+    res.status(500).json({ error: 'Failed to process image' });
+  }
+});
+
 app.post('/api/analyze', async (req, res) => {
   try {
     const { answers } = req.body;
@@ -58,24 +133,68 @@ app.post('/api/analyze', async (req, res) => {
     const prompt = `## CONTEXT & ROLE
 You are an expert perfume consultant with 15 years of experience matching fragrances to personalities. You understand fragrance families, notes chemistry, seasonal suitability, and lifestyle compatibility.
 
-## CRITICAL: GENDER-SPECIFIC RECOMMENDATIONS
+## 🚨 CRITICAL: GENDER-SPECIFIC RECOMMENDATIONS - ABSOLUTE RULE #1 🚨
 
-**IMPORTANT - READ CAREFULLY:**
-The user has specified their gender. You MUST recommend perfumes that match their gender identity:
+**THIS IS THE #1 PRIORITY - VIOLATING THIS REJECTS THE ENTIRE RECOMMENDATION**
 
-- If Male/Prefer not to say → Recommend MEN'S fragrances ONLY (masculine, unisex leaning masculine)
-- If Female → Recommend WOMEN'S fragrances ONLY (feminine, unisex leaning feminine)  
-- If Non-binary → Recommend UNISEX fragrances (truly gender-neutral)
+The user's gender is: ${answers[1] || 'Not specified'}
 
-**DO NOT recommend:**
-- Female perfumes to male users
-- Male cologne/perfumes to female users
-- Gender-inappropriate fragrances
+**MANDATORY GENDER MATCHING RULES:**
+
+### HOW TO IDENTIFY GENDER MARKETING:
+
+**MEN'S FRAGRANCES are typically:**
+- Marketed with masculine imagery (suits, sports, power, adventure)
+- Labeled as "Eau de Toilette" or "Cologne"  
+- Found in men's fragrance sections
+- Have bold, woody, spicy, aquatic profiles
+- Examples of MALE BRANDS: Dior Homme line, Bleu de Chanel line, Versace Dylan Blue/Eros, Paco Rabanne 1 Million line, Acqua di Gio line, Tom Ford Oud Wood
+
+**WOMEN'S FRAGRANCES are typically:**
+- Marketed with feminine imagery (flowers, romance, elegance)
+- Labeled as "Eau de Parfum" for women
+- Found in women's fragrance sections  
+- Have floral, fruity, sweet, gourmand profiles
+- Examples of FEMALE BRANDS: Viktor&Rolf Flowerbomb, Marc Jacobs Daisy, YSL Black Opium, Ariana Grande, Lancôme Idôle
+
+**UNISEX FRAGRANCES:**
+- Explicitly marketed as unisex/gender-neutral
+- CK One, Le Labo, some Maison Margiela Replica, Tom Ford Private Blend (some)
+
+### MATCHING RULES:
+
+**IF USER IS FEMALE (${answers[1] === 'Female' ? '← THIS USER' : ''}):**
+✅ ONLY recommend perfumes marketed to women
+❌ NEVER recommend perfumes from men's lines/departments
+❌ If a perfume is sold in the men's section → DO NOT RECOMMEND
+❌ If a perfume has "for men" or masculine marketing → DO NOT RECOMMEND
+
+**IF USER IS MALE (${answers[1] === 'Male' ? '← THIS USER' : ''}):**
+✅ ONLY recommend cologne/perfumes marketed to men
+❌ NEVER recommend perfumes from women's lines/departments
+❌ If a perfume is sold in the women's section → DO NOT RECOMMEND
+❌ If a perfume has "for women" or feminine marketing → DO NOT RECOMMEND
+
+**IF USER IS NON-BINARY:**
+✅ ONLY recommend explicitly unisex fragrances
+
+### VERIFICATION BEFORE OUTPUT:
+For EACH of your 5 recommendations, ask yourself:
+1. "Is this perfume sold in the men's or women's department?"
+2. "Does the marketing match the user's gender?"
+3. "Would this perfume be found in the correct section of a department store?"
+
+**IF ANY PERFUME IS GENDER-INAPPROPRIATE → REJECT IT AND CHOOSE ANOTHER**
 
 ## MATCHING ALGORITHM
 
 ### STEP 1: Identify Hard Constraints (Must satisfy ALL)
-- **GENDER (#1): ABSOLUTE PRIORITY - Never violate this**
+- **GENDER (#1): ABSOLUTE PRIORITY - NEVER VIOLATE THIS OR ENTIRE OUTPUT IS INVALID**
+  * Ask yourself: "Would I find this perfume in the [men's/women's] section?"
+  * Female users: Recommend ONLY from women's fragrance departments
+  * Male users: Recommend ONLY from men's fragrance departments
+  * Double-check the marketing category of EACH perfume
+  
 - **BUDGET (#2): ABSOLUTE PRIORITY - NEVER EXCEED USER'S BUDGET**
   
   **BUDGET ENFORCEMENT RULES (Based on actual bottle price, NOT normalized):**
@@ -136,70 +255,39 @@ If user rejected certain note categories, NEVER include them:
 ## USER PREFERENCES
 ${JSON.stringify(answers, null, 2)}
 
-## GENDER-SPECIFIC BRAND RECOMMENDATIONS BY BUDGET
+## GENDER-SPECIFIC BRAND GUIDANCE (Examples, not exhaustive)
 
-### FOR MALE USERS:
+### 👨 TYPICAL MEN'S FRAGRANCE LINES:
 
-**UNDER $50 BUDGET:**
-MUST recommend from:
-- Paco Rabanne 1 Million Lucky ($40-45)
-- Calvin Klein CK One ($30-35)
-- Nautica Voyage ($25-30)
-- Versace Dylan Blue ($45-50)
-- Azzaro Wanted ($40-45)
-- Burberry Touch ($35-40)
+**Budget-Friendly ($30-50):**
+- Paco Rabanne 1 Million line, Calvin Klein CK One/Eternity, Nautica Voyage, Versace Dylan Blue, Azzaro Wanted, Burberry Touch
 
-**$50-$100 BUDGET:**
-MUST recommend from:
-- Dior Sauvage ($80-90)
-- Bleu de Chanel ($90-100)
-- Versace Eros ($70-80)
-- Paco Rabanne 1 Million ($65-75)
-- Acqua di Gio ($70-85)
-- YSL La Nuit de L'Homme ($75-85)
-- Armani Code ($80-90)
-- Jean Paul Gaultier Le Male ($60-70)
+**Mid-Range ($50-100):**
+- Dior Sauvage/Homme line, Bleu de Chanel, Versace Eros, Paco Rabanne lines, Acqua di Gio, YSL La Nuit de L'Homme, Armani Code, Jean Paul Gaultier Le Male
 
-**$100-$200 BUDGET:**
-- Tom Ford Oud Wood ($150-180)
-- Tom Ford Noir Extreme ($140-160)
-- Maison Margiela Replica Jazz Club ($135-150)
-- Le Labo Santal 33 ($165-180)
+**Premium ($100+):**
+- Tom Ford Oud Wood/Noir line, Maison Margiela Replica (masculine), Le Labo (some)
 
-**NEVER recommend for males:** Flowerbomb, Daisy, Black Opium, women's fragrances
+**KEY:** These are found in MEN'S fragrance sections
 
-AVOID for males: Flowerbomb, anything marketed to women
+---
 
-### FOR FEMALE USERS:
+### 👩 TYPICAL WOMEN'S FRAGRANCE LINES:
 
-**UNDER $50 BUDGET:**
-MUST recommend from:
-- Ariana Grande Cloud ($35-40)
-- Britney Spears Fantasy ($25-30)
-- Elizabeth Arden Green Tea ($20-25)
-- Pacifica Persian Rose ($35-40)
-- Body Fantasies Signature ($15-20)
-- Juicy Couture Viva La Juicy ($40-45)
+**Budget-Friendly ($30-50):**
+- Ariana Grande Cloud/Thank U Next, Britney Spears Fantasy, Elizabeth Arden, Pacifica, Body Fantasies, Juicy Couture
 
-**$50-$100 BUDGET:**
-MUST recommend from:
-- Viktor&Rolf Flowerbomb ($90-100)
-- Marc Jacobs Daisy ($85-95)
-- YSL Black Opium ($85-95)
-- Prada Candy ($80-90)
-- Lancôme Idôle ($75-85)
-- Chloe Eau de Parfum ($95-100)
-- Dolce & Gabbana Light Blue ($70-80)
+**Mid-Range ($50-100):**
+- Viktor&Rolf Flowerbomb, Marc Jacobs Daisy, YSL Black Opium/Mon Paris, Prada Candy, Lancôme Idôle/La Vie Est Belle, Chloe, Dolce & Gabbana Light Blue
 
-**$100-$200 BUDGET:**
-- Chanel Coco Mademoiselle ($135-150)
-- Dior J'adore ($120-140)
-- Tom Ford Lost Cherry ($150-180)
-- Maison Margiela Replica By the Fireplace ($135-150)
+**Premium ($100+):**
+- Chanel Coco Mademoiselle/Chance, Dior J'adore/Miss Dior, Tom Ford Lost Cherry (women's line), Maison Margiela Replica (feminine scents)
 
-**NEVER recommend for females:** Sauvage, male colognes, Bleu de Chanel
+**KEY:** These are found in WOMEN'S fragrance sections
 
-AVOID for females: Sauvage, male cologne brands
+---
+
+**IMPORTANT:** These are EXAMPLES to help you understand gender marketing. You can recommend OTHER perfumes as long as they match the user's gender identity and are marketed to that gender.
 
 ## OUTPUT REQUIREMENTS
 
@@ -286,28 +374,43 @@ Write as a knowledgeable friend:
 - Connect to their life: "Perfect for confident professionals"
 - Be specific and gender-appropriate
 
-## FINAL CHECKLIST - BEFORE YOU OUTPUT, VERIFY:
-- [ ] **ALL 5 perfumes match user's gender (CRITICAL)**
-- [ ] **ALL 5 perfumes are within budget range (CRITICAL)**
-  * Under $50 → Check EVERY price is $30-$50
-  * $50-$100 → Check EVERY price is $50-$110 max
-  * $100-$200 → Check EVERY price is $100-$220 max
+## 🚨 FINAL VERIFICATION CHECKLIST - MANDATORY BEFORE OUTPUT 🚨
+
+**STEP 1: VERIFY GENDER (DO THIS FIRST!)**
+User's gender: ${answers[1] || 'CHECK ANSWERS'}
+
+Go through EACH of your 5 recommendations:
+1. ${answers[1] === 'Female' ? '❌ Is this Sauvage/Bleu de Chanel/Eros/male cologne? → REJECT!' : ''}
+   ${answers[1] === 'Male' ? '❌ Is this Flowerbomb/Daisy/Black Opium/female perfume? → REJECT!' : ''}
+2. Same check for recommendation #2
+3. Same check for recommendation #3
+4. Same check for recommendation #4
+5. Same check for recommendation #5
+
+**IF EVEN ONE PERFUME VIOLATES GENDER → START OVER WITH ALL 5 RECOMMENDATIONS**
+
+**STEP 2: VERIFY BUDGET**
+- [ ] Under $50 → Check EVERY price is $30-$50
+- [ ] $50-$100 → Check EVERY price is $50-$110 max
+- [ ] $100-$200 → Check EVERY price is $100-$220 max
 - [ ] **NO Tom Ford if budget under $100**
 - [ ] **NO Creed if budget under $200**
+
+**STEP 3: OTHER CHECKS**
 - [ ] None contain allergy ingredients
 - [ ] Match percentages follow the algorithm
 - [ ] Includes brand diversity
 - [ ] Recommendations ordered highest → lowest match
 
-**IF ANY PERFUME VIOLATES BUDGET, REJECT IT AND PICK ANOTHER ONE IN BUDGET.**
+**IF ANY CHECK FAILS, REJECT THAT PERFUME AND PICK ANOTHER ONE.**
 
 Output ONLY valid JSON array, no other text. Format:
 [{"brand":"...","name":"...","matchPercentage":95,"personalityNarrative":"...","whyPerfect":[...],"notesBreakdown":{...},"commercialDetails":{...},"socialProof":{...},"similarTo":"..."}]`;
 
-    // Use Claude 3 Haiku - proven to work with your API key
+    // Use Claude 3 Haiku - Only model available on your API key
     const message = await anthropic.messages.create({
       model: 'claude-3-haiku-20240307',
-      max_tokens: 4096,  // Haiku maximum
+      max_tokens: 4096,
       messages: [
         {
           role: 'user',
@@ -324,6 +427,37 @@ Output ONLY valid JSON array, no other text. Format:
       const jsonMatch = content.match(/\[[\s\S]*\]/);
       if (jsonMatch) {
         recommendations = JSON.parse(jsonMatch[0]);
+        
+        // 🚨 BACKEND GENDER FILTERING - Because Haiku doesn't follow instructions well
+        const userGender = answers[1];
+        
+        // Define known male fragrances
+        const maleBrands = ['Sauvage', 'Bleu de Chanel', 'Eros', 'Acqua di Gio', 'Oud Wood', '1 Million', 'Le Male', 'Armani Code', 'La Nuit'];
+        
+        // Define known female fragrances  
+        const femaleBrands = ['Flowerbomb', 'Daisy', 'Black Opium', 'Cloud', 'Idôle', 'Candy', 'J\'adore', 'Coco Mademoiselle', 'La Vie Est Belle'];
+        
+        recommendations = recommendations.filter(perfume => {
+          const perfumeName = `${perfume.brand} ${perfume.name}`;
+          const isMaleFragrance = maleBrands.some(brand => perfumeName.includes(brand));
+          const isFemaleFragrance = femaleBrands.some(brand => perfumeName.includes(brand));
+          
+          // Filter based on user gender
+          if (userGender === 'Female' && isMaleFragrance) {
+            console.log(`🚫 Filtered out MALE perfume for FEMALE user: ${perfumeName}`);
+            return false;
+          }
+          
+          if (userGender === 'Male' && isFemaleFragrance) {
+            console.log(`🚫 Filtered out FEMALE perfume for MALE user: ${perfumeName}`);
+            return false;
+          }
+          
+          return true;
+        });
+        
+        // Log filtering results
+        console.log(`✅ Gender filtering complete. ${recommendations.length} perfumes passed.`);
         
         // Handle missing data fields gracefully
         recommendations = recommendations.map(perfume => ({
@@ -498,6 +632,235 @@ async function searchShareASale(query) {
   ];
 }
 
+// ============================================
+// REFERRAL SYSTEM ENDPOINTS
+// ============================================
+
+// In-memory storage for referrals (upgrade to database in production)
+const referrals = new Map();
+const referralClicks = [];
+
+// In-memory storage for email captures
+const emailCaptures = [];
+
+// Email capture endpoint
+app.post('/api/capture-email', (req, res) => {
+  try {
+    const { email, timestamp, answers } = req.body;
+    
+    if (!email) {
+      return res.status(400).json({ error: 'Email required' });
+    }
+    
+    // Store email capture
+    emailCaptures.push({
+      email,
+      timestamp: timestamp || Date.now(),
+      hasAnswers: !!answers,
+      capturedAt: new Date().toISOString()
+    });
+    
+    console.log('📧 Email captured:', email);
+    console.log('📊 Total emails captured:', emailCaptures.length);
+    
+    res.json({ 
+      success: true,
+      message: 'Email captured successfully'
+    });
+  } catch (error) {
+    console.error('Error capturing email:', error);
+    res.status(500).json({ error: 'Failed to capture email' });
+  }
+});
+
+// Get email statistics (optional - for admin)
+app.get('/api/email-stats', (req, res) => {
+  res.json({
+    totalEmails: emailCaptures.length,
+    recentCaptures: emailCaptures.slice(-10).reverse()
+  });
+});
+
+// Generate referral code
+app.post('/api/referral/generate', (req, res) => {
+  try {
+    const { userId, referralCode, userName } = req.body;
+    
+    if (!referralCode) {
+      return res.status(400).json({ error: 'Referral code required' });
+    }
+    
+    // Check if code already exists
+    if (referrals.has(referralCode)) {
+      return res.json({ 
+        referralCode: referralCode,
+        message: 'Code already exists'
+      });
+    }
+    
+    // Create new referral
+    referrals.set(referralCode, {
+      userId: userId || 'anonymous',
+      referralCode: referralCode,
+      userName: userName || 'User',
+      clicks: 0,
+      signups: 0,
+      createdAt: Date.now(),
+      lastClickedAt: null
+    });
+    
+    console.log('✅ Referral code generated:', referralCode);
+    
+    res.json({
+      referralCode: referralCode,
+      message: 'Referral code created successfully'
+    });
+  } catch (error) {
+    console.error('Error generating referral code:', error);
+    res.status(500).json({ error: 'Failed to generate referral code' });
+  }
+});
+
+// Track referral click
+app.post('/api/referral/track-click', (req, res) => {
+  try {
+    const { referralCode, clickedAt, userAgent } = req.body;
+    
+    if (!referralCode) {
+      return res.status(400).json({ error: 'Referral code required' });
+    }
+    
+    // Get referral
+    const referral = referrals.get(referralCode);
+    
+    if (!referral) {
+      return res.status(404).json({ error: 'Referral code not found' });
+    }
+    
+    // Update click count
+    referral.clicks += 1;
+    referral.lastClickedAt = clickedAt || Date.now();
+    
+    // Store click details
+    referralClicks.push({
+      referralCode: referralCode,
+      clickedAt: clickedAt || Date.now(),
+      userAgent: userAgent || 'unknown',
+      ipAddress: req.ip || 'unknown',
+      converted: false
+    });
+    
+    console.log('📊 Referral click tracked:', referralCode, 'Total clicks:', referral.clicks);
+    
+    res.json({
+      success: true,
+      clicks: referral.clicks
+    });
+  } catch (error) {
+    console.error('Error tracking referral click:', error);
+    res.status(500).json({ error: 'Failed to track click' });
+  }
+});
+
+// Track referral signup
+app.post('/api/referral/track-signup', (req, res) => {
+  try {
+    const { referralCode, referredUserId, signupAt, conversionTime } = req.body;
+    
+    if (!referralCode) {
+      return res.status(400).json({ error: 'Referral code required' });
+    }
+    
+    // Get referral
+    const referral = referrals.get(referralCode);
+    
+    if (!referral) {
+      return res.status(404).json({ error: 'Referral code not found' });
+    }
+    
+    // Update signup count
+    referral.signups += 1;
+    
+    // Mark last click as converted
+    const lastClick = referralClicks.reverse().find(c => c.referralCode === referralCode && !c.converted);
+    if (lastClick) {
+      lastClick.converted = true;
+    }
+    referralClicks.reverse(); // Restore original order
+    
+    console.log('🎉 Referral signup tracked:', referralCode, 'Total signups:', referral.signups);
+    
+    res.json({
+      success: true,
+      signups: referral.signups,
+      conversionTime: conversionTime || 0
+    });
+  } catch (error) {
+    console.error('Error tracking referral signup:', error);
+    res.status(500).json({ error: 'Failed to track signup' });
+  }
+});
+
+// Get referral statistics
+app.get('/api/referral/stats/:code', (req, res) => {
+  try {
+    const referralCode = req.params.code;
+    
+    const referral = referrals.get(referralCode);
+    
+    if (!referral) {
+      // Return zeros for new users
+      return res.json({
+        referralCode: referralCode,
+        clicks: 0,
+        signups: 0,
+        message: 'No stats yet - start sharing!'
+      });
+    }
+    
+    res.json({
+      referralCode: referral.referralCode,
+      clicks: referral.clicks,
+      signups: referral.signups,
+      createdAt: referral.createdAt,
+      lastClickedAt: referral.lastClickedAt
+    });
+  } catch (error) {
+    console.error('Error getting referral stats:', error);
+    res.status(500).json({ error: 'Failed to get stats' });
+  }
+});
+
+// Get all referral analytics (admin endpoint)
+app.get('/api/referral/analytics', (req, res) => {
+  try {
+    const totalReferrals = referrals.size;
+    const totalClicks = Array.from(referrals.values()).reduce((sum, r) => sum + r.clicks, 0);
+    const totalSignups = Array.from(referrals.values()).reduce((sum, r) => sum + r.signups, 0);
+    const conversionRate = totalClicks > 0 ? ((totalSignups / totalClicks) * 100).toFixed(2) : 0;
+    
+    res.json({
+      totalReferrals: totalReferrals,
+      totalClicks: totalClicks,
+      totalSignups: totalSignups,
+      conversionRate: conversionRate + '%',
+      topReferrers: Array.from(referrals.values())
+        .sort((a, b) => (b.clicks + b.signups) - (a.clicks + a.signups))
+        .slice(0, 10)
+        .map(r => ({
+          referralCode: r.referralCode,
+          userName: r.userName,
+          clicks: r.clicks,
+          signups: r.signups,
+          total: r.clicks + r.signups
+        }))
+    });
+  } catch (error) {
+    console.error('Error getting analytics:', error);
+    res.status(500).json({ error: 'Failed to get analytics' });
+  }
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err);
@@ -516,11 +879,30 @@ app.use((req, res) => {
 const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`✅ NOTA Life Server running on port ${PORT}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`📧 Email Capture Mode: ${process.env.EMAIL_CAPTURE_MODE || 'always (default)'}`);
   console.log(`🔗 Local: http://localhost:${PORT}`);
   if (process.env.RAILWAY_PUBLIC_DOMAIN) {
     console.log(`🚀 Railway: https://${process.env.RAILWAY_PUBLIC_DOMAIN}`);
   }
 });
+
+// API endpoint to get email capture configuration
+app.get('/api/config/email-capture', (req, res) => {
+  const mode = process.env.EMAIL_CAPTURE_MODE || 'always';
+  res.json({ 
+    mode: mode.toLowerCase(),
+    description: getEmailCaptureDescription(mode)
+  });
+});
+
+function getEmailCaptureDescription(mode) {
+  const lowerMode = mode.toLowerCase();
+  if (lowerMode === 'always') return 'Email capture shows on every quiz completion';
+  if (lowerMode === 'never') return 'Email capture disabled';
+  const days = parseInt(mode);
+  if (!isNaN(days)) return `Email capture shows again after ${days} days`;
+  return 'Email capture shows on every quiz completion (default)';
+}
 
 // Graceful shutdown
 process.on('SIGTERM', () => {

@@ -162,7 +162,7 @@
 - Engaging
 - ⭐⭐⭐⭐ Immersive
 
-### Option 19: "Scent-Matched to Your Story"
+### Option 19: "Matched to Your Story by NOTA"
 **Mix of:** "Scent. Matched." + "Where Your Story Meets Scent"
 **Why it works:**
 - Platform name integration
@@ -234,7 +234,7 @@
 ╔══════════════════════════════════════════════╗
 ║  [X]                                         ║
 ║                                              ║
-║           ScentMatch                         ║
+║           NOTA                               ║
 ║                                              ║
 ║      The Scent of Your Story                ║
 ║                                              ║
@@ -258,7 +258,7 @@
 ╔══════════════════════════════════════════════╗
 ║  [X]                                         ║
 ║                                              ║
-║           ScentMatch                         ║
+║           NOTA                               ║
 ║                                              ║
 ║   Where Your Story Meets Your Scent          ║
 ║                                              ║
@@ -282,7 +282,7 @@
 ╔══════════════════════════════════════════════╗
 ║  [X]                                         ║
 ║                                              ║
-║           ScentMatch                         ║
+║           NOTA                               ║
 ║                                              ║
 ║    Where Chemistry Meets Your Story          ║
 ║                                              ║
@@ -305,7 +305,7 @@
 ## 💡 Additional Creative Combinations
 
 ### Short & Punchy Mixes:
-- "Your Story. Scent-Matched."
+- "Your Story. Matched by NOTA."
 - "Scent Meets Story"
 - "Story. Scent. You."
 - "Where You Meet Your Scent"
@@ -349,7 +349,7 @@ text-transform: none;
 
 **Full implementation:**
 ```
-ScentMatch
+NOTA
 The Scent of Your Story
 Discover your perfect fragrance in 30 seconds
 ```

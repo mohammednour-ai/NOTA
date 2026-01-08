@@ -199,7 +199,7 @@
 
 **Option A (Recommended):**
 ```
-[Logo: ScentMatch]
+[Logo: NOTA]
 
 Where Your Story Meets Scent
 
@@ -212,7 +212,7 @@ personalized recommendations
 
 **Option B (Alternative):**
 ```
-[Logo: ScentMatch]
+[Logo: NOTA]
 
 Your Signature. Your Scent. Your Story.
 
@@ -225,7 +225,7 @@ that match your unique personality
 
 **Option C (Minimal):**
 ```
-[Logo: ScentMatch]
+[Logo: NOTA]
 
 The Scent of You Awaits
 
@@ -285,7 +285,7 @@ If you want both a slogan AND a descriptive subtitle:
 **Use this complete text structure:**
 
 ```
-ScentMatch
+NOTA
 
 Where Your Story Meets Scent
 

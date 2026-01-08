@@ -1,7 +1,7 @@
 # E2E Visual Testing Suite - User Guide
 
 ## Overview
-Complete visual and functional testing suite with iframe support for the ScentMatch platform.
+Complete visual and functional testing suite with iframe support for the NOTA platform.
 
 ---
 
@@ -16,7 +16,7 @@ open e2e-test-visual.html
 ```
 
 ### 2. Ensure Application is Running
-Make sure ScentMatch is running at `http://localhost:3001`
+Make sure NOTA is running at `http://localhost:3001`
 
 ```bash
 npm start

@@ -3,7 +3,7 @@
 ## 🎬 Changes Implemented
 
 ### ✅ What Was Removed:
-- ❌ Logo text (ScentMatch)
+- ❌ Logo text (NOTA)
 - ❌ Title (Discover Your Signature Scent)
 - ❌ Slogan (The Scent of Your Story)
 - ❌ Subtitle text

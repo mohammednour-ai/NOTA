@@ -95,7 +95,7 @@ I will automatically:
 
 ### Splash Screen Content:
 
-**Logo/Brand:** ScentMatch
+**Logo/Brand:** NOTA
 
 **Main Headline:**
 "✨ Discover Your Signature Scent"

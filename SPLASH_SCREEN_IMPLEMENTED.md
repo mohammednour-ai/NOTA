@@ -21,7 +21,7 @@
 
 ### 3. **Content Structure**
 ```
-ScentMatch (Logo)
+NOTA (Logo)
 ✨ Discover Your Signature Scent (Title)
 The Scent of Your Story (Slogan)
 AI-powered perfume matching... (Subtitle)

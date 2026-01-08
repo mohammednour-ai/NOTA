@@ -1,4 +1,4 @@
-# 🎉 SCENTMATCH - PROJECT COMPLETE!
+# 🎉 NOTA - PROJECT COMPLETE!
 
 ## 📦 What Has Been Built
 
@@ -147,7 +147,7 @@ Then open: http://localhost:3000
 ### Change Branding
 Edit `public/index.html`:
 ```html
-<h1>🌸 ScentMatch</h1>  <!-- Your brand name -->
+<h1>🌸 NOTA</h1>  <!-- Your brand name -->
 ```
 
 ### Change Colors

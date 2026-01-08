@@ -18,7 +18,7 @@
 - Direct CTA
 
 ### 4. "Match My Scent"
-- Platform-aligned (ScentMatch)
+- Platform-aligned (NOTA)
 - Clear benefit
 - Modern
 

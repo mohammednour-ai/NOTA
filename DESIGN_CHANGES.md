@@ -1,4 +1,4 @@
-# Design Comparison: Function of Beauty vs ScentMatch
+# Design Comparison: Function of Beauty vs NOTA
 
 ## Changes Made to Match Function of Beauty Design
 
@@ -82,7 +82,7 @@ Based on analysis of [Function of Beauty's quiz](https://functionofbeauty.com/pa
 - ✓🤖🔍🔗 Loading step emojis
 
 ### After:
-✅ Text-only logo: "ScentMatch"
+✅ Text-only logo: "NOTA"
 ✅ SVG icons for all features (professional)
 ✅ SVG icons for loading steps
 ✅ Proper Feather icons style (stroke-based)

@@ -1,5 +1,5 @@
 # ===========================================
-# SCENTMATCH - ENVIRONMENT CONFIGURATION
+# NOTA - ENVIRONMENT CONFIGURATION
 # ===========================================
 
 # ===========================================
@@ -8,6 +8,31 @@
 # Get your API key from: https://console.anthropic.com
 # This is REQUIRED for the AI recommendations to work
 ANTHROPIC_API_KEY=sk-ant-your-api-key-here
+
+# ===========================================
+# LEONARDO AI (OPTIONAL - For Image Generation)
+# ===========================================
+# Get your API key from: https://app.leonardo.ai/settings
+# Only needed if you want to generate quiz card images
+LEONARDO_API_KEY=your_leonardo_api_key_here
+
+# ===========================================
+# OPENAI API (OPTIONAL - For DALL-E Image Generation)
+# ===========================================
+# Get your API key from: https://platform.openai.com/api-keys
+# Alternative to Leonardo AI - cheaper and faster for images
+OPENAI_API_KEY=sk-your-api-key-here
+
+# ===========================================
+# EMAIL CAPTURE BEHAVIOR (OPTIONAL)
+# ===========================================
+# Control when to show the email capture modal
+# Options:
+#   - always = Show email capture on every quiz completion
+#   - never = Never show email capture modal
+#   - [number] = Show again after X days (e.g., 30 for 30 days)
+# Default: always
+EMAIL_CAPTURE_MODE=always
 
 # ===========================================
 # AMAZON ASSOCIATES (OPTIONAL)

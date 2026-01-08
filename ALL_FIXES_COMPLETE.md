@@ -154,7 +154,7 @@ Steps:
 
 ## 🚀 Ready to Launch!
 
-Your **ScentMatch** platform is now:
+Your **NOTA** platform is now:
 
 ### ✅ Fully Functional
 - All 30 questions work

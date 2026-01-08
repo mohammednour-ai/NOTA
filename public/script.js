@@ -5,6 +5,35 @@ let answers = {};
 let userGender = null; // Track user's gender choice
 let themeProgress = 0; // 0 = neutral, 1 = fully gendered
 let userCountry = 'US'; // Default to US, will be detected
+let emailCaptureConfig = { mode: 'always' }; // Default: always
+
+// Sarah's typing animation
+function typewriterEffect() {
+    const text = "Trained on 10,000+ fragrances and powered by Claude AI, I analyze your unique preferences to deliver personalized matches that feel like they were chosen by a luxury boutique expert—instantly.";
+    const element = document.getElementById('sarahTyping');
+    const cursor = document.querySelector('.typing-cursor');
+    
+    if (!element) return;
+    
+    let index = 0;
+    element.textContent = '';
+    
+    function type() {
+        if (index < text.length) {
+            element.textContent += text.charAt(index);
+            index++;
+            setTimeout(type, 30); // Speed of typing (30ms per character)
+        } else {
+            // Remove cursor after typing is complete
+            setTimeout(() => {
+                if (cursor) cursor.style.display = 'none';
+            }, 500);
+        }
+    }
+    
+    // Start typing after a brief delay
+    setTimeout(type, 500);
+}
 
 // Detect user's country
 async function detectUserCountry() {
@@ -186,6 +215,11 @@ document.addEventListener('keydown', (e) => {
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', async () => {
+    console.log('🚀 Initializing NOTA app...');
+    
+    // Initialize Sarah's typing animation
+    typewriterEffect();
+    
     // Initialize splash screen
     initSplashScreen();
     
@@ -195,14 +229,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize 3D Card Carousel
     init3DCarousel();
     
+    // Initialize share functionality
+    initializeShareFunctionality();
+    initializeShareAppSystem();
+    
+    // Initialize email capture form
+    const emailForm = document.getElementById('emailCaptureForm');
+    if (emailForm) {
+        emailForm.addEventListener('submit', handleEmailSubmit);
+        console.log('✅ Email capture form listener attached');
+    } else {
+        console.error('❌ Email capture form not found!');
+    }
+    
+    // Load quiz questions
     try {
         const response = await fetch('/api/questions');
         questions = await response.json();
-        document.getElementById('totalQuestions').textContent = questions.length;
+        const totalQuestionsEl = document.getElementById('totalQuestions');
+        if (totalQuestionsEl) {
+            totalQuestionsEl.textContent = questions.length;
+        }
+        console.log('✅ Loaded', questions.length, 'questions');
     } catch (error) {
-        console.error('Error loading questions:', error);
+        console.error('❌ Error loading questions:', error);
         alert('Failed to load quiz questions. Please refresh the page.');
     }
+    
+    console.log('✅ NOTA app initialized');
 });
 
 // 3D Floating Cards Carousel
@@ -373,6 +427,11 @@ function loadQuestion() {
     const question = questions[currentQuestionIndex];
     const quizContent = document.getElementById('quizContent');
     
+    // Show mid-quiz share banner at question 15
+    if (currentQuestionIndex === 14) { // Question 15 (0-indexed)
+        showMidQuizShareBanner();
+    }
+    
     // Update progress
     const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
     document.getElementById('progressBar').style.width = progress + '%';
@@ -421,8 +480,8 @@ function loadQuestion() {
         });
         html += '</div>';
     } else if (question.type === 'multiple') {
-        html += '<div class="options-container">';
-        html += '<p class="hint-text">Select all that apply</p>';
+        html += '<div class="options-container multiple-choice">';
+        html += '<div class="multiple-choice-hint"><i class="fas fa-check-double"></i> <strong>Select all that apply</strong></div>';
         question.options.forEach((option, index) => {
             const isSelected = answers[question.id] && answers[question.id].includes(option);
             const optionId = `option-${question.id}-${index}`;
@@ -679,14 +738,240 @@ function saveTextInput() {
 }
 
 async function submitQuiz() {
+    console.log('🎯 submitQuiz() called');
+    console.log('📋 Current answers:', answers);
+    
+    // Check if we should show email capture
+    try {
+        const shouldShowEmail = await shouldShowEmailCapture();
+        console.log('📧 Should show email capture:', shouldShowEmail);
+        
+        if (shouldShowEmail) {
+            console.log('📧 Showing email capture modal');
+            showEmailCaptureModal();
+            return; // Wait for user to submit email or skip
+        }
+    } catch (error) {
+        console.error('⚠️ Email capture check failed, proceeding anyway:', error);
+    }
+    
+    console.log('✅ Skipping email capture - proceeding with quiz submission');
+    // Continue with quiz submission
+    proceedWithQuizSubmission();
+}
+
+// Check if email capture should be shown based on configuration
+async function shouldShowEmailCapture() {
+    // Fetch configuration from backend
+    try {
+        const response = await fetch('/api/config/email-capture');
+        const config = await response.json();
+        emailCaptureConfig = config;
+        console.log('📧 Email capture config:', config);
+    } catch (error) {
+        console.log('⚠️ Could not fetch email config, using default');
+    }
+    
+    const mode = emailCaptureConfig.mode.toLowerCase();
+    
+    // Never show email capture
+    if (mode === 'never') {
+        console.log('📧 Mode: NEVER - Email capture disabled');
+        return false;
+    }
+    
+    // Always show email capture
+    if (mode === 'always') {
+        console.log('📧 Mode: ALWAYS - Showing email capture');
+        return true;
+    }
+    
+    // Days-based logic
+    const days = parseInt(mode);
+    if (isNaN(days)) {
+        console.log('📧 Invalid mode, defaulting to always');
+        return true; // Default to always showing email capture
+    }
+    
+    console.log(`📧 Mode: ${days} days - Checking last capture date`);
+    return checkEmailCaptureByDays(days);
+}
+
+// Check if email should be captured based on days
+function checkEmailCaptureByDays(days) {
+    const userEmail = localStorage.getItem('userEmail');
+    const lastCaptureDate = localStorage.getItem('emailCaptureDate');
+    
+    // No email captured yet
+    if (!userEmail) {
+        console.log('📧 No email found - should show capture');
+        return true;
+    }
+    
+    // No date stored (old data) - treat as expired
+    if (!lastCaptureDate) {
+        console.log('📧 No capture date found - should show capture');
+        return true;
+    }
+    
+    // Check if enough days have passed
+    const daysSinceCapture = (Date.now() - parseInt(lastCaptureDate)) / (1000 * 60 * 60 * 24);
+    console.log(`📧 Days since last capture: ${daysSinceCapture.toFixed(1)}`);
+    
+    if (daysSinceCapture >= days) {
+        console.log(`📧 ${days} days passed - should show capture`);
+        return true;
+    }
+    
+    console.log(`📧 Only ${daysSinceCapture.toFixed(1)} days passed - skip capture`);
+    return false;
+}
+
+// Show email capture modal
+function showEmailCaptureModal() {
+    console.log('📧 showEmailCaptureModal() called');
+    const modal = document.getElementById('emailCaptureModal');
+    console.log('📧 Modal element:', modal);
+    
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+        console.log('✅ Email modal should now be visible');
+        
+        // Show debug button after 5 seconds
+        setTimeout(() => {
+            if (modal.classList.contains('active')) {
+                const debugBtn = document.getElementById('debugProceedBtn');
+                if (debugBtn) {
+                    debugBtn.classList.add('visible');
+                    console.log('🚨 Debug button shown - modal still open after 5 seconds');
+                }
+            }
+        }, 5000);
+        
+        // Add a safety timeout - if modal is still showing after 30 seconds, auto-proceed
+        setTimeout(() => {
+            if (modal.classList.contains('active')) {
+                console.log('⚠️ Modal timeout - auto-proceeding to results');
+                skipEmailCapture();
+            }
+        }, 30000);
+    } else {
+        console.error('❌ Email capture modal not found in DOM!');
+        // Proceed without email if modal not found
+        console.log('⚠️ Proceeding without email capture');
+        proceedWithQuizSubmission();
+    }
+}
+
+// Hide email capture modal
+function hideEmailCaptureModal() {
+    const modal = document.getElementById('emailCaptureModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = ''; // Restore scrolling
+    }
+    
+    // Hide debug button
+    const debugBtn = document.getElementById('debugProceedBtn');
+    if (debugBtn) {
+        debugBtn.classList.remove('visible');
+    }
+}
+
+// Skip email capture and proceed to results
+function skipEmailCapture() {
+    console.log('📧 User skipped email capture');
+    hideEmailCaptureModal();
+    proceedWithQuizSubmission();
+}
+
+// Handle email form submission
+function handleEmailSubmit(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    console.log('📧 Email form submitted');
+    
+    const emailInput = document.getElementById('userEmail');
+    if (!emailInput) {
+        console.error('❌ Email input not found!');
+        skipEmailCapture();
+        return;
+    }
+    
+    const email = emailInput.value.trim();
+    console.log('📧 Email value:', email);
+    
+    // Allow empty email (skip)
+    if (!email) {
+        console.log('📧 Empty email - treating as skip');
+        skipEmailCapture();
+        return;
+    }
+    
+    // Validate email format
+    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
+    if (!emailRegex.test(email)) {
+        alert('Please enter a valid email address');
+        return;
+    }
+    
+    console.log('✅ Email validated:', email);
+    
+    // Store email locally with timestamp
+    localStorage.setItem('userEmail', email);
+    localStorage.setItem('emailCaptureDate', Date.now().toString());
+    
+    // Send email to backend (optional - for your records)
+    fetch('/api/capture-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            email,
+            timestamp: Date.now(),
+            answers: answers
+        })
+    }).then(() => {
+        console.log('✅ Email sent to backend');
+    }).catch(error => {
+        console.log('⚠️ Email capture failed:', error);
+    });
+    
+    // Hide modal and proceed immediately (don't wait for backend)
+    console.log('🚀 Proceeding to results...');
+    hideEmailCaptureModal();
+    proceedWithQuizSubmission();
+}
+
+// Proceed with quiz submission (original logic)
+async function proceedWithQuizSubmission() {
+    console.log('🚀 proceedWithQuizSubmission() called');
+    
     // Show loading screen
-    document.getElementById('quiz').classList.remove('active');
-    document.getElementById('loading').classList.add('active');
+    const quizSection = document.getElementById('quiz');
+    const loadingSection = document.getElementById('loading');
+    
+    console.log('Quiz section:', quizSection);
+    console.log('Loading section:', loadingSection);
+    
+    if (quizSection) {
+        quizSection.classList.remove('active');
+        console.log('✅ Quiz section hidden');
+    }
+    
+    if (loadingSection) {
+        loadingSection.classList.add('active');
+        console.log('✅ Loading section shown');
+    }
     
     // Animate loading steps
     animateLoadingSteps();
     
     try {
+        console.log('📤 Sending answers to API:', answers);
+        
         // Get recommendations from Claude
         const analyzeResponse = await fetch('/api/analyze', {
             method: 'POST',
@@ -696,17 +981,24 @@ async function submitQuiz() {
             body: JSON.stringify({ answers })
         });
         
+        console.log('📥 Analyze response status:', analyzeResponse.status);
+        
         if (!analyzeResponse.ok) {
+            const errorText = await analyzeResponse.text();
+            console.error('API Error:', errorText);
             throw new Error('Failed to analyze preferences');
         }
         
         const analyzeData = await analyzeResponse.json();
+        console.log('✅ Analyze data received:', analyzeData);
         
         // Validate recommendations
         if (!analyzeData.recommendations || !Array.isArray(analyzeData.recommendations)) {
             console.error('Invalid recommendations format:', analyzeData);
             throw new Error('Invalid response format from AI');
         }
+        
+        console.log('📤 Searching for affiliate links...');
         
         // Search for affiliate links with user's country
         const affiliateResponse = await fetch('/api/search-affiliates', {
@@ -720,7 +1012,10 @@ async function submitQuiz() {
             })
         });
         
+        console.log('📥 Affiliate response status:', affiliateResponse.status);
+        
         const affiliateData = await affiliateResponse.json();
+        console.log('✅ Affiliate data received:', affiliateData);
         
         // Use recommendations even if affiliate search fails
         const results = affiliateData.results || analyzeData.recommendations.map(p => ({
@@ -728,20 +1023,32 @@ async function submitQuiz() {
             affiliateLinks: []
         }));
         
+        console.log('🎯 Final results:', results);
+        
         // Display results
         displayResults(results);
+        console.log('✅ displayResults() called');
+        
     } catch (error) {
-        console.error('Error submitting quiz:', error);
+        console.error('❌ Error submitting quiz:', error);
         showErrorMessage('Something went wrong. Please try again. ' + error.message);
-        document.getElementById('loading').classList.remove('active');
-        document.getElementById('quiz').classList.add('active');
+        
+        const loadingSection = document.getElementById('loading');
+        const quizSection = document.getElementById('quiz');
+        
+        if (loadingSection) {
+            loadingSection.classList.remove('active');
+        }
+        if (quizSection) {
+            quizSection.classList.add('active');
+        }
     }
 }
 
 function animateLoadingSteps() {
     const steps = document.querySelectorAll('.step');
     let currentStep = 0;
-    
+
     const interval = setInterval(() => {
         if (currentStep < steps.length) {
             steps[currentStep].classList.add('active');
@@ -750,6 +1057,20 @@ function animateLoadingSteps() {
             clearInterval(interval);
         }
     }, 1500);
+    
+    // Countdown timer
+    const timerElement = document.getElementById('loadingTimer');
+    if (timerElement) {
+        let timeLeft = 10;
+        const timerInterval = setInterval(() => {
+            timeLeft--;
+            if (timeLeft > 0 && timerElement) {
+                timerElement.textContent = timeLeft;
+            } else {
+                clearInterval(timerInterval);
+            }
+        }, 1000);
+    }
 }
 
 function displayResults(perfumes) {
@@ -757,6 +1078,22 @@ function displayResults(perfumes) {
     document.getElementById('results').classList.add('active');
     
     const resultsContent = document.getElementById('resultsContent');
+    
+    // Match personality profile based on answers
+    let matchedProfile = null;
+    if (typeof matchPersonalityProfile === 'function') {
+        matchedProfile = matchPersonalityProfile(answers);
+        console.log('Matched Personality Profile:', matchedProfile);
+    }
+    
+    // Store results for sharing (include profile)
+    storeUserResultsForSharing(perfumes, matchedProfile);
+    
+    // Track quiz completion for referral system
+    trackQuizCompletion();
+    
+    // Update share app progress
+    setTimeout(() => updateShareAppProgress(), 1000);
     
     // Validate perfumes array
     if (!perfumes || !Array.isArray(perfumes) || perfumes.length === 0) {
@@ -771,12 +1108,43 @@ function displayResults(perfumes) {
         return;
     }
     
-    let html = `
+    let html = '';
+    
+    // Display personality profile if matched
+    if (matchedProfile) {
+        html += `
+            <div class="personality-profile-card">
+                <div class="profile-header">
+                    <div class="profile-icon">
+                        <i class="fas ${matchedProfile.icon || 'fa-star'}"></i>
+                    </div>
+                    <div class="profile-header-text">
+                        <h3 class="profile-name">${matchedProfile.name}</h3>
+                        <p class="profile-description">${matchedProfile.description}</p>
+                    </div>
+                </div>
+                <div class="profile-scent-section">
+                    <div class="scent-label">
+                        <i class="fas fa-flask"></i>
+                        <strong>Your Scent Families:</strong>
+                    </div>
+                    <div class="scent-tags">
+                        ${matchedProfile.scentFamilies.map(family => 
+                            `<span class="scent-tag"><i class="fas fa-tag"></i>${family}</span>`
+                        ).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    html += `
         <div class="pricing-explainer">
-            <div class="explainer-icon">📊</div>
+            <div class="explainer-icon">
+                <i class="fas fa-balance-scale"></i>
+            </div>
             <div class="explainer-text">
-                <strong>Fair Price Comparison:</strong> All prices are shown at 50ml equivalent for easy comparison. 
-                <span class="explainer-detail">Actual bottle sizes vary (30ml-100ml), but normalized pricing helps you compare value accurately.</span>
+                <strong>Fair Price Comparison:</strong> All prices normalized to 50ml for easy comparison.
             </div>
         </div>
         <div class="perfume-list">
@@ -836,18 +1204,21 @@ function displayResults(perfumes) {
                             <div class="notes-layers">
                                 ${perfume.notesBreakdown.top ? `
                                     <div class="note-layer">
+                                        <i class="fas fa-leaf note-icon" title="Top Notes"></i>
                                         <span class="note-type">Top:</span> 
                                         ${perfume.notesBreakdown.top.join(', ')}
                                     </div>
                                 ` : ''}
                                 ${perfume.notesBreakdown.heart ? `
                                     <div class="note-layer">
+                                        <i class="fas fa-heart note-icon" title="Heart Notes"></i>
                                         <span class="note-type">Heart:</span> 
                                         ${perfume.notesBreakdown.heart.join(', ')}
                                     </div>
                                 ` : ''}
                                 ${perfume.notesBreakdown.base ? `
                                     <div class="note-layer">
+                                        <i class="fas fa-mountain note-icon" title="Base Notes"></i>
                                         <span class="note-type">Base:</span> 
                                         ${perfume.notesBreakdown.base.join(', ')}
                                     </div>
@@ -856,6 +1227,7 @@ function displayResults(perfumes) {
                         </div>
                     ` : perfume.notes && perfume.notes.length > 0 ? `
                         <div class="perfume-notes">
+                            <i class="fas fa-flask note-icon"></i>
                             <strong>Key Notes:</strong> ${perfume.notes.join(', ')}
                         </div>
                     ` : ''}
@@ -924,6 +1296,26 @@ function displayResults(perfumes) {
     });
     
     html += '</div>';
+    
+    // Add prominent Share Results CTA
+    html += `
+        <div class="share-results-cta">
+            <div class="share-cta-content">
+                <div class="share-cta-icon">
+                    <i class="fas fa-share-nodes"></i>
+                </div>
+                <div class="share-cta-text">
+                    <h3>Love Your Matches?</h3>
+                    <p>Share your personalized perfume recommendations with friends!</p>
+                </div>
+                <button class="share-cta-button" onclick="openReferralOverlay()">
+                    <span>Share My Results</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    `;
+    
     resultsContent.innerHTML = html;
     
     // Scroll to top
@@ -1005,6 +1397,26 @@ function showSection(sectionId) {
         targetSection.classList.add('active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+    
+    // Update share button visibility
+    updateShareButtonVisibility();
+}
+
+// Update share button visibility based on section
+function updateShareButtonVisibility() {
+    const headerShare = document.getElementById('headerShareIcon');
+    if (!headerShare) return;
+    
+    const quizSection = document.getElementById('quiz');
+    const resultsSection = document.getElementById('results');
+    
+    // Show in quiz and results, hide on hero/other pages
+    if ((quizSection && quizSection.classList.contains('active')) || 
+        (resultsSection && resultsSection.classList.contains('active'))) {
+        headerShare.style.display = 'block';
+    } else {
+        headerShare.style.display = 'none';
+    }
 }
 
 // Handle contact form submission
@@ -1046,3 +1458,444 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+// ============================================
+// SOCIAL SHARING INTEGRATION
+// ============================================
+
+// Global share manager and content generator
+let shareManager = null;
+let contentGenerator = null;
+let currentSharePackage = null;
+let currentUserResults = null;
+
+// Initialize share functionality
+function initializeShareFunctionality() {
+    shareManager = new SocialShareManager({
+        baseUrl: window.location.origin,
+        analytics: trackShareAnalytics
+    });
+    
+    contentGenerator = new ShareableContentGenerator({
+        baseUrl: window.location.origin,
+        brandName: 'NOTA',
+        logoUrl: 'images/logo/gpt-image-1.5_Modern_luxury_perfume_app_logo_design_for_NOTA_minimalist_perfume_bottle_silhoue-0.jpg'
+    });
+    
+    // Show native share button if supported
+    if (navigator.share) {
+        const nativeBtn = document.getElementById('nativeShareBtn');
+        if (nativeBtn) {
+            nativeBtn.style.display = 'flex';
+        }
+    }
+}
+
+// Open share modal
+async function openShareModal() {
+    if (!shareManager || !contentGenerator) {
+        initializeShareFunctionality();
+    }
+    
+    if (!currentUserResults) {
+        console.error('No results to share');
+        return;
+    }
+    
+    try {
+        // Generate share package
+        currentSharePackage = await contentGenerator.generateSharePackage(
+            currentUserResults,
+            'direct'
+        );
+        
+        // Show modal
+        const modal = document.getElementById('shareModal');
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        // Display preview image
+        const previewImg = document.getElementById('sharePreviewImage');
+        if (previewImg && currentSharePackage.imageDataUrl) {
+            previewImg.src = currentSharePackage.imageDataUrl;
+        }
+        
+        // Set share text
+        const shareTextInput = document.getElementById('shareText');
+        if (shareTextInput) {
+            shareTextInput.value = `${currentSharePackage.shareText}\n\n${currentSharePackage.shareUrl}`;
+        }
+        
+        // Update meta tags
+        updateMetaTags(currentSharePackage);
+        
+    } catch (error) {
+        console.error('Error opening share modal:', error);
+        alert('Failed to generate share content. Please try again.');
+    }
+}
+
+// Close share modal
+function closeShareModal() {
+    const modal = document.getElementById('shareModal');
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Share to specific platform
+async function shareToSocial(platform) {
+    if (!shareManager || !currentSharePackage) {
+        console.error('Share manager or package not initialized');
+        return;
+    }
+    
+    try {
+        let success = false;
+        
+        switch (platform) {
+            case 'facebook':
+                success = await shareManager.shareToFacebook({
+                    url: currentSharePackage.shareUrl,
+                    title: currentSharePackage.title,
+                    description: currentSharePackage.description,
+                    imageUrl: currentSharePackage.imageDataUrl
+                });
+                break;
+                
+            case 'twitter':
+                // Shorten URL for Twitter character limit
+                const shortUrl = await contentGenerator.shortenURL(currentSharePackage.shareUrl);
+                success = await shareManager.shareToTwitter({
+                    text: currentSharePackage.shareText,
+                    url: shortUrl,
+                    hashtags: currentSharePackage.hashtags.slice(0, 3) // Twitter limits hashtags
+                });
+                break;
+                
+            case 'whatsapp':
+                success = await shareManager.shareToWhatsApp({
+                    text: currentSharePackage.shareText,
+                    url: currentSharePackage.shareUrl
+                });
+                break;
+                
+            case 'pinterest':
+                success = await shareManager.shareToPinterest({
+                    imageUrl: currentSharePackage.imageDataUrl,
+                    description: currentSharePackage.description,
+                    url: currentSharePackage.shareUrl
+                });
+                break;
+                
+            case 'instagram':
+                success = await shareManager.shareToInstagram({
+                    imageUrl: currentSharePackage.imageDataUrl,
+                    caption: `${currentSharePackage.shareText}\n\n${currentSharePackage.hashtags.map(h => '#' + h).join(' ')}`
+                });
+                break;
+                
+            case 'email':
+                success = await shareManager.shareViaEmail({
+                    subject: currentSharePackage.title,
+                    body: `${currentSharePackage.description}\n\n${currentSharePackage.shareUrl}\n\nDiscover your perfect perfume at NOTA!`
+                });
+                break;
+                
+            case 'copy':
+                success = await shareManager.copyToClipboard({
+                    url: currentSharePackage.shareUrl
+                });
+                break;
+                
+            case 'native':
+                success = await shareManager.shareNative({
+                    title: currentSharePackage.title,
+                    text: currentSharePackage.shareText,
+                    url: currentSharePackage.shareUrl
+                });
+                break;
+                
+            default:
+                console.error('Unknown platform:', platform);
+        }
+        
+        if (success) {
+            trackShareAnalytics({
+                platform: platform,
+                shareType: 'quiz_results',
+                timestamp: Date.now()
+            });
+        }
+        
+    } catch (error) {
+        console.error('Share error:', error);
+    }
+}
+
+// Copy share text
+async function copyShareText() {
+    const shareTextInput = document.getElementById('shareText');
+    if (shareTextInput) {
+        await shareManager.copyToClipboard({ text: shareTextInput.value });
+    }
+}
+
+// Update meta tags dynamically for social sharing
+function updateMetaTags(sharePackage) {
+    // Update Open Graph tags
+    updateMetaTag('og-title', 'property', 'og:title', sharePackage.title);
+    updateMetaTag('og-description', 'property', 'og:description', sharePackage.description);
+    updateMetaTag('og-image', 'property', 'og:image', sharePackage.imageDataUrl);
+    updateMetaTag('og-url', 'property', 'og:url', sharePackage.shareUrl);
+    
+    // Update Twitter Card tags
+    updateMetaTag('twitter-title', 'name', 'twitter:title', sharePackage.title);
+    updateMetaTag('twitter-description', 'name', 'twitter:description', sharePackage.description);
+    updateMetaTag('twitter-image', 'name', 'twitter:image', sharePackage.imageDataUrl);
+}
+
+function updateMetaTag(id, attributeName, attributeValue, content) {
+    let tag = document.getElementById(id);
+    if (!tag) {
+        tag = document.querySelector(`meta[${attributeName}="${attributeValue}"]`);
+    }
+    if (tag) {
+        tag.setAttribute('content', content);
+    }
+}
+
+// Analytics tracking for share events
+function trackShareAnalytics(eventData) {
+    console.log('📊 Share Analytics:', eventData);
+    
+    // Google Analytics 4
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'share', {
+            method: eventData.platform,
+            content_type: 'perfume_quiz_results',
+            item_id: currentUserResults?.topMatch?.name || 'unknown'
+        });
+    }
+    
+    // Meta Pixel
+    if (typeof fbq !== 'undefined') {
+        fbq('track', 'Share', {
+            platform: eventData.platform,
+            content_name: 'Quiz Results'
+        });
+    }
+    
+    // Custom analytics (can be replaced with your analytics service)
+    if (window.dataLayer) {
+        window.dataLayer.push({
+            event: 'social_share',
+            platform: eventData.platform,
+            share_type: eventData.shareType,
+            timestamp: eventData.timestamp
+        });
+    }
+}
+
+// Store user results for sharing (called from displayResults)
+function storeUserResultsForSharing(perfumes, matchedProfile = null) {
+    if (!perfumes || perfumes.length === 0) return;
+    
+    const topMatch = perfumes[0];
+    const matchPercentage = topMatch.matchPercentage || 98;
+    
+    // Use matched personality profile if available
+    let personality = matchedProfile ? matchedProfile.name : (topMatch.personalityType || 'Fragrance Enthusiast');
+    let personalityDescription = matchedProfile ? matchedProfile.description : '';
+    
+    currentUserResults = {
+        topMatch: {
+            brand: topMatch.brand,
+            name: topMatch.name
+        },
+        matchPercentage: matchPercentage,
+        personality: personality,
+        personalityDescription: personalityDescription,
+        personalityProfile: matchedProfile,
+        userName: answers[30] || '', // Question 30 is typically name
+        gender: answers[1] // Question 1 is gender
+    };
+    
+    console.log('✅ Results stored for sharing:', currentUserResults);
+}
+
+// Close modal with Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        // Check email capture modal first
+        const emailModal = document.getElementById('emailCaptureModal');
+        if (emailModal && emailModal.classList.contains('active')) {
+            skipEmailCapture();
+            return;
+        }
+        
+        // Check share modal
+        const shareModal = document.getElementById('shareModal');
+        if (shareModal && shareModal.classList.contains('active')) {
+            closeShareModal();
+            return;
+        }
+    }
+});
+
+// Share functionality will be initialized in main DOMContentLoaded
+
+// ============================================
+// SHARE APP REFERRAL SYSTEM INTEGRATION
+// ============================================
+
+let shareAppModal = null;
+
+/**
+ * Initialize Share App System
+ */
+async function initializeShareAppSystem() {
+    // Wait for referral manager to initialize
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // Initialize modal
+    shareAppModal = new ShareAppModal({
+        baseUrl: window.location.origin
+    });
+    await shareAppModal.init();
+    
+    // Render share buttons at all placement points
+    renderShareAppButtons();
+    
+    console.log('✅ Share App System initialized');
+}
+
+/**
+ * Render share buttons at all strategic placements
+ */
+function renderShareAppButtons() {
+    // 1. Header Placement (Always Visible)
+    const headerIcon = new ShareAppButton({
+        variant: 'icon',
+        placement: 'header',
+        incentive: 'Share & Earn Rewards',
+        containerId: 'headerShareIcon'
+    });
+    headerIcon.render();
+    
+    // 2. Welcome Screen Placement
+    const welcomeButton = new ShareAppButton({
+        variant: 'button',
+        placement: 'welcome',
+        incentive: 'Send to a friend who needs this 💌',
+        containerId: 'welcomeShareButton'
+    });
+    welcomeButton.render();
+    
+    // 3. Post-Results Placement
+    const resultsCard = new ShareAppButton({
+        variant: 'card',
+        placement: 'post-results',
+        incentive: 'Share NOTA with friends and both get 15% off your first perfume!',
+        containerId: 'postResultsShareCard'
+    });
+    resultsCard.render();
+    
+    // Update progress if we have referral stats
+    updateShareAppProgress();
+}
+
+/**
+ * Show mid-quiz share banner at question 15
+ */
+function showMidQuizShareBanner() {
+    // Check if already shown in this session
+    if (sessionStorage.getItem('midQuizShareShown')) {
+        return;
+    }
+    
+    // Create banner container
+    const quizContent = document.getElementById('quizContent');
+    if (!quizContent) return;
+    
+    const bannerContainer = document.createElement('div');
+    bannerContainer.id = 'midQuizShareBanner';
+    
+    // Insert before quiz content
+    quizContent.parentNode.insertBefore(bannerContainer, quizContent);
+    
+    // Render banner
+    const banner = new ShareAppButton({
+        variant: 'banner',
+        placement: 'mid-quiz',
+        incentive: 'Your friend would love this too! Share NOTA →',
+        containerId: 'midQuizShareBanner'
+    });
+    banner.render();
+    
+    // Mark as shown
+    sessionStorage.setItem('midQuizShareShown', 'true');
+    
+    // Auto-hide after 15 seconds
+    setTimeout(() => {
+        const bannerEl = document.getElementById('midQuizShareBanner');
+        if (bannerEl) {
+            bannerEl.style.opacity = '0';
+            setTimeout(() => bannerEl.remove(), 300);
+        }
+    }, 15000);
+}
+
+/**
+ * Open share app modal
+ */
+function openShareAppModal(placement) {
+    if (shareAppModal) {
+        shareAppModal.open(placement);
+    }
+}
+
+/**
+ * Update share app progress
+ */
+async function updateShareAppProgress() {
+    const manager = getReferralManager();
+    if (!manager || !manager.referralCode) return;
+    
+    await manager.loadReferralStats();
+    
+    const progress = manager.getIncentiveProgress();
+    
+    // Find all card variants and update their progress
+    const progressElements = document.querySelectorAll('.share-app-card');
+    progressElements.forEach(card => {
+        const progressBar = card.querySelector('.share-app-progress-fill');
+        const progressText = card.querySelector('.share-app-progress-text');
+        
+        if (progressBar && progressText) {
+            progressBar.style.width = progress.progress + '%';
+            
+            if (progress.remaining === 0) {
+                progressText.innerHTML = `🎉 Reward unlocked! Check your email!`;
+            } else {
+                progressText.innerHTML = `${progress.total}/${progress.nextTier} friends shared • ${progress.remaining} more for ${progress.nextReward}!`;
+            }
+        }
+    });
+}
+
+/**
+ * Track referral signup when quiz is completed
+ */
+async function trackQuizCompletion() {
+    const manager = getReferralManager();
+    if (manager) {
+        await manager.trackReferralSignup();
+        console.log('✅ Quiz completion tracked for referral');
+    }
+}
+
+// ============================================
+// EMAIL CAPTURE INITIALIZATION
+// ============================================
+
+// Email form will be initialized in main DOMContentLoaded

@@ -4,8 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOTA - AI-Powered Perfume Discovery</title>
+    
+    <!-- Open Graph Meta Tags (Dynamic - will be updated by JavaScript) -->
+    <meta property="og:title" content="NOTA - AI-Powered Perfume Discovery" id="og-title">
+    <meta property="og:description" content="Find your perfect signature scent with AI-powered personalized recommendations" id="og-description">
+    <meta property="og:image" content="images/logo/gpt-image-1.5_Modern_luxury_perfume_app_logo_design_for_NOTA_minimalist_perfume_bottle_silhoue-0.jpg" id="og-image">
+    <meta property="og:url" content="https://nota-life.com" id="og-url">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="NOTA">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="NOTA - AI-Powered Perfume Discovery" id="twitter-title">
+    <meta name="twitter:description" content="Find your perfect signature scent with AI-powered personalized recommendations" id="twitter-description">
+    <meta name="twitter:image" content="images/logo/gpt-image-1.5_Modern_luxury_perfume_app_logo_design_for_NOTA_minimalist_perfume_bottle_silhoue-0.jpg" id="twitter-image">
+    
     <link rel="icon" type="image/png" href="images/logo/gpt-image-1.5_Modern_luxury_perfume_app_logo_design_for_NOTA_minimalist_perfume_bottle_silhoue-0.jpg">
+    
+    <!-- Google Fonts - Professional Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles/share-app.css">
+    <link rel="stylesheet" href="styles/referral-overlay.css">
+    <link rel="stylesheet" href="styles/debug.css">
 </head>
 <body>
     <!-- Splash Screen Modal -->
@@ -18,15 +45,10 @@
             </button>
             
             <div class="splash-badges">
-                <!-- AI Claude Icon -->
+                <!-- AI Claude Icon - Anthropic Official Style -->
                 <div class="splash-badge" title="Powered by Claude AI">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                        <polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline>
-                        <polyline points="7.5 19.79 7.5 14.6 3 12"></polyline>
-                        <polyline points="21 12 16.5 14.6 16.5 19.79"></polyline>
-                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.5 3L21 6.5L12 15.5L8.5 12L3 17.5L4.5 19L8.5 15L12 18.5L22.5 8L21 6.5L17.5 3ZM4.5 9L3 10.5L8.5 16L12 12.5L8.5 9L4.5 9Z"/>
                     </svg>
                     <span>Claude AI</span>
                 </div>
@@ -65,7 +87,7 @@
         <!-- Header -->
         <header class="header">
             <div class="logo" onclick="showSection('hero')" style="cursor: pointer;" title="Return to Home">
-                <img src="images/logo/gpt-image-1.5_Modern_luxury_perfume_app_logo_design_for_NOTA_minimalist_perfume_bottle_silhoue-0.jpg" alt="NOTA Logo" class="logo-image">
+                <img src="images/logo/Logopng.png" alt="NOTA Logo" class="logo-image">
             </div>
             <nav class="nav">
                 <a href="#hero" onclick="showSection('hero')">Home</a>
@@ -73,6 +95,8 @@
                 <a href="#how-it-works" onclick="showSection('how-it-works')">How It Works</a>
                 <a href="#contact" onclick="showSection('contact')">Contact</a>
             </nav>
+            <!-- Share App Icon (Header Placement) -->
+            <div id="headerShareIcon" class="header-share-icon"></div>
         </header>
 
         <!-- Hero Section -->
@@ -80,67 +104,42 @@
             <div class="hero-content">
                 <h1 class="hero-title">Discover Your Signature Scent</h1>
                 <p class="hero-subtitle">Take our personalized quiz and let AI find the perfect perfume for you</p>
-                <button class="cta-button" onclick="startQuiz()">Take The Quiz</button>
+                
+                <!-- Button Container for Alignment -->
+                <div class="hero-buttons">
+                    <button class="cta-button" onclick="startQuiz()">Take The Quiz</button>
+                    <!-- Share App Button (Welcome Placement) -->
+                    <div id="welcomeShareButton"></div>
+                </div>
+                
                 <div class="hero-features">
                     <div class="feature">
-                        <svg class="feature-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                        </svg>
+                        <i class="fas fa-brain feature-icon-pro"></i>
                         <span>AI-Powered</span>
                     </div>
                     <div class="feature">
-                        <svg class="feature-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
+                        <i class="fas fa-user-check feature-icon-pro"></i>
                         <span>Personalized</span>
                     </div>
                     <div class="feature">
-                        <svg class="feature-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-                        </svg>
+                        <i class="fas fa-bolt feature-icon-pro"></i>
                         <span>Instant Links</span>
                     </div>
                 </div>
             </div>
             <div class="hero-image">
-                <!-- Messy Organized Cards -->
-                <div class="cards-carousel">
-                    <div class="card-stack">
-                        <div class="card card-1" data-index="0">
-                            <div class="card-inner">
-                                <img src="images/Splash/Default_blue_syle_for_men_0.jpg" alt="Perfume Collection">
-                            </div>
-                        </div>
-                        <div class="card card-2" data-index="1">
-                            <div class="card-inner">
-                                <img src="images/Splash/Default_similar_but_a_man_0.jpg" alt="Luxury Fragrance">
-                            </div>
-                        </div>
-                        <div class="card card-3" data-index="2">
-                            <div class="card-inner">
-                                <img src="images/Splash/Default_summer_happy_mode_0.jpg" alt="Summer Scents">
-                            </div>
-                        </div>
-                        <div class="card card-4" data-index="3">
-                            <div class="card-inner">
-                                <img src="images/Splash/Default_summer_happy_mood_0.jpg" alt="Happy Mood">
-                            </div>
-                        </div>
-                        <div class="card card-5" data-index="4">
-                            <div class="card-inner">
-                                <img src="images/Splash/lucid-origin_IMAGE_Cinematic_Splash_Screen_Background_Prompt_Cinematic_luxury_perfume_adverti-0 (1).jpg" alt="Cinematic Perfume">
-                            </div>
-                        </div>
-                        <div class="card card-6" data-index="5">
-                            <div class="card-inner">
-                                <img src="images/Splash/lucid-origin_IMAGE_Cinematic_Splash_Screen_Background_Prompt_Cinematic_luxury_perfume_adverti-0.jpg" alt="Luxury Collection">
-                            </div>
-                        </div>
-                    </div>
+                <!-- Hero Avatar Image -->
+                <div class="hero-avatar">
+                    <img src="images/Avatar/Sarah Main.jpg" alt="Sarah - AI Perfume Consultant" class="avatar-image">
+                </div>
+                <!-- Sarah AI Introduction - Below Image -->
+                <div class="sarah-intro">
+                    <h3 class="sarah-name">Meet Sarah</h3>
+                    <p class="sarah-title">Your AI Perfume Consultant</p>
+                    <p class="sarah-description">
+                        <span id="sarahTyping"></span>
+                        <span class="typing-cursor">|</span>
+                    </p>
                 </div>
             </div>
         </section>
@@ -164,12 +163,106 @@
             </div>
         </section>
 
+        <!-- Email Capture Modal -->
+        <div id="emailCaptureModal" class="email-capture-modal">
+            <div class="email-capture-backdrop" onclick="skipEmailCapture()"></div>
+            <div class="email-capture-card">
+                <button class="email-close-btn" onclick="skipEmailCapture()" aria-label="Close">×</button>
+                <div class="email-capture-header">
+                    <div class="email-capture-icon">
+                        <i class="fas fa-envelope-open-text"></i>
+                    </div>
+                    <h2>You're Almost There!</h2>
+                    <p class="email-subtitle">Get your personalized perfume recommendations instantly</p>
+                </div>
+                
+                <div class="email-capture-body">
+                    <form id="emailCaptureForm">
+                        <div class="email-input-group">
+                            <i class="fas fa-envelope email-icon"></i>
+                            <input 
+                                type="email" 
+                                id="userEmail" 
+                                placeholder="Enter your email address" 
+                                autocomplete="email"
+                            >
+                        </div>
+                        
+                        <button type="submit" class="email-submit-btn">
+                            <span>Get My Results</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                        
+                        <button type="button" class="email-skip-btn" onclick="skipEmailCapture()">
+                            Skip for now
+                        </button>
+                        
+                        <div class="email-benefits">
+                            <div class="benefit-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Instant access to your matches</span>
+                            </div>
+                            <div class="benefit-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>100% free, no credit card required</span>
+                            </div>
+                            <div class="benefit-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Save your results for later</span>
+                            </div>
+                        </div>
+                        
+                        <p class="privacy-note">
+                            <i class="fas fa-lock"></i>
+                            We respect your privacy. No spam, ever.
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <!-- Loading Section -->
         <section id="loading" class="loading-section">
             <div class="loading-content">
-                <div class="spinner"></div>
+                <!-- Animated Perfume Bottle -->
+                <div class="loading-bottle">
+                    <svg class="bottle-svg" width="80" height="120" viewBox="0 0 80 120" fill="none">
+                        <defs>
+                            <linearGradient id="bottleGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:var(--secondary-color);stop-opacity:0.8" />
+                                <stop offset="100%" style="stop-color:var(--accent-color);stop-opacity:0.9" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Bottle cap -->
+                        <rect x="25" y="5" width="30" height="15" rx="3" fill="url(#bottleGradient)" class="bottle-cap"/>
+                        <!-- Bottle neck -->
+                        <rect x="30" y="20" width="20" height="15" fill="url(#bottleGradient)" class="bottle-neck"/>
+                        <!-- Bottle body -->
+                        <rect x="15" y="35" width="50" height="70" rx="5" fill="url(#bottleGradient)" opacity="0.3" class="bottle-body"/>
+                        <!-- Liquid inside -->
+                        <rect x="18" y="85" width="44" height="0" rx="4" fill="url(#bottleGradient)" class="bottle-liquid"/>
+                        <!-- Shine effect -->
+                        <ellipse cx="35" cy="50" rx="8" ry="15" fill="white" opacity="0.3" class="bottle-shine"/>
+                    </svg>
+                    <div class="loading-sparkles">
+                        <span class="sparkle" style="--delay: 0s; --x: -20px; --y: -30px;"></span>
+                        <span class="sparkle" style="--delay: 0.3s; --x: 20px; --y: -25px;"></span>
+                        <span class="sparkle" style="--delay: 0.6s; --x: -15px; --y: 30px;"></span>
+                        <span class="sparkle" style="--delay: 0.9s; --x: 18px; --y: 25px;"></span>
+                    </div>
+                </div>
+                
                 <h2>Analyzing Your Preferences...</h2>
                 <p>Our AI is finding the perfect perfumes for you</p>
+                
+                <!-- Progress Bar -->
+                <div class="loading-progress-bar">
+                    <div class="loading-progress-fill"></div>
+                </div>
+                
+                <!-- Time Estimate -->
+                <div class="loading-timer">Estimated time: <span id="loadingTimer">10</span>s</div>
+                
                 <div class="loading-steps">
                     <div class="step active">
                         <svg class="step-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -211,7 +304,14 @@
             <div class="results-content" id="resultsContent">
                 <!-- Results will be dynamically loaded here -->
             </div>
+            
+            <!-- Share App Card (Post-Results Placement) -->
+            <div id="postResultsShareCard"></div>
+            
             <div class="results-footer">
+                <button class="btn btn-primary share-results-btn" onclick="openShareModal()" id="shareResultsBtn">
+                    <i class="fas fa-share-alt"></i> Share My Results
+                </button>
                 <button class="btn btn-secondary" onclick="restartQuiz()">Take Quiz Again</button>
             </div>
         </section>
@@ -553,6 +653,92 @@
         </footer>
     </div>
 
+    <!-- Share Modal -->
+    <div class="share-modal" id="shareModal">
+        <div class="share-modal-overlay" onclick="closeShareModal()"></div>
+        <div class="share-modal-content">
+            <button class="share-modal-close" onclick="closeShareModal()" aria-label="Close">×</button>
+            
+            <h2 class="share-modal-title">Share Your Results</h2>
+            <p class="share-modal-subtitle">Let your friends discover their perfect scent too!</p>
+            
+            <!-- Share Preview -->
+            <div class="share-preview" id="sharePreview">
+                <canvas id="shareCanvas" width="600" height="315" style="display:none;"></canvas>
+                <img id="sharePreviewImage" alt="Share preview" style="max-width: 100%; border-radius: 10px; margin-bottom: 20px;">
+            </div>
+            
+            <!-- Share Text -->
+            <div class="share-text-container">
+                <textarea id="shareText" class="share-text-input" rows="3" readonly></textarea>
+                <button class="share-copy-text-btn" onclick="copyShareText()" title="Copy text">
+                    <i class="fas fa-copy"></i>
+                </button>
+            </div>
+            
+            <!-- Platform Buttons -->
+            <div class="share-platforms">
+                <button class="share-platform-btn facebook" onclick="shareToSocial('facebook')" title="Share on Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                    <span>Facebook</span>
+                </button>
+                
+                <button class="share-platform-btn twitter" onclick="shareToSocial('twitter')" title="Share on X">
+                    <i class="fab fa-x-twitter"></i>
+                    <span>X</span>
+                </button>
+                
+                <button class="share-platform-btn whatsapp" onclick="shareToSocial('whatsapp')" title="Share on WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>WhatsApp</span>
+                </button>
+                
+                <button class="share-platform-btn pinterest" onclick="shareToSocial('pinterest')" title="Share on Pinterest">
+                    <i class="fab fa-pinterest"></i>
+                    <span>Pinterest</span>
+                </button>
+                
+                <button class="share-platform-btn instagram" onclick="shareToSocial('instagram')" title="Share on Instagram">
+                    <i class="fab fa-instagram"></i>
+                    <span>Instagram</span>
+                </button>
+                
+                <button class="share-platform-btn email" onclick="shareToSocial('email')" title="Share via Email">
+                    <i class="fas fa-envelope"></i>
+                    <span>Email</span>
+                </button>
+                
+                <button class="share-platform-btn copy" onclick="shareToSocial('copy')" title="Copy Link">
+                    <i class="fas fa-link"></i>
+                    <span>Copy Link</span>
+                </button>
+                
+                <button class="share-platform-btn native" onclick="shareToSocial('native')" title="More Options" id="nativeShareBtn" style="display:none;">
+                    <i class="fas fa-share-alt"></i>
+                    <span>More</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Social Share Scripts -->
+    <script src="social-share-manager.js"></script>
+    <script src="shareable-content-generator.js"></script>
+    
+    <!-- Personality Profiles -->
+    <script src="personality-profiles.js"></script>
+    
+    <!-- Referral System Scripts -->
+    <script src="referral-manager.js"></script>
+    <script src="components/share-app-button.js"></script>
+    <script src="components/share-app-modal.js"></script>
+    <script src="components/referral-overlay.js"></script>
+    
+    <!-- Emergency Debug Button (appears if flow breaks) -->
+    <button id="debugProceedBtn" class="debug-proceed-btn" onclick="proceedWithQuizSubmission()">
+        🚨 Debug: Proceed to Results
+    </button>
+    
     <script src="script.js"></script>
 </body>
 </html>

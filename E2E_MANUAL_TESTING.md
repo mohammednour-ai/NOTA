@@ -11,7 +11,7 @@
 ### Phase 1: Landing Page
 - [ ] Page loads at http://localhost:3001
 - [ ] Hero section visible
-- [ ] "ScentMatch" logo (no emoji)
+- [ ] "NOTA" logo (no emoji)
 - [ ] "TAKE THE QUIZ" button visible
 - [ ] Button is pink (#ff6b9d)
 - [ ] Button has 8px border radius

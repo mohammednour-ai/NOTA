@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOTA - AI Prompt Demo & Logic Review</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+        
+        .section {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border-left: 4px solid #667eea;
+        }
+        
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .badge {
+            background: #667eea;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin: 1rem 0;
+            position: relative;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: #5568d3;
+        }
+        
+        .json-viewer {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+        
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+        
+        .flow-diagram {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .flow-step {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 2px solid #667eea;
+            text-align: center;
+            position: relative;
+        }
+        
+        .flow-step::after {
+            content: '→';
+            position: absolute;
+            right: -1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            color: #667eea;
+        }
+        
+        .flow-step:last-child::after {
+            display: none;
+        }
+        
+        .flow-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-weight: bold;
+        }
+        
+        button.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin: 0.5rem;
+        }
+        
+        button.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .key-value {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 1rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .key-value:last-child {
+            border-bottom: none;
+        }
+        
+        .key {
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .value {
+            color: #333;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            resize: vertical;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #666;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 NOTA AI Prompt Demo & Logic Review</h1>
+        <p class="subtitle">Interactive demonstration of how quiz answers are sent to Claude AI and processed</p>
+        
+        <!-- Flow Diagram -->
+        <div class="section">
+            <h2>📊 Complete Data Flow</h2>
+            <div class="flow-diagram">
+                <div class="flow-step">
+                    <div class="flow-number">1</div>
+                    <strong>User Answers</strong>
+                    <p>30 questions</p>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-number">2</div>
+                    <strong>Format Data</strong>
+                    <p>JSON structure</p>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-number">3</div>
+                    <strong>Build Prompt</strong>
+                    <p>AI instructions</p>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-number">4</div>
+                    <strong>Send to Claude</strong>
+                    <p>API request</p>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-number">5</div>
+                    <strong>Get Results</strong>
+                    <p>5 perfumes</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sample Answers -->
+        <div class="section">
+            <h2>📝 Example Quiz Answers (Sample Data)</h2>
+            <div class="info">
+                <strong>💡 This is what gets sent from the frontend to the server:</strong>
+            </div>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyToClipboard('sample-answers')">Copy</button>
+                <pre id="sample-answers">{
+  "1": "Female",
+  "2": "18-25",
+  "3": ["Daily wear", "Evening events", "Date nights"],
+  "4": ["Spring", "Summer"],
+  "5": "Evening",
+  "6": "Moderate",
+  "7": "6-8 hours",
+  "8": ["Floral", "Fruity"],
+  "9": ["Rose", "Jasmine", "Lavender"],
+  "10": ["Bergamot", "Orange"],
+  "11": ["Not for me"],
+  "12": "Somewhat sweet",
+  "13": ["Vanilla", "Honey"],
+  "14": ["Not really"],
+  "15": "Like them",
+  "16": ["Berry (strawberry, raspberry)", "Peach"],
+  "17": "Yes, in moderation",
+  "18": "Like them",
+  "19": "Yes, sometimes",
+  "20": "Mix of both",
+  "21": ["Romantic/Feminine", "Elegant/Sophisticated"],
+  "22": "Jo Malone (Fresh & Simple)",
+  "23": "$50-$100",
+  "24": ["None"],
+  "25": "Mostly natural",
+  "26": "Important",
+  "27": "Both",
+  "28": ["Romantic", "Confident"],
+  "29": "Yes, occasionally",
+  "30": "Chanel Chance, Viktor&Rolf Flowerbomb"
+}</pre>
+            </div>
+        </div>
+
+        <!-- AI Prompt Structure -->
+        <div class="section">
+            <h2>🎯 AI Prompt Template (What Claude Receives)</h2>
+            
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('prompt-full')">Full Prompt</button>
+                <button class="tab" onclick="showTab('prompt-breakdown')">Breakdown</button>
+                <button class="tab" onclick="showTab('prompt-editable')">Edit & Test</button>
+            </div>
+
+            <!-- Full Prompt Tab -->
+            <div id="prompt-full" class="tab-content active">
+                <div class="warning">
+                    <strong>⚠️ Current Prompt:</strong> This is the EXACT prompt sent to Claude AI
+                </div>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyToClipboard('full-prompt')">Copy</button>
+                    <pre id="full-prompt">Based on the following user preferences for perfume, recommend 5 specific perfumes that would be perfect for them. Include the brand name and perfume name.
+
+User Preferences:
+{
+  "1": "Female",
+  "2": "18-25",
+  "3": ["Daily wear", "Evening events"],
+  ...
+}
+
+IMPORTANT: Consider ALL types of perfumes including:
+- Celebrity fragrances (Ariana Grande, Billie Eilish, Taylor Swift, Rihanna, etc.)
+- Designer brands (Chanel, Dior, YSL, Gucci, Versace, etc.)
+- Popular mainstream (Victoria's Secret, Bath & Body Works, etc.)
+- Niche and luxury brands (Tom Ford, Jo Malone, etc.)
+
+For YOUNG users (18-25) or those wanting TRENDY scents, prioritize:
+- Ariana Grande (Cloud, Thank U Next, Sweet Like Candy, R.E.M.)
+- Billie Eilish Fragrances
+- Viktor&Rolf Flowerbomb
+- Marc Jacobs Daisy
+- Paco Rabanne Olympea
+- Lancôme Idôle
+- Prada Candy
+
+Please analyze these preferences and recommend 5 perfumes. For each perfume, provide:
+1. Brand and perfume name
+2. Brief description (2-3 sentences)
+3. Why it matches their preferences
+4. Key notes
+5. Match percentage (how well it matches user preferences, 75-99%)
+
+Format your response as a JSON array with this structure:
+[
+  {
+    "brand": "Brand Name",
+    "name": "Perfume Name",
+    "description": "Description here",
+    "why": "Why it matches",
+    "notes": ["note1", "note2", "note3"],
+    "matchPercentage": 95
+  }
+]
+
+Order recommendations from highest match percentage to lowest.</pre>
+                </div>
+            </div>
+
+            <!-- Breakdown Tab -->
+            <div id="prompt-breakdown" class="tab-content">
+                <h3>Prompt Structure Analysis:</h3>
+                
+                <div style="margin-top: 1rem;">
+                    <div class="key-value">
+                        <div class="key">Section 1: Context</div>
+                        <div class="value">Tells Claude what to do: "recommend 5 specific perfumes"</div>
+                    </div>
+                    <div class="key-value">
+                        <div class="key">Section 2: User Data</div>
+                        <div class="value">All 30 quiz answers in JSON format</div>
+                    </div>
+                    <div class="key-value">
+                        <div class="key">Section 3: Perfume Types</div>
+                        <div class="value">Lists all perfume categories to consider</div>
+                    </div>
+                    <div class="key-value">
+                        <div class="key">Section 4: Priority Brands</div>
+                        <div class="value">For young users (18-25), prioritize trendy brands</div>
+                    </div>
+                    <div class="key-value">
+                        <div class="key">Section 5: Output Format</div>
+                        <div class="value">Specifies exact JSON structure for response</div>
+                    </div>
+                    <div class="key-value">
+                        <div class="key">Section 6: Requirements</div>
+                        <div class="value">5 fields per perfume + match percentage</div>
+                    </div>
+                </div>
+
+                <div class="warning" style="margin-top: 1.5rem;">
+                    <strong>🎯 Key Logic Points:</strong>
+                    <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                        <li>Always returns 5 perfumes</li>
+                        <li>Match percentage ranges from 75-99%</li>
+                        <li>Results ordered by match percentage (highest first)</li>
+                        <li>Considers user age, gender, and preferences</li>
+                        <li>Prioritizes trendy brands for young users</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Editable Tab -->
+            <div id="prompt-editable" class="tab-content">
+                <div class="info">
+                    <strong>✏️ Edit the prompt below to test different approaches:</strong>
+                </div>
+                <textarea id="editable-prompt">Based on the following user preferences for perfume, recommend 5 specific perfumes that would be perfect for them.
+
+[Edit this prompt to test different logic...]
+
+Format your response as a JSON array with this structure:
+[
+  {
+    "brand": "Brand Name",
+    "name": "Perfume Name",
+    "description": "Description here",
+    "why": "Why it matches",
+    "notes": ["note1", "note2", "note3"],
+    "matchPercentage": 95
+  }
+]</textarea>
+                <button class="primary" onclick="savePrompt()">💾 Save for Testing</button>
+                <button class="primary" onclick="resetPrompt()">🔄 Reset to Original</button>
+            </div>
+        </div>
+
+        <!-- API Request Structure -->
+        <div class="section">
+            <h2>🔌 API Request to Claude</h2>
+            <div class="info">
+                <strong>📡 POST to:</strong> <code>https://api.anthropic.com/v1/messages</code>
+            </div>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyToClipboard('api-request')">Copy</button>
+                <pre id="api-request">{
+  "model": "claude-3-haiku-20240307",
+  "max_tokens": 4096,
+  "messages": [
+    {
+      "role": "user",
+      "content": "[THE FULL PROMPT WITH USER ANSWERS]"
+    }
+  ]
+}
+
+Headers:
+{
+  "x-api-key": "YOUR_ANTHROPIC_API_KEY",
+  "anthropic-version": "2023-06-01",
+  "content-type": "application/json"
+}</pre>
+            </div>
+        </div>
+
+        <!-- Expected Response -->
+        <div class="section">
+            <h2>✅ Expected AI Response</h2>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyToClipboard('ai-response')">Copy</button>
+                <pre id="ai-response">{
+  "recommendations": [
+    {
+      "brand": "Ariana Grande",
+      "name": "Cloud",
+      "description": "A dreamy, sweet fragrance with notes of lavender, pear, and coconut. Perfect for young women who love romantic, playful scents.",
+      "why": "Matches your preference for sweet, floral scents and fits your budget. Popular with 18-25 age group and perfect for daily wear and date nights.",
+      "notes": ["Lavender", "Pear", "Coconut", "Vanilla", "Praline"],
+      "matchPercentage": 96
+    },
+    {
+      "brand": "Viktor & Rolf",
+      "name": "Flowerbomb",
+      "description": "An explosive floral bouquet with jasmine, rose, and freesia. Seductive and powerful.",
+      "why": "Your love for floral notes (rose, jasmine) makes this perfect. Romantic and feminine, great for evening events.",
+      "notes": ["Jasmine", "Rose", "Freesia", "Orchid", "Patchouli"],
+      "matchPercentage": 94
+    },
+    {
+      "brand": "Marc Jacobs",
+      "name": "Daisy",
+      "description": "Fresh and youthful with strawberry, violet, and jasmine notes. Playfully romantic.",
+      "why": "Fits your romantic style and berry preferences. Perfect for spring and summer, moderate strength.",
+      "notes": ["Strawberry", "Violet", "Jasmine", "Musk", "Vanilla"],
+      "matchPercentage": 92
+    },
+    {
+      "brand": "Lancôme",
+      "name": "La Vie Est Belle",
+      "description": "Sweet iris and gourmand happiness fragrance with praline and vanilla.",
+      "why": "Matches your sweet preference and budget. Elegant yet modern, perfect for confident women.",
+      "notes": ["Iris", "Patchouli", "Tonka Bean", "Praline"],
+      "matchPercentage": 89
+    },
+    {
+      "brand": "Chanel",
+      "name": "Chance Eau Tendre",
+      "description": "Fresh and tender floral-fruity fragrance with grapefruit and quince.",
+      "why": "Based on your mention of Chanel Chance. Fresh, modern, and fits your style preferences.",
+      "notes": ["Grapefruit", "Quince", "Jasmine", "White Musk"],
+      "matchPercentage": 87
+    }
+  ],
+  "rawResponse": "[Full text from Claude]"
+}</pre>
+            </div>
+        </div>
+
+        <!-- Logic Review -->
+        <div class="section">
+            <h2>🧠 Current Logic & Potential Improvements</h2>
+            
+            <h3 style="color: #667eea; margin-top: 1.5rem;">✅ What Works Well:</h3>
+            <div class="success">
+                <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                    <li>✅ Considers all 30 quiz answers</li>
+                    <li>✅ Age-appropriate recommendations</li>
+                    <li>✅ Budget-aware suggestions</li>
+                    <li>✅ Prioritizes trendy brands for young users</li>
+                    <li>✅ Match percentage for transparency</li>
+                    <li>✅ Includes reasoning ("why it matches")</li>
+                </ul>
+            </div>
+
+            <h3 style="color: #667eea; margin-top: 1.5rem;">💡 Potential Improvements:</h3>
+            <div class="warning">
+                <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                    <li>📊 <strong>Weighted Preferences:</strong> Give more importance to certain answers (e.g., budget, fragrance family)</li>
+                    <li>🎯 <strong>Exclude Dislikes:</strong> Explicitly exclude notes user said "not for me"</li>
+                    <li>🌍 <strong>Regional Availability:</strong> Consider if perfumes are available in user's country</li>
+                    <li>🔄 <strong>Diversity:</strong> Ensure recommendations span different price points and brands</li>
+                    <li>💰 <strong>Budget Strictness:</strong> Make budget range more strict (currently flexible)</li>
+                    <li>📈 <strong>Confidence Score:</strong> Add confidence level to match percentage</li>
+                    <li>🎨 <strong>Seasonal Weight:</strong> Give more weight to selected seasons</li>
+                </ul>
+            </div>
+
+            <h3 style="color: #667eea; margin-top: 1.5rem;">⚙️ Suggested Prompt Enhancements:</h3>
+            <div class="code-block">
+                <pre>ADDITIONAL RULES YOU COULD ADD:
+
+1. STRICT BUDGET COMPLIANCE:
+   "Only recommend perfumes within the user's budget range. If budget is $50-$100, 
+   do NOT recommend perfumes over $100."
+
+2. EXCLUDE DISLIKES:
+   "Do NOT recommend perfumes containing notes the user explicitly disliked 
+   (e.g., if they selected 'Not for me' for woody notes, avoid all woody perfumes)."
+
+3. DIVERSITY REQUIREMENT:
+   "Ensure recommendations include at least 3 different brands and span different 
+   price points within the budget."
+
+4. SEASONAL PRIORITY:
+   "Prioritize perfumes suitable for the seasons user selected. If they chose 
+   'Spring' and 'Summer', focus on lighter, fresher scents."
+
+5. OCCASION MATCHING:
+   "If user selected specific occasions (e.g., 'Date nights', 'Work/Office'), 
+   ensure each perfume is explicitly labeled as suitable for those occasions."</pre>
+            </div>
+        </div>
+
+        <!-- Testing Tools -->
+        <div class="section">
+            <h2>🧪 Testing Tools</h2>
+            <div class="info">
+                <p><strong>To test changes to the prompt:</strong></p>
+                <ol style="margin-left: 1.5rem; margin-top: 0.5rem; line-height: 1.8;">
+                    <li>Edit the prompt in the "Edit & Test" tab above</li>
+                    <li>Update <code>server.js</code> line 57-95 with your new prompt</li>
+                    <li>Restart the server: <code>npm start</code></li>
+                    <li>Take the quiz on localhost:3001</li>
+                    <li>Review the results</li>
+                </ol>
+            </div>
+            
+            <button class="primary" onclick="window.open('http://localhost:3001', '_blank')">🚀 Test on Local Server</button>
+            <button class="primary" onclick="downloadPromptTemplate()">💾 Download Custom Prompt Template</button>
+        </div>
+
+        <!-- Footer -->
+        <div style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 2px solid #e0e0e0; color: #666;">
+            <p><strong>NOTA Life AI Prompt Demo</strong></p>
+            <p style="margin-top: 0.5rem;">Use this tool to understand and improve the AI recommendation logic</p>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        function showTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Deactivate all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Activate clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Copy to clipboard
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            });
+        }
+
+        // Save edited prompt
+        function savePrompt() {
+            const prompt = document.getElementById('editable-prompt').value;
+            localStorage.setItem('custom-prompt', prompt);
+            alert('✅ Prompt saved to browser storage!\n\nTo use in production:\n1. Copy this prompt\n2. Update server.js (line 57-95)\n3. Restart server');
+        }
+
+        // Reset prompt
+        function resetPrompt() {
+            if (confirm('Reset to original prompt?')) {
+                const original = document.getElementById('full-prompt').textContent;
+                document.getElementById('editable-prompt').value = original;
+            }
+        }
+
+        // Download template
+        function downloadPromptTemplate() {
+            const template = document.getElementById('full-prompt').textContent;
+            const blob = new Blob([template], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'nota-ai-prompt-template.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Load saved prompt if exists
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedPrompt = localStorage.getItem('custom-prompt');
+            if (savedPrompt) {
+                document.getElementById('editable-prompt').value = savedPrompt;
+            }
+        });
+    </script>
+</body>
+</html>

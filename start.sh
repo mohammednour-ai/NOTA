@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "========================================"
-echo " SCENTMATCH - Perfume Recommendation"
+echo " NOTA - Perfume Recommendation"
 echo "========================================"
 echo ""
 

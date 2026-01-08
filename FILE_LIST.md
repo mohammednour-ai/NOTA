@@ -1,6 +1,6 @@
 # 📂 COMPLETE PROJECT FILE LISTING
 
-## Project: ScentMatch - Perfume Recommendation Platform
+## Project: NOTA - Perfume Recommendation Platform
 ## Status: ✅ COMPLETE & READY TO USE
 ## Total Files Created: 14 (excluding node_modules)
 

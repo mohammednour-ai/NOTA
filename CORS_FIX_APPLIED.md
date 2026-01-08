@@ -120,7 +120,7 @@ Save this URL for quick access during development
 ## Server Routes Available
 
 ```
-GET /                    → Main application (ScentMatch)
+GET /                    → Main application (NOTA)
 GET /test               → E2E Testing Suite ⭐ NEW
 GET /api/questions      → Quiz questions API
 POST /api/analyze       → AI recommendations API
@@ -187,7 +187,7 @@ Try this in the browser console (F12):
 ```javascript
 // Check iframe access (should work now)
 document.getElementById('testFrame').contentDocument.title
-// Should return: "Scent Match - Your Perfect Perfume Awaits"
+// Should return: "NOTA - Your Perfect Perfume Awaits"
 ```
 
 If this works, the CORS issue is fixed! ✅

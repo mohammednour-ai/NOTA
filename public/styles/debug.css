@@ -1,0 +1,31 @@
+/* Emergency Debug Button */
+.debug-proceed-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #ff4444;
+    color: white;
+    border: none;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(255, 68, 68, 0.4);
+    z-index: 99999;
+    display: none;
+    animation: pulse 2s infinite;
+}
+
+.debug-proceed-btn.visible {
+    display: block;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.debug-proceed-btn:hover {
+    background: #ff2222;
+    transform: scale(1.1);
+}

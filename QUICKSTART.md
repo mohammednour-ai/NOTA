@@ -98,7 +98,7 @@ recommend 5 specific perfumes  // Change this number
 ### Add Your Branding
 Edit `public/index.html`:
 ```html
-<h1>🌸 ScentMatch</h1>  <!-- Change name here -->
+<h1>🌸 NOTA</h1>  <!-- Change name here -->
 ```
 
 ---

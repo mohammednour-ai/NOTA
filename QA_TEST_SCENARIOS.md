@@ -1,7 +1,7 @@
-# QA Test Scenarios - ScentMatch Platform
+# QA Test Scenarios - NOTA Platform
 
 ## Test Plan Overview
-- **Application**: ScentMatch - Perfume Recommendation Platform
+- **Application**: NOTA - Perfume Recommendation Platform
 - **Version**: 1.0.0
 - **Test Type**: End-to-End (E2E) Functional & Visual Testing
 - **Browser Support**: Chrome, Firefox, Safari, Edge
@@ -28,7 +28,7 @@
 **Expected Result**:
 - ✅ Page loads within 2 seconds
 - ✅ Hero section is visible
-- ✅ "ScentMatch" logo displayed (no emoji)
+- ✅ "NOTA" logo displayed (no emoji)
 - ✅ Header navigation visible (About, How It Works, Contact)
 - ✅ Hero title: "Discover Your Signature Scent"
 - ✅ Hero subtitle present

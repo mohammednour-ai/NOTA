@@ -1,0 +1,778 @@
+/* ============================================
+   SHARE APP REFERRAL SYSTEM STYLES
+   ============================================ */
+
+/* ===== SHARE APP BUTTON VARIANTS ===== */
+
+/* Icon Variant - Floating header button */
+.share-app-icon-container {
+    position: relative;
+}
+
+.share-app-icon-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(var(--secondary-rgb), 0.3);
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.share-app-icon-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(var(--secondary-rgb), 0.4);
+}
+
+.share-app-icon-btn i {
+    font-size: 1.1rem;
+}
+
+.share-app-badge {
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+/* Button Variant - Standard CTA */
+.share-app-button-container {
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+.share-app-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(var(--secondary-rgb), 0.2);
+}
+
+.share-app-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(var(--secondary-rgb), 0.3);
+    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+}
+
+.share-app-btn i {
+    font-size: 1.2rem;
+}
+
+/* Card Variant - Post-results large card */
+.share-app-card {
+    background: linear-gradient(135deg, var(--light-bg) 0%, #f9f9f9 100%);
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin: 2rem 0;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border: 2px solid var(--border-color);
+}
+
+.share-app-card-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.share-app-card-title {
+    font-size: 2rem;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+}
+
+.share-app-card-description {
+    font-size: 1.1rem;
+    color: var(--text-light);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.share-app-card-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.25rem 2.5rem;
+    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(var(--secondary-rgb), 0.3);
+}
+
+.share-app-card-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(var(--secondary-rgb), 0.4);
+}
+
+/* Progress Bar in Card */
+.share-app-progress {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.share-app-progress-bar {
+    width: 100%;
+    height: 12px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.share-app-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+    border-radius: 10px;
+    transition: width 0.6s ease;
+}
+
+.share-app-progress-text {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+/* Social Proof */
+.share-app-social-proof {
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.share-app-social-proof i {
+    color: #ff6b6b;
+}
+
+/* Banner Variant - Mid-quiz interruption */
+.share-app-banner {
+    position: relative;
+    background: linear-gradient(135deg, #ffffff 0%, #f5f7ff 100%);
+    border-radius: 20px;
+    padding: 2rem;
+    margin: 2rem 0;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    border: 2px solid var(--accent-color);
+    animation: slideIn 0.4s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.share-app-banner-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--text-light);
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.share-app-banner-close:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-dark);
+}
+
+.share-app-banner-content {
+    text-align: center;
+}
+
+.share-app-banner-emoji {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.share-app-banner-title {
+    font-size: 1.8rem;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+}
+
+.share-app-banner-text {
+    font-size: 1.1rem;
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+}
+
+.share-app-banner-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.share-app-banner-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.share-app-banner-btn-primary:hover {
+    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+    transform: translateY(-2px);
+}
+
+.share-app-banner-btn-secondary {
+    padding: 1rem 2rem;
+    background: white;
+    color: var(--text-dark);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.share-app-banner-btn-secondary:hover {
+    background: var(--hover-bg);
+    border-color: var(--secondary-color);
+}
+
+/* ===== SHARE APP MODAL ===== */
+
+.share-app-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.share-app-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+}
+
+.share-app-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+}
+
+.share-app-modal-content {
+    position: relative;
+    background: white;
+    border-radius: 24px;
+    padding: 2.5rem;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: modalSlideUp 0.3s ease;
+}
+
+@keyframes modalSlideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.share-app-modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-light);
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.share-app-modal-close:hover {
+    background: var(--hover-bg);
+    color: var(--text-dark);
+    transform: rotate(90deg);
+}
+
+/* Modal Header */
+.share-app-modal-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.share-app-modal-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.share-app-modal-title {
+    font-size: 2rem;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+}
+
+.share-app-modal-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-light);
+}
+
+/* Referral Link Input - HIDDEN */
+.share-app-link-container {
+    display: none; /* Hide referral link text box */
+    margin-bottom: 2rem;
+}
+
+.share-app-link-label {
+    display: block;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+}
+
+.share-app-link-input-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.share-app-link-input {
+    flex: 1;
+    padding: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    background: var(--hover-bg);
+    color: var(--text-dark);
+    font-family: monospace;
+}
+
+.share-app-link-copy {
+    padding: 1rem 1.5rem;
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 60px;
+}
+
+.share-app-link-copy:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(var(--secondary-rgb), 0.3);
+}
+
+/* Platform Buttons */
+.share-app-platforms {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.share-app-platforms-title {
+    grid-column: 1 / -1;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    text-align: center;
+}
+
+.share-app-platform-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    width: 100%;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.share-app-platform-btn i {
+    font-size: 1.5rem; /* Match share results style */
+}
+
+.share-app-platform-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Platform-specific colors - Match share results style */
+.share-app-platform-btn.whatsapp {
+    border-color: #25d366;
+    color: #25d366;
+}
+
+.share-app-platform-btn.whatsapp:hover {
+    background: #25d366;
+    color: white;
+}
+
+.share-app-platform-btn.facebook {
+    border-color: #1877f2;
+    color: #1877f2;
+}
+
+.share-app-platform-btn.facebook:hover {
+    background: #1877f2;
+    color: white;
+}
+
+.share-app-platform-btn.twitter {
+    border-color: #1da1f2;
+    color: #1da1f2;
+}
+
+.share-app-platform-btn.twitter:hover {
+    background: #1da1f2;
+    color: white;
+}
+
+.share-app-platform-btn.instagram {
+    border-color: #e1306c;
+    color: #e1306c;
+}
+
+.share-app-platform-btn.instagram:hover {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    color: white;
+}
+
+.share-app-platform-btn.email {
+    border-color: #ea4335;
+    color: #ea4335;
+}
+
+.share-app-platform-btn.email:hover {
+    background: #ea4335;
+    color: white;
+}
+
+.share-app-platform-btn.messenger {
+    border-color: #0084ff;
+    color: #0084ff;
+}
+
+.share-app-platform-btn.messenger:hover {
+    background: #0084ff;
+    color: white;
+}
+
+.share-app-platform-btn.copy {
+    border-color: var(--secondary-color);
+    color: var(--secondary-color);
+}
+
+.share-app-platform-btn.copy:hover {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.share-app-platform-btn.native {
+    border-color: var(--text-light);
+    color: var(--text-light);
+}
+
+.share-app-platform-btn.native:hover {
+    background: var(--text-light);
+    color: white;
+}
+
+/* Incentive Box */
+.share-app-incentive {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffe9a6 100%);
+    border: 2px solid #ffc107;
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.share-app-incentive i {
+    font-size: 2rem;
+    color: #ff6b00;
+}
+
+.share-app-incentive p {
+    margin: 0;
+    color: #856404;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Notifications */
+.share-app-notification {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: white;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    z-index: 10001;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    max-width: 350px;
+    font-weight: 500;
+}
+
+.share-app-notification.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.share-app-notification.success {
+    border-left: 4px solid var(--success-color);
+    color: var(--success-color);
+}
+
+.share-app-notification.info {
+    border-left: 4px solid var(--secondary-color);
+    color: var(--secondary-color);
+}
+
+.share-app-notification.error {
+    border-left: 4px solid #f44336;
+    color: #f44336;
+}
+
+/* Reward Modal */
+.reward-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10002;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.reward-modal.active {
+    opacity: 1;
+}
+
+.reward-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+}
+
+.reward-modal-content {
+    position: relative;
+    background: white;
+    border-radius: 24px;
+    padding: 3rem;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    animation: celebrationPop 0.5s ease;
+}
+
+@keyframes celebrationPop {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.reward-confetti {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+    animation: spin 2s ease;
+}
+
+@keyframes spin {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-10deg); }
+    75% { transform: rotate(10deg); }
+}
+
+.reward-modal-content h2 {
+    font-size: 2.5rem;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+}
+
+.reward-description {
+    font-size: 1.1rem;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+}
+
+.reward-title {
+    font-size: 1.8rem;
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.reward-instructions {
+    font-size: 1rem;
+    color: var(--text-light);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.reward-modal-btn {
+    padding: 1rem 3rem;
+    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(var(--secondary-rgb), 0.3);
+}
+
+.reward-modal-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .share-app-modal-content {
+        padding: 2rem 1.5rem;
+        max-height: 95vh;
+    }
+    
+    .share-app-platforms {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .share-app-platform-btn {
+        padding: 0.875rem;
+        font-size: 0.85rem;
+    }
+    
+    .share-app-platform-btn i {
+        font-size: 1.5rem;
+    }
+    
+    .share-app-card {
+        padding: 2rem 1.5rem;
+    }
+    
+    .share-app-banner {
+        padding: 1.5rem;
+    }
+    
+    .share-app-banner-actions {
+        flex-direction: column;
+    }
+    
+    .share-app-banner-btn-primary,
+    .share-app-banner-btn-secondary {
+        width: 100%;
+    }
+    
+    .share-app-notification {
+        bottom: 1rem;
+        right: 1rem;
+        left: 1rem;
+        max-width: none;
+    }
+    
+    .share-app-badge {
+        display: none;
+    }
+    
+    .reward-modal-content {
+        padding: 2rem 1.5rem;
+    }
+}
