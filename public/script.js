@@ -771,7 +771,16 @@ function displayResults(perfumes) {
         return;
     }
     
-    let html = '<div class="perfume-list">';
+    let html = `
+        <div class="pricing-explainer">
+            <div class="explainer-icon">📊</div>
+            <div class="explainer-text">
+                <strong>Fair Price Comparison:</strong> All prices are shown at 50ml equivalent for easy comparison. 
+                <span class="explainer-detail">Actual bottle sizes vary (30ml-100ml), but normalized pricing helps you compare value accurately.</span>
+            </div>
+        </div>
+        <div class="perfume-list">
+    `;
     
     perfumes.forEach((perfume, index) => {
         // Find Amazon link
@@ -798,24 +807,113 @@ function displayResults(perfumes) {
                         <div class="match-bar" style="width: ${matchPercentage}%"></div>
                     </div>
                     
-                    <p class="perfume-description">${perfume.description}</p>
-
-                    ${perfume.why ? `
+                    ${perfume.personalityNarrative ? `
+                        <div class="personality-narrative">
+                            <em>${perfume.personalityNarrative}</em>
+                        </div>
+                    ` : ''}
+                    
+                    ${perfume.description && !perfume.personalityNarrative ? `
+                        <p class="perfume-description">${perfume.description}</p>
+                    ` : ''}
+                    
+                    ${perfume.whyPerfect && Array.isArray(perfume.whyPerfect) ? `
+                        <div class="why-perfect">
+                            <strong>Why it's perfect for you:</strong>
+                            ${perfume.whyPerfect.map(reason => 
+                                `<div class="reason-item">${reason}</div>`
+                            ).join('')}
+                        </div>
+                    ` : perfume.why ? `
                         <div class="why-match">
                             <strong>Why it matches:</strong> ${perfume.why}
                         </div>
                     ` : ''}
-
-                    ${perfume.notes && perfume.notes.length > 0 ? `
+                    
+                    ${perfume.notesBreakdown ? `
+                        <div class="notes-breakdown">
+                            <strong>Fragrance Journey:</strong>
+                            <div class="notes-layers">
+                                ${perfume.notesBreakdown.top ? `
+                                    <div class="note-layer">
+                                        <span class="note-type">Top:</span> 
+                                        ${perfume.notesBreakdown.top.join(', ')}
+                                    </div>
+                                ` : ''}
+                                ${perfume.notesBreakdown.heart ? `
+                                    <div class="note-layer">
+                                        <span class="note-type">Heart:</span> 
+                                        ${perfume.notesBreakdown.heart.join(', ')}
+                                    </div>
+                                ` : ''}
+                                ${perfume.notesBreakdown.base ? `
+                                    <div class="note-layer">
+                                        <span class="note-type">Base:</span> 
+                                        ${perfume.notesBreakdown.base.join(', ')}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    ` : perfume.notes && perfume.notes.length > 0 ? `
                         <div class="perfume-notes">
                             <strong>Key Notes:</strong> ${perfume.notes.join(', ')}
                         </div>
                     ` : ''}
                     
+                    ${perfume.commercialDetails ? `
+                        <div class="commercial-info">
+                            ${perfume.commercialDetails.price ? `
+                                <span class="info-badge price-badge">
+                                    💰 ${perfume.commercialDetails.price}${perfume.commercialDetails.size ? ` (${perfume.commercialDetails.size})` : ''}
+                                </span>
+                            ` : ''}
+                            ${perfume.commercialDetails.normalizedPrice50ml ? `
+                                <span class="info-badge normalized-price">
+                                    📊 ${perfume.commercialDetails.normalizedPrice50ml}/50ml
+                                </span>
+                            ` : ''}
+                            ${perfume.commercialDetails.longevity ? `<span class="info-badge">⏱️ ${perfume.commercialDetails.longevity}</span>` : ''}
+                            ${perfume.commercialDetails.sillage ? `<span class="info-badge">🌟 ${perfume.commercialDetails.sillage}</span>` : ''}
+                            ${perfume.commercialDetails.bestFor ? `<span class="info-badge">✨ ${perfume.commercialDetails.bestFor}</span>` : ''}
+                        </div>
+                    ` : ''}
+                    
+                    ${perfume.socialProof ? `
+                        <div class="social-proof">
+                            ${perfume.socialProof.rating ? `⭐ ${perfume.socialProof.rating}` : ''}
+                            ${perfume.socialProof.reviewCount ? ` (${perfume.socialProof.reviewCount} reviews)` : ''}
+                            ${perfume.socialProof.popularityRank ? ` • ${perfume.socialProof.popularityRank}` : ''}
+                        </div>
+                    ` : ''}
+
+                    ${perfume.sampleOption && perfume.sampleOption.available ? `
+                        <div class="sample-option">
+                            🧪 <strong>Sample available:</strong> ${perfume.sampleOption.price} - ${perfume.sampleOption.message}
+                        </div>
+                    ` : ''}
+
+                    ${perfume.urgencyTrigger ? `
+                        <div class="urgency-trigger">
+                            ⚡ ${perfume.urgencyTrigger}
+                        </div>
+                    ` : ''}
+
+                    ${perfume.trustSignals && perfume.trustSignals.length > 0 ? `
+                        <div class="trust-signals">
+                            ${perfume.trustSignals.map(signal => `<span class="trust-badge">✓ ${signal}</span>`).join(' ')}
+                        </div>
+                    ` : ''}
+                    
+                    ${perfume.similarTo ? `
+                        <div class="similar-to">
+                            <strong>Similar vibes:</strong> ${perfume.similarTo}
+                        </div>
+                    ` : ''}
+
                     ${amazonLink ? `
-                        <a href="${amazonLink.url}" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
+                        <a href="${amazonLink.url}"
+                           target="_blank"
+                           rel="noopener noreferrer"
                            class="amazon-btn">
                             View on Amazon
                         </a>
