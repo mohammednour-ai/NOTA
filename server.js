@@ -45,6 +45,11 @@ app.get('/test', (req, res) => {
   res.sendFile(__dirname + '/e2e-test-visual.html');
 });
 
+// Serve scraper demo page
+app.get('/demo', (req, res) => {
+  res.sendFile(__dirname + '/public/scraper-demo.html');
+});
+
 // Initialize Anthropic client
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,

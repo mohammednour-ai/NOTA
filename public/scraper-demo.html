@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfume Scraper Demo - NOTA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .demo-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .search-section {
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .input-group button {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .input-group button:hover {
+            transform: translateY(-2px);
+        }
+
+        .input-group button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .examples {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .example-btn {
+            padding: 0.5rem 1rem;
+            background: #f0f0f0;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .example-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            display: none;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            display: none;
+        }
+
+        .results.active {
+            display: block;
+        }
+
+        .normalized-info {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .normalized-info h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .stats-bar {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 4px;
+        }
+
+        .retailer-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .retailer-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .retailer-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .retailer-card.best-deal {
+            border-color: #28a745;
+            background: linear-gradient(135deg, #ffffff 0%, #f0fff4 100%);
+        }
+
+        .best-deal-badge {
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            background: #28a745;
+            color: white;
+            padding: 0.35rem 0.85rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .retailer-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .retailer-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #28a745;
+            margin: 0.75rem 0;
+        }
+
+        .confidence-score {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .confidence-bar {
+            flex: 1;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+            transition: width 0.5s;
+        }
+
+        .retailer-link {
+            display: block;
+            width: 100%;
+            padding: 0.85rem;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .retailer-link:hover {
+            background: #5568d3;
+            transform: translateY(-1px);
+        }
+
+        .retailer-card.best-deal .retailer-link {
+            background: #28a745;
+        }
+
+        .retailer-card.best-deal .retailer-link:hover {
+            background: #218838;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .no-results-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+        }
+
+        .cache-info {
+            font-size: 0.85rem;
+            color: #666;
+            text-align: center;
+            margin-top: 1rem;
+            font-style: italic;
+        }
+
+        .affiliate-disclosure {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: #6c757d;
+            text-align: center;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌸 Perfume Scraper Demo</h1>
+            <p>Test the multi-retailer scraping system - Enter any perfume name</p>
+        </div>
+
+        <div class="demo-card">
+            <div class="search-section">
+                <div class="input-group">
+                    <input 
+                        type="text" 
+                        id="perfumeInput" 
+                        placeholder="e.g., Chanel Coco Mademoiselle EDP 100ml"
+                        autocomplete="off"
+                    >
+                    <button onclick="searchPerfume()" id="searchBtn">
+                        🔍 Search
+                    </button>
+                </div>
+
+                <div class="examples">
+                    <small style="color: #666; margin-right: 0.5rem;">Try:</small>
+                    <button class="example-btn" onclick="setExample('Chanel Coco Mademoiselle EDP 100ml')">Chanel Coco</button>
+                    <button class="example-btn" onclick="setExample('Dior Sauvage EDT 100ml')">Dior Sauvage</button>
+                    <button class="example-btn" onclick="setExample('Tom Ford Oud Wood')">Tom Ford Oud</button>
+                    <button class="example-btn" onclick="setExample('Ariana Grande Cloud')">Ariana Cloud</button>
+                    <button class="example-btn" onclick="setExample('YSL Black Opium')">YSL Black Opium</button>
+                </div>
+            </div>
+
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p>Searching across 6 retailers...</p>
+                <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">This may take 5-10 seconds</p>
+            </div>
+
+            <div id="results" class="results">
+                <div id="normalizedInfo"></div>
+                <div id="statsBar"></div>
+                <div id="retailerCards"></div>
+                <div id="cacheInfo" class="cache-info"></div>
+                <div class="affiliate-disclosure">
+                    ℹ️ We may earn a commission from purchases made through these links. This helps support our service at no extra cost to you.
+                </div>
+            </div>
+
+            <div id="noResults" class="no-results" style="display: none;">
+                <div class="no-results-icon">🔍</div>
+                <h3>No Retailers Found</h3>
+                <p>Try a different perfume or check back later.</p>
+            </div>
+
+            <div id="errorMessage" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Allow Enter key to search
+        document.getElementById('perfumeInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchPerfume();
+            }
+        });
+
+        function setExample(perfume) {
+            document.getElementById('perfumeInput').value = perfume;
+            searchPerfume();
+        }
+
+        async function searchPerfume() {
+            const input = document.getElementById('perfumeInput').value.trim();
+            
+            if (!input) {
+                alert('Please enter a perfume name');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('loading').classList.add('active');
+            document.getElementById('results').classList.remove('active');
+            document.getElementById('noResults').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('searchBtn').disabled = true;
+
+            try {
+                const response = await fetch(`/api/search?query=${encodeURIComponent(input)}`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Search failed');
+                }
+
+                displayResults(data);
+
+            } catch (error) {
+                document.getElementById('errorMessage').innerHTML = `
+                    <div class="error-message">
+                        <strong>Error:</strong> ${error.message}
+                    </div>
+                `;
+                document.getElementById('errorMessage').style.display = 'block';
+            } finally {
+                document.getElementById('loading').classList.remove('active');
+                document.getElementById('searchBtn').disabled = false;
+            }
+        }
+
+        function displayResults(data) {
+            const { normalized, results, source, cachedAt } = data;
+
+            // Display normalized info
+            document.getElementById('normalizedInfo').innerHTML = `
+                <div class="normalized-info">
+                    <h3>📦 Product Information</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Brand</span>
+                            <span class="info-value">${normalized.brand}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Product Line</span>
+                            <span class="info-value">${normalized.line}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Concentration</span>
+                            <span class="info-value">${normalized.concentration}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Size</span>
+                            <span class="info-value">${normalized.size}ml</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Display stats
+            if (results && results.length > 0) {
+                const avgConfidence = (results.reduce((sum, r) => sum + r.confidence, 0) / results.length).toFixed(0);
+                document.getElementById('statsBar').innerHTML = `
+                    <div class="stats-bar">
+                        <strong>📊 Found ${results.length} retailer${results.length !== 1 ? 's' : ''}</strong> 
+                        • Average confidence: ${avgConfidence}%
+                        ${source === 'cache' ? ' • <em>From cache</em>' : ' • <em>Live results</em>'}
+                    </div>
+                `;
+
+                // Display retailer cards
+                const cardsHtml = results.map((retailer, index) => `
+                    <div class="retailer-card ${index === 0 ? 'best-deal' : ''}">
+                        ${index === 0 ? '<div class="best-deal-badge">🏆 Best Deal</div>' : ''}
+                        <div class="retailer-name">${retailer.retailer}</div>
+                        <div class="retailer-price">${retailer.price || 'Price at retailer'}</div>
+                        <div class="confidence-score">
+                            <span>${retailer.confidence}% match</span>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" style="width: ${retailer.confidence}%"></div>
+                            </div>
+                        </div>
+                        <a href="${retailer.url}" target="_blank" rel="noopener noreferrer" class="retailer-link">
+                            Visit ${retailer.retailer} →
+                        </a>
+                    </div>
+                `).join('');
+
+                document.getElementById('retailerCards').innerHTML = `
+                    <div class="retailer-cards">
+                        ${cardsHtml}
+                    </div>
+                `;
+
+                // Cache info
+                if (source === 'cache' && cachedAt) {
+                    const cacheTime = new Date(cachedAt).toLocaleString();
+                    document.getElementById('cacheInfo').textContent = 
+                        `Cached at ${cacheTime} • Results valid for 1 hour`;
+                } else {
+                    document.getElementById('cacheInfo').textContent = 
+                        'Fresh results • Will be cached for 1 hour';
+                }
+
+                document.getElementById('results').classList.add('active');
+                document.getElementById('noResults').style.display = 'none';
+
+            } else {
+                // No results found
+                document.getElementById('noResults').style.display = 'block';
+                document.getElementById('results').classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>
