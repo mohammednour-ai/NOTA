@@ -6,11 +6,6 @@ const axios = require('axios');
 require('dotenv').config();
 const { perfumeDatabase, findPerfume, generateAmazonSearchLink, generateAllMarketplaceLinks } = require('./perfume-database');
 
-// Import new scraping system
-const searchRouter = require('./routes/search-api');
-const { normalizeProduct } = require('./lib/product-normalizer');
-const RetailerAggregator = require('./lib/retailer-aggregator');
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -27,9 +22,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(express.static('public'));
-
-// Mount search API router
-app.use('/api', searchRouter);
 
 // Health check endpoint for monitoring
 app.get('/health', (req, res) => {
@@ -495,46 +487,6 @@ Output ONLY valid JSON array, no other text. Format:
     } catch (error) {
       console.error('Error parsing Claude response:', error);
       recommendations = parseTextRecommendations(message.content[0].text);
-    }
-
-    // NEW: Add retailer links via scraping
-    if (process.env.USE_DIRECT_SCRAPING !== 'false') {
-      try {
-        console.log('\n📍 Starting multi-retailer scraping for recommendations...');
-        const aggregator = new RetailerAggregator();
-        
-        const recommendationsWithLinks = await Promise.all(
-          recommendations.map(async (perfume) => {
-            try {
-              // Normalize perfume for scraping
-              const searchQuery = `${perfume.brand} ${perfume.name} ${perfume.concentration || 'EDP'} 100ml`;
-              const normalized = normalizeProduct(searchQuery);
-              
-              // Search retailers
-              const retailerLinks = await aggregator.searchAllRetailers(normalized);
-              
-              return {
-                ...perfume,
-                retailerLinks: retailerLinks.slice(0, 6), // Top 6 results
-                normalized
-              };
-            } catch (error) {
-              console.error(`Error scraping ${perfume.brand} ${perfume.name}:`, error.message);
-              return {
-                ...perfume,
-                retailerLinks: []
-              };
-            }
-          })
-        );
-        
-        recommendations = recommendationsWithLinks;
-        console.log('✅ Scraping complete for all recommendations');
-        
-      } catch (error) {
-        console.error('Error during scraping integration:', error);
-        // Continue without retailer links
-      }
     }
 
     res.json({

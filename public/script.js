@@ -1282,7 +1282,32 @@ function displayResults(perfumes) {
                         </div>
                     ` : ''}
 
-                    ${amazonLink ? `
+                    ${perfume.retailerLinks && perfume.retailerLinks.length > 0 ? `
+                        <div class="disclaimer-notice">
+                            We don't sell directly. Choose your preferred retailer below.
+                        </div>
+                        
+                        <div class="retailer-cards">
+                            ${perfume.retailerLinks.map((link, linkIndex) => `
+                                <div class="retailer-card ${linkIndex === 0 ? 'best-deal' : ''}">
+                                    ${linkIndex === 0 ? '<span class="best-deal-badge">Best Deal</span>' : ''}
+                                    <div class="retailer-logo">${link.retailer}</div>
+                                    <div class="retailer-price">${link.price || 'Price available at retailer'}</div>
+                                    <div class="retailer-confidence">${link.confidence}% match confidence</div>
+                                    <a href="${link.url}" 
+                                       target="_blank" 
+                                       rel="noopener noreferrer"
+                                       class="retailer-cta">
+                                        Visit ${link.retailer}
+                                    </a>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="affiliate-disclosure">
+                            We may earn a commission from purchases made through these links. This helps support our service at no extra cost to you.
+                        </div>
+                    ` : amazonLink ? `
                         <a href="${amazonLink.url}"
                            target="_blank"
                            rel="noopener noreferrer"
@@ -1290,6 +1315,7 @@ function displayResults(perfumes) {
                             View on Amazon
                         </a>
                     ` : ''}
+
                 </div>
             </div>
         `;
