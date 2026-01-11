@@ -34,6 +34,7 @@
     <link rel="stylesheet" href="styles/referral-overlay.css">
     <link rel="stylesheet" href="styles/retailer-cards.css">
     <link rel="stylesheet" href="styles/promotional-features.css">
+    <link rel="stylesheet" href="styles/perfume-decorations.css">
     <link rel="stylesheet" href="styles/debug.css">
 </head>
 <body>
@@ -126,15 +127,15 @@
                 
                 <div class="hero-features">
                     <div class="feature">
-                        <i class="fas fa-brain feature-icon-pro"></i>
+                        <i class="fas fa-flask feature-icon-pro"></i>
                         <span>AI-Powered</span>
                     </div>
                     <div class="feature">
-                        <i class="fas fa-user-check feature-icon-pro"></i>
+                        <i class="fas fa-spray-can feature-icon-pro"></i>
                         <span>Personalized</span>
                     </div>
                     <div class="feature">
-                        <i class="fas fa-bolt feature-icon-pro"></i>
+                        <i class="fas fa-droplet feature-icon-pro"></i>
                         <span>Instant Links</span>
                     </div>
                 </div>
@@ -155,12 +156,16 @@
             
             <!-- Right Column: Sarah Image + Text -->
             <div class="hero-image">
+                <!-- Decorative perfume elements -->
+                <div class="scent-trail"></div>
+                <div class="floral-accent floral-accent-top-right"></div>
+                
                 <!-- Hero Avatar Image -->
                 <div class="hero-avatar">
                     <img src="images/avatar/sarah-ai-consultant.jpg" alt="AI Perfume Consultant - Your Personal Fragrance Expert" class="avatar-image">
                 </div>
                 <!-- Sarah AI Introduction - Below Image -->
-                <div class="sarah-intro">
+                <div class="sarah-intro perfume-aura">
                     <h3 class="sarah-name">Your AI Perfume Consultant</h3>
                     <p class="sarah-title">Luxury Fragrance Expert</p>
                     <p class="sarah-description">
@@ -175,9 +180,9 @@
         <div class="trust-badges-section">
             <div class="trust-badge-item">
                 <div class="trust-icon">
+                    <!-- Perfume bottles cluster icon -->
                     <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
-                        <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 18c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7z"/>
-                        <circle cx="12" cy="12" r="4"/>
+                        <path d="M8 3h2v2h4V3h2v2h1c1.1 0 2 .9 2 2v14c0 1.1-.9 2-2 2H7c-1.1 0-2-.9-2-2V7c0-1.1.9-2 2-2h1V3zm-1 6v10h2V9H7zm4 0v10h2V9h-2zm4 0v10h2V9h-2z"/>
                     </svg>
                 </div>
                 <div class="trust-text">
@@ -188,8 +193,10 @@
             
             <div class="trust-badge-item">
                 <div class="trust-icon">
+                    <!-- Star with fragrance notes -->
                     <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
                         <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                        <circle cx="12" cy="12" r="2" fill="#d4af70"/>
                     </svg>
                 </div>
                 <div class="trust-text">
@@ -200,8 +207,10 @@
             
             <div class="trust-badge-item">
                 <div class="trust-icon">
+                    <!-- Elegant perfume bottle -->
                     <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
-                        <path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 12 7.4l3.38 4.6L17 10.83 14.92 8H20v6z"/>
+                        <path d="M9 2h6v3h1c1.1 0 2 .9 2 2v14c0 1.1-.9 2-2 2H8c-1.1 0-2-.9-2-2V7c0-1.1.9-2 2-2h1V2zm1 3v-1h4v1H10zm-2 4v10c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V9H8z"/>
+                        <rect x="10" y="12" width="4" height="1" fill="#d4af70"/>
                     </svg>
                 </div>
                 <div class="trust-text">
@@ -212,8 +221,10 @@
             
             <div class="trust-badge-item">
                 <div class="trust-icon">
+                    <!-- Molecular/lab flask for AI -->
                     <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        <path d="M9 3v4.06c-1.6.49-3 1.86-3.3 3.94H3v2h2.7c.3 2.08 1.7 3.45 3.3 3.94V21h2v-4.06c1.6-.49 3-1.86 3.3-3.94H17v-2h-2.7c-.3-2.08-1.7-3.45-3.3-3.94V3H9zm1 6c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z"/>
+                        <circle cx="10" cy="12" r="1.5" fill="#d4af70"/>
                     </svg>
                 </div>
                 <div class="trust-text">

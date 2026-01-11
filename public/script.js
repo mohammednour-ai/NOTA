@@ -41,16 +41,16 @@ function typewriterEffect() {
 // =============================================
 
 const mockActivities = [
-    { name: "Emma", perfume: "Tom Ford Black Orchid", time: "2 min ago" },
-    { name: "James", perfume: "Chanel Bleu de Chanel", time: "5 min ago" },
-    { name: "Sofia", perfume: "Dior Sauvage", time: "8 min ago" },
-    { name: "Lucas", perfume: "YSL La Nuit de L'Homme", time: "12 min ago" },
-    { name: "Olivia", perfume: "Jo Malone Wood Sage", time: "15 min ago" },
-    { name: "Noah", perfume: "Creed Aventus", time: "18 min ago" },
-    { name: "Ava", perfume: "Gucci Bloom", time: "22 min ago" },
-    { name: "Liam", perfume: "Prada L'Homme", time: "25 min ago" },
-    { name: "Mia", perfume: "Lancôme La Vie Est Belle", time: "28 min ago" },
-    { name: "Ethan", perfume: "Versace Eros", time: "32 min ago" }
+    { name: "Emma", perfume: "Tom Ford Black Orchid", time: "2 min ago", notes: ["floral", "oriental"] },
+    { name: "James", perfume: "Chanel Bleu de Chanel", time: "5 min ago", notes: ["woody", "citrus"] },
+    { name: "Sofia", perfume: "Dior Sauvage", time: "8 min ago", notes: ["fresh", "woody"] },
+    { name: "Lucas", perfume: "YSL La Nuit de L'Homme", time: "12 min ago", notes: ["oriental", "woody"] },
+    { name: "Olivia", perfume: "Jo Malone Wood Sage", time: "15 min ago", notes: ["fresh", "woody"] },
+    { name: "Noah", perfume: "Creed Aventus", time: "18 min ago", notes: ["fresh", "citrus"] },
+    { name: "Ava", perfume: "Gucci Bloom", time: "22 min ago", notes: ["floral", "fresh"] },
+    { name: "Liam", perfume: "Prada L'Homme", time: "25 min ago", notes: ["fresh", "citrus"] },
+    { name: "Mia", perfume: "Lancôme La Vie Est Belle", time: "28 min ago", notes: ["floral", "oriental"] },
+    { name: "Ethan", perfume: "Versace Eros", time: "32 min ago", notes: ["fresh", "woody"] }
 ];
 
 let activityIndex = 0;
@@ -79,13 +79,21 @@ function addActivityItem(activity) {
     // Get initials for avatar
     const initials = activity.name.split(' ').map(n => n[0]).join('');
     
+    // Create fragrance dots HTML
+    const notesHTML = activity.notes ? activity.notes.map(note => 
+        `<span class="fragrance-dot ${note}"></span>`
+    ).join('') : '';
+    
     // Create activity item
     const activityHTML = `
         <div class="activity-item">
             <div class="activity-avatar">${initials}</div>
             <div class="activity-content">
                 <div class="activity-user">${activity.name}</div>
-                <div class="activity-perfume">Matched: ${activity.perfume}</div>
+                <div class="activity-perfume">
+                    Matched: ${activity.perfume}
+                    ${notesHTML}
+                </div>
                 <div class="activity-time">${activity.time}</div>
             </div>
         </div>

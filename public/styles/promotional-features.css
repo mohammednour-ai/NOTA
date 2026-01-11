@@ -357,6 +357,14 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.activity-perfume .fragrance-dot {
+    margin-left: 0.25rem;
+    flex-shrink: 0;
 }
 
 .activity-time {

@@ -20,6 +20,18 @@
     --accent-gold: #d4af70;          /* Muted champagne-gold */
     --accent-gold-dim: #a38c5a;      /* Dimmer gold for subtle highlights */
     
+    /* === Perfume Fragrance Family Colors === */
+    --perfume-floral: #d4a5a5;       /* Soft rose for floral notes */
+    --perfume-woody: #8b7355;        /* Warm brown for woody notes */
+    --perfume-citrus: #e8c766;       /* Soft yellow for citrus notes */
+    --perfume-oriental: #9c6b7a;     /* Deep plum for oriental notes */
+    --perfume-fresh: #7eb09b;        /* Aqua-green for fresh notes */
+    --perfume-floral-rgb: 212, 165, 165;
+    --perfume-woody-rgb: 139, 115, 85;
+    --perfume-citrus-rgb: 232, 199, 102;
+    --perfume-oriental-rgb: 156, 107, 122;
+    --perfume-fresh-rgb: 126, 176, 155;
+    
     /* === Semantic Colors (Dark-tuned) === */
     --success-color: #4a8f6a;        /* Success green */
     --warning-color: #d49a3a;        /* Warning amber */
@@ -852,6 +864,28 @@ h1, h2, h3, h4 {
     max-width: 900px;
     margin: 0 auto;
     background: var(--bg-primary);  /* Noir Luxe dark background */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Add subtle perfume particles background to quiz */
+.quiz-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 30%, rgba(212, 175, 112, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(212, 165, 165, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.quiz-section > * {
+    position: relative;
+    z-index: 1;
 }
 
 .quiz-section.active {
@@ -883,7 +917,22 @@ h1, h2, h3, h4 {
     border-radius: 10px;
     transition: width 0.3s ease;
     width: 3.33%;
-    box-shadow: 0 2px 4px rgba(var(--cta-primary-rgb), 0.4);
+    box-shadow: 0 2px 4px rgba(var(--cta-primary-rgb), 0.4), 0 0 15px rgba(212, 175, 112, 0.3);
+    position: relative;
+}
+
+/* Add scent trail effect to progress bar */
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    background: radial-gradient(circle, rgba(212, 175, 112, 0.4) 0%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(8px);
 }
 
 .progress-text {
@@ -960,7 +1009,7 @@ h1, h2, h3, h4 {
     border-color: var(--accent-gold);
     background: var(--bg-surface-hover);
     transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(var(--cta-primary-rgb), 0.4);
+    box-shadow: 0 8px 20px rgba(var(--cta-primary-rgb), 0.4), 0 0 30px rgba(212, 175, 112, 0.2);
 }
 
 .option:focus-visible {
@@ -1832,10 +1881,32 @@ h1, h2, h3, h4 {
     overflow: hidden;
     transition: all 0.3s ease;
     border: 2px solid var(--border-subtle);
+    position: relative;
+}
+
+/* Add bottle silhouette overlay */
+.perfume-card::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    right: -50px;
+    width: 200px;
+    height: 300px;
+    opacity: 0.02;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 150'%3E%3Cpath d='M30 10 L30 30 L25 35 L25 120 Q25 140 50 140 Q75 140 75 120 L75 35 L70 30 L70 10 Q70 5 50 5 Q30 5 30 10 M40 0 L60 0 L60 10 L40 10 Z M45 40 Q50 50 55 40' fill='%23d4af70'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 0;
+}
+
+.perfume-card > * {
+    position: relative;
+    z-index: 1;
 }
 
 .perfume-card:hover {
-    box-shadow: 0 8px 32px rgba(var(--cta-primary-rgb), 0.4);
+    box-shadow: 0 8px 32px rgba(var(--cta-primary-rgb), 0.4), 0 0 40px rgba(212, 175, 112, 0.15);
     border-color: var(--accent-gold-dim);
 }
 
@@ -2502,9 +2573,26 @@ h1, h2, h3, h4 {
 /* Notes breakdown - Plain design */
 .notes-breakdown {
     margin: 1rem 0;
-    padding: 1rem;
+    padding: 1.25rem;
     background: var(--hover-bg);  /* Light gray */
     border-radius: 10px;
+    border-left: 3px solid var(--accent-gold);
+    position: relative;
+}
+
+/* Add decorative floral accent to notes section */
+.notes-breakdown::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    opacity: 0.08;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 10 Q60 30 50 50 Q30 40 50 10 M50 10 Q40 30 50 50 Q70 40 50 10 M50 50 Q60 70 50 90 Q30 60 50 50 M50 50 Q40 70 50 90 Q70 60 50 50' fill='%23d4af70' opacity='0.3'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
 }
 
 .notes-breakdown strong {
