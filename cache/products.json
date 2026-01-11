@@ -1,0 +1,127 @@
+{
+  "chanel_coco_mademoiselle_edp_100": {
+    "normalized": {
+      "brand": "Chanel",
+      "line": "Coco Mademoiselle",
+      "concentration": "EDP",
+      "size": 100,
+      "normalizedId": "chanel_coco_mademoiselle_edp_100",
+      "original": "Chanel Coco Mademoiselle EDP 100ml"
+    },
+    "results": [],
+    "stats": {
+      "totalProducts": 0,
+      "retailers": 0,
+      "byRetailer": [],
+      "bestDeal": null,
+      "priceRange": null
+    },
+    "timestamp": 1768023133238,
+    "expiresAt": 1768026733238
+  },
+  "yves_saint_laurent_ysl_black_opium_edp_100": {
+    "normalized": {
+      "brand": "Yves Saint Laurent",
+      "line": "YSL Black Opium",
+      "concentration": "EDP",
+      "size": 100,
+      "normalizedId": "yves_saint_laurent_ysl_black_opium_edp_100",
+      "original": "YSL Black Opium"
+    },
+    "results": [
+      {
+        "brand": "Ysl",
+        "name": "Ysl black opium 5 oz edp sp for women, 5 Fluid Ounce",
+        "price": "",
+        "size": "5oz",
+        "url": "https://www.amazon.com/Saint-Laurent-black-opium-women/dp/B07C11196M/ref=sr_1_1?dib=eyJ2IjoiMSJ9.Jo5Kts13L0FCaO6NYmKLZsAbtPR3hKyffpj__gBb3-te4c0RGslb1qZtojTjV_A7RCVnuWrV5gqj5wnRYeZEYdDQljcE-NcgZCcvY3BBjYTQXCv-6IAYbQy4kLfUbWRL8OSiwz1u0IReX42bFmd1GTIECH_bcsTo2zRCS_Hcenqv64OY_RUfjPl-arKg9DUIxE14u5zgwBi97r-wGzmKq0OKqh77Ne1V6iI6jyE28OVtaYh1_tJHPRr_13TWBRlY3S2t3Zt-9_vALaAu0lFvAu1B7HqriNy9pmMFL-kJCZU.hbI9AGigT3_DEV-pnwBQ82gkr1eRbRh-Ia8EZr_DjEU&dib_tag=se&keywords=Yves+Saint+Laurent+YSL+Black+Opium+perfume+EDP+100ml&nsdOptOutParam=true&qid=1768023107&sr=8-1&tag=nota0c-20&utm_source=nota&utm_medium=referral&utm_campaign=perfume_finder",
+        "image": "https://m.media-amazon.com/images/I/61hb-9vLY2L._AC_UL320_.jpg",
+        "description": "Yves Saint LaurentYsl black opium 5 oz edp sp for women, 5 Fluid Ounce Cedar,Orange,Vanilla5 Fl Oz (Pack of 1)Options:4 sizes, 5 scents4 sizes, 5 scents4.64.6 out of 5 stars (6.2K)  See optionsNo featured offers availableCAD 306.03(2 new offers)",
+        "asin": "B07C11196M",
+        "confidence": 95,
+        "retailer": "Amazon US",
+        "country": "US",
+        "scrapedAt": "2026-01-10T05:32:09.978Z"
+      }
+    ],
+    "stats": {
+      "totalProducts": 1,
+      "retailers": 1,
+      "byRetailer": [
+        {
+          "retailer": "Amazon US",
+          "count": 1,
+          "avgConfidence": 95
+        }
+      ],
+      "bestDeal": {
+        "retailer": "Amazon US",
+        "price": "",
+        "confidence": 95
+      },
+      "priceRange": null
+    },
+    "timestamp": 1768023200648,
+    "expiresAt": 1768026800648
+  },
+  "dior_sauvage_edt_100": {
+    "normalized": {
+      "brand": "Dior",
+      "line": "Sauvage",
+      "concentration": "EDT",
+      "size": 100,
+      "normalizedId": "dior_sauvage_edt_100",
+      "original": "Dior Sauvage EDT 100ml"
+    },
+    "results": [],
+    "stats": {
+      "totalProducts": 0,
+      "retailers": 0,
+      "byRetailer": [],
+      "bestDeal": null,
+      "priceRange": null
+    },
+    "timestamp": 1768023238130,
+    "expiresAt": 1768026838130
+  },
+  "tom_ford_oud_wood_edp_100": {
+    "normalized": {
+      "brand": "Tom Ford",
+      "line": "Oud Wood",
+      "concentration": "EDP",
+      "size": 100,
+      "normalizedId": "tom_ford_oud_wood_edp_100",
+      "original": "Tom Ford Oud Wood"
+    },
+    "results": [],
+    "stats": {
+      "totalProducts": 0,
+      "retailers": 0,
+      "byRetailer": [],
+      "bestDeal": null,
+      "priceRange": null
+    },
+    "timestamp": 1768023911806,
+    "expiresAt": 1768027511806
+  },
+  "ariana_grande_cloud_edp_100": {
+    "normalized": {
+      "brand": "Ariana Grande",
+      "line": "Cloud",
+      "concentration": "EDP",
+      "size": 100,
+      "normalizedId": "ariana_grande_cloud_edp_100",
+      "original": "Ariana Grande Cloud"
+    },
+    "results": [],
+    "stats": {
+      "totalProducts": 0,
+      "retailers": 0,
+      "byRetailer": [],
+      "bestDeal": null,
+      "priceRange": null
+    },
+    "timestamp": 1768024107311,
+    "expiresAt": 1768027707311
+  }
+}

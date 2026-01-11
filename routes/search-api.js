@@ -2,7 +2,7 @@ const express = require('express');
 const rateLimit = require('express-rate-limit');
 const { normalizeProduct } = require('../lib/product-normalizer');
 const cacheManager = require('../lib/cache-manager');
-const RetailerAggregator = require('../lib/retailer-aggregator');
+const GoogleOnlyRetailerAggregator = require('../lib/google-only-aggregator');
 const { injectAffiliateLinks } = require('../lib/affiliate-injector');
 
 const router = express.Router();
@@ -65,10 +65,20 @@ router.get('/search', searchLimiter, async (req, res) => {
       });
     }
     
-    console.log(`[API] Cache miss, initiating scraping...`);
+    console.log(`[API] Cache miss, querying Google Shopping API...`);
     
-    // Scrape all retailers in parallel
-    const aggregator = new RetailerAggregator();
+    // Search using Google Shopping API only
+    const aggregator = new GoogleOnlyRetailerAggregator();
+    
+    // Check if API is configured
+    if (!aggregator.isConfigured()) {
+      return res.status(503).json({
+        error: 'Google Shopping API not configured',
+        message: 'Please add GOOGLE_API_KEY and GOOGLE_SHOPPING_CX to .env file',
+        documentation: 'See GOOGLE_SHOPPING_API_SETUP.md for setup instructions'
+      });
+    }
+    
     const results = await aggregator.searchAllRetailers(normalized);
     
     // Inject affiliate links

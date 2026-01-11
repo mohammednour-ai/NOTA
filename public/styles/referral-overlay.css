@@ -35,29 +35,22 @@
     backdrop-filter: blur(10px);
 }
 
-/* Card - Professional Gradient Design */
+/* Card - Noir Luxe Design */
 .referral-overlay-card {
     position: relative;
-    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+    background: linear-gradient(135deg, var(--cta-primary), var(--accent-gold-dim));
     border-radius: 24px;
     padding: 3rem 2.5rem;
     max-width: 540px;
     width: 90%;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--accent-gold);
     transform: scale(0.9) translateY(20px);
     transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     z-index: 1;
-    animation: pulse-glow 3s ease-in-out infinite;
 }
 
-@keyframes pulse-glow {
-    0%, 100% {
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(var(--secondary-rgb), 0.3);
-    }
-    50% {
-        box-shadow: 0 25px 75px rgba(0, 0, 0, 0.5), 0 0 60px rgba(var(--secondary-rgb), 0.5);
-    }
-}
+/* REMOVED: pulse-glow animation - simpler plain design */
 
 .referral-overlay.active .referral-overlay-card {
     transform: scale(1) translateY(0);
@@ -68,10 +61,10 @@
     position: absolute;
     top: 1.5rem;
     right: 1.5rem;
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
+    background: rgba(10, 10, 10, 0.6);
+    border: 1px solid var(--border-emphasis);
     font-size: 1.5rem;
-    color: white;
+    color: var(--text-primary);
     cursor: pointer;
     padding: 0.5rem;
     border-radius: 50%;
@@ -85,7 +78,7 @@
 }
 
 .referral-overlay-close:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(10, 10, 10, 0.8);
     transform: rotate(90deg);
 }
 
@@ -99,13 +92,14 @@
     width: 90px;
     height: 90px;
     margin: 0 auto 1.5rem;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(10, 10, 10, 0.4);
+    border: 2px solid var(--accent-gold);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 3rem;
-    color: white;
+    color: var(--text-primary);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px);
 }
@@ -113,15 +107,17 @@
 .referral-overlay-header h2 {
     font-family: 'Playfair Display', Georgia, serif;
     font-size: 2.2rem;
-    color: white;
+    color: var(--bg-primary);
     margin-bottom: 0.5rem;
     font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .referral-overlay-header p {
     font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.95);
+    color: var(--bg-primary);
     margin: 0;
+    opacity: 0.9;
 }
 
 /* Body */
@@ -139,7 +135,8 @@
     gap: 1rem;
     flex-wrap: wrap;
     padding: 1.5rem;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(10, 10, 10, 0.3);
+    border: 1px solid var(--border-emphasis);
     border-radius: 16px;
     backdrop-filter: blur(10px);
 }
@@ -151,8 +148,8 @@
     align-items: center;
     justify-content: center;
     padding: 0;
-    background: white;
-    border: none;
+    background: var(--bg-surface);
+    border: 2px solid var(--border-emphasis);
     border-radius: 50%;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -198,13 +195,13 @@
     color: var(--secondary-color);
 }
 
-/* Copy Button - White on gradient */
+/* Copy Button - Noir Luxe */
 .referral-copy-btn {
     width: 100%;
     padding: 1.25rem 2rem;
-    background: white;
-    color: var(--secondary-color);
-    border: none;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border: 2px solid var(--accent-gold);
     border-radius: 50px;
     font-size: 1.1rem;
     font-weight: 700;
@@ -215,12 +212,14 @@
     gap: 0.75rem;
     transition: all 0.3s ease;
     font-family: 'Inter', sans-serif;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
 .referral-copy-btn:hover {
+    background: var(--bg-surface-hover);
+    border-color: var(--accent-gold);
     transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 10px 30px rgba(212, 175, 112, 0.4);
 }
 
 .referral-copy-btn i {

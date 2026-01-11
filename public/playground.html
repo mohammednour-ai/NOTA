@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noir Luxe Palette Playground</title>
+    <style>
+        /* NOIR LUXE 2025 PALETTE TOKENS */
+        :root {
+            /* === Dark Backgrounds === */
+            --bg-primary: #0a0a0a;           /* Near-black main background */
+            --bg-surface: #1a1a1a;           /* Warm charcoal for cards/modals */
+            --bg-surface-hover: #242424;     /* Slightly lighter on hover */
+            
+            /* === Text Colors === */
+            --text-primary: #f5f5f5;         /* Off-white primary text */
+            --text-secondary: #b8b8b8;       /* Muted warm-gray secondary text */
+            --text-tertiary: #888888;        /* Even more muted for hints */
+            
+            /* === Primary/CTA === */
+            --cta-primary: #2d5f4e;          /* Evergreen base */
+            --cta-primary-hover: #3a7a62;    /* Brighter evergreen on hover */
+            --cta-primary-rgb: 45, 95, 78;
+            
+            /* === Accent === */
+            --accent-gold: #d4af70;          /* Muted champagne-gold */
+            --accent-gold-dim: #a38c5a;      /* Dimmer gold for subtle highlights */
+            
+            /* === Semantic Colors === */
+            --success: #4a8f6a;              /* Success green (tuned for dark) */
+            --warning: #d49a3a;              /* Warning amber */
+            --error: #c74242;                /* Error red */
+            
+            /* === Focus/Borders === */
+            --border-subtle: #2a2a2a;        /* Subtle dividers */
+            --border-emphasis: #3a3a3a;      /* Emphasized dividers */
+            --focus-ring: var(--accent-gold);
+            
+            /* === Shadows === */
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: var(--bg-surface);
+            border-radius: 16px;
+            border: 1px solid var(--border-subtle);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        
+        /* TOKEN PREVIEW GRID */
+        .tokens-section {
+            margin-bottom: 3rem;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-gold);
+        }
+        
+        .tokens-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .token-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .token-card:hover {
+            background: var(--bg-surface-hover);
+            border-color: var(--border-emphasis);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .token-swatch {
+            width: 100%;
+            height: 80px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-emphasis);
+        }
+        
+        .token-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+        
+        .token-value {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+        }
+        
+        /* MOCK OFFERS CARD */
+        .offers-section {
+            margin-bottom: 3rem;
+        }
+        
+        .offers-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .offers-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        
+        .offers-header h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .offers-header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        
+        .offer-list {
+            padding: 1rem;
+        }
+        
+        .offer-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            gap: 1rem;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+        }
+        
+        .offer-row:hover {
+            background: var(--bg-surface-hover);
+            border-color: var(--border-emphasis);
+        }
+        
+        .offer-row.best-deal {
+            border-color: var(--accent-gold);
+            background: linear-gradient(135deg, var(--bg-surface) 0%, rgba(212, 175, 112, 0.05) 100%);
+            position: relative;
+        }
+        
+        .offer-row.best-deal::before {
+            content: "BEST DEAL";
+            position: absolute;
+            top: -8px;
+            left: 1rem;
+            background: var(--accent-gold);
+            color: var(--bg-primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        
+        .offer-retailer {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .retailer-logo-placeholder {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            border: 1px solid var(--border-emphasis);
+        }
+        
+        .retailer-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .offer-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            text-align: right;
+        }
+        
+        .offer-row.best-deal .offer-price {
+            color: var(--success);
+        }
+        
+        .visit-btn {
+            background: var(--cta-primary);
+            color: var(--text-primary);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .visit-btn:hover {
+            background: var(--cta-primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(var(--cta-primary-rgb), 0.4);
+        }
+        
+        .visit-btn:focus {
+            outline: 2px solid var(--focus-ring);
+            outline-offset: 2px;
+        }
+        
+        .affiliate-disclosure {
+            padding: 1rem 1.5rem;
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border-subtle);
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+            text-align: center;
+        }
+        
+        /* TOGGLE SECTION */
+        .toggle-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--bg-surface);
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+        }
+        
+        .toggle-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        
+        .toggle-btn {
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-emphasis);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .toggle-btn:hover {
+            background: var(--cta-primary);
+            color: var(--text-primary);
+            border-color: var(--cta-primary);
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .offer-row {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+                text-align: center;
+            }
+            
+            .offer-retailer {
+                justify-content: center;
+            }
+            
+            .offer-price {
+                text-align: center;
+            }
+            
+            .visit-btn {
+                width: 100%;
+            }
+            
+            .tokens-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Noir Luxe 2025 Palette</h1>
+            <p>Dark elegance • Gender-neutral • US/Canada optimized</p>
+        </div>
+        
+        <!-- TOKEN PREVIEW -->
+        <section class="tokens-section">
+            <h2 class="section-title">Color Tokens</h2>
+            <div class="tokens-grid">
+                <div class="token-card">
+                    <div class="token-swatch" style="background: var(--bg-primary);"></div>
+                    <div class="token-name">BG Primary</div>
+                    <div class="token-value">#0a0a0a</div>
+                </div>
+                <div class="token-card">
+                    <div class="token-swatch" style="background: var(--bg-surface);"></div>
+                    <div class="token-name">BG Surface</div>
+                    <div class="token-value">#1a1a1a</div>
+                </div>
+                <div class="token-card">
+                    <div class="token-swatch" style="background: var(--cta-primary);"></div>
+                    <div class="token-name">CTA Evergreen</div>
+                    <div class="token-value">#2d5f4e</div>
+                </div>
+                <div class="token-card">
+                    <div class="token-swatch" style="background: var(--accent-gold);"></div>
+                    <div class="token-name">Accent Gold</div>
+                    <div class="token-value">#d4af70</div>
+                </div>
+                <div class="token-card">
+                    <div class="token-swatch" style="background: var(--success);"></div>
+                    <div class="token-name">Success</div>
+                    <div class="token-value">#4a8f6a</div>
+                </div>
+                <div class="token-card">
+                    <div class="token-swatch" style="background: var(--text-primary); border: 1px solid var(--border-emphasis);"></div>
+                    <div class="token-name">Text Primary</div>
+                    <div class="token-value">#f5f5f5</div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- MOCK OFFERS UI -->
+        <section class="offers-section">
+            <h2 class="section-title">Aggregated Offers UI</h2>
+            <div class="offers-card">
+                <div class="offers-header">
+                    <h3>Tom Ford Black Orchid Eau de Parfum</h3>
+                    <p>Your signature scent—available at these retailers</p>
+                </div>
+                
+                <div class="offer-list">
+                    <div class="offer-row best-deal">
+                        <div class="offer-retailer">
+                            <div class="retailer-logo-placeholder">🛒</div>
+                            <span class="retailer-name">Amazon.com</span>
+                        </div>
+                        <div class="offer-price">$89.99</div>
+                        <button class="visit-btn">Visit</button>
+                    </div>
+                    
+                    <div class="offer-row">
+                        <div class="offer-retailer">
+                            <div class="retailer-logo-placeholder">💎</div>
+                            <span class="retailer-name">Sephora</span>
+                        </div>
+                        <div class="offer-price">$135.00</div>
+                        <button class="visit-btn">Visit</button>
+                    </div>
+                    
+                    <div class="offer-row">
+                        <div class="offer-retailer">
+                            <div class="retailer-logo-placeholder">🏬</div>
+                            <span class="retailer-name">Nordstrom</span>
+                        </div>
+                        <div class="offer-price">$135.00</div>
+                        <button class="visit-btn">Visit</button>
+                    </div>
+                    
+                    <div class="offer-row">
+                        <div class="offer-retailer">
+                            <div class="retailer-logo-placeholder">🌟</div>
+                            <span class="retailer-name">Ulta Beauty</span>
+                        </div>
+                        <div class="offer-price">$130.00</div>
+                        <button class="visit-btn">Visit</button>
+                    </div>
+                </div>
+                
+                <div class="affiliate-disclosure">
+                    <small>We may earn a commission when you purchase through our links. Your price remains the same.</small>
+                </div>
+            </div>
+            
+            <div class="toggle-section">
+                <h3>Test Scenarios</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                    Click to preview different states (best deal, missing prices, long names, etc.)
+                </p>
+                <div class="toggle-buttons">
+                    <button class="toggle-btn" onclick="alert('State: Default with best deal highlight')">Default State</button>
+                    <button class="toggle-btn" onclick="alert('State: Missing prices')">Missing Prices</button>
+                    <button class="toggle-btn" onclick="alert('State: Long retailer names')">Long Names</button>
+                    <button class="toggle-btn" onclick="alert('State: Mobile view (resize browser)')">Mobile Preview</button>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

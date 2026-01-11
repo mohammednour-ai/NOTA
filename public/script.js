@@ -2,10 +2,11 @@
 let questions = [];
 let currentQuestionIndex = 0;
 let answers = {};
-let userGender = null; // Track user's gender choice
-let themeProgress = 0; // 0 = neutral, 1 = fully gendered
 let userCountry = 'US'; // Default to US, will be detected
 let emailCaptureConfig = { mode: 'always' }; // Default: always
+
+// NO THEME SYSTEM - Plain minimalist design throughout
+// Removed: userGender, themeProgress, theme transition logic
 
 // Sarah's typing animation
 function typewriterEffect() {
@@ -22,7 +23,7 @@ function typewriterEffect() {
         if (index < text.length) {
             element.textContent += text.charAt(index);
             index++;
-            setTimeout(type, 30); // Speed of typing (30ms per character)
+            setTimeout(type, 30);
         } else {
             // Remove cursor after typing is complete
             setTimeout(() => {
@@ -34,6 +35,73 @@ function typewriterEffect() {
     // Start typing after a brief delay
     setTimeout(type, 500);
 }
+
+// =============================================
+// LIVE ACTIVITY FEED SYSTEM
+// =============================================
+
+const mockActivities = [
+    { name: "Emma", perfume: "Tom Ford Black Orchid", time: "2 min ago" },
+    { name: "James", perfume: "Chanel Bleu de Chanel", time: "5 min ago" },
+    { name: "Sofia", perfume: "Dior Sauvage", time: "8 min ago" },
+    { name: "Lucas", perfume: "YSL La Nuit de L'Homme", time: "12 min ago" },
+    { name: "Olivia", perfume: "Jo Malone Wood Sage", time: "15 min ago" },
+    { name: "Noah", perfume: "Creed Aventus", time: "18 min ago" },
+    { name: "Ava", perfume: "Gucci Bloom", time: "22 min ago" },
+    { name: "Liam", perfume: "Prada L'Homme", time: "25 min ago" },
+    { name: "Mia", perfume: "Lancôme La Vie Est Belle", time: "28 min ago" },
+    { name: "Ethan", perfume: "Versace Eros", time: "32 min ago" }
+];
+
+let activityIndex = 0;
+
+function initializeLiveActivityFeed() {
+    const feedElement = document.getElementById('activityFeed');
+    if (!feedElement) return;
+    
+    // Add initial activities
+    for (let i = 0; i < 4; i++) {
+        addActivityItem(mockActivities[activityIndex % mockActivities.length]);
+        activityIndex++;
+    }
+    
+    // Add new activity every 8 seconds
+    setInterval(() => {
+        addActivityItem(mockActivities[activityIndex % mockActivities.length]);
+        activityIndex++;
+    }, 8000);
+}
+
+function addActivityItem(activity) {
+    const feedElement = document.getElementById('activityFeed');
+    if (!feedElement) return;
+    
+    // Get initials for avatar
+    const initials = activity.name.split(' ').map(n => n[0]).join('');
+    
+    // Create activity item
+    const activityHTML = `
+        <div class="activity-item">
+            <div class="activity-avatar">${initials}</div>
+            <div class="activity-content">
+                <div class="activity-user">${activity.name}</div>
+                <div class="activity-perfume">Matched: ${activity.perfume}</div>
+                <div class="activity-time">${activity.time}</div>
+            </div>
+        </div>
+    `;
+    
+    // Add to top of feed
+    feedElement.insertAdjacentHTML('afterbegin', activityHTML);
+    
+    // Keep only last 5 items
+    while (feedElement.children.length > 5) {
+        feedElement.removeChild(feedElement.lastChild);
+    }
+}
+
+// REMOVED: Theme colors object and interpolation functions
+// Plain design doesn't need dynamic color transitions
 
 // Detect user's country
 async function detectUserCountry() {
@@ -113,25 +181,7 @@ const splashImages = [
     'images/Splash/lucid-origin_IMAGE_Cinematic_Splash_Screen_Background_Prompt_Cinematic_luxury_perfume_adverti-0.jpg'
 ];
 
-// Theme colors for gradual transition
-const themes = {
-    neutral: {
-        secondary: { r: 199, g: 125, b: 255 }, // Purple #c77dff
-        accent: { r: 224, g: 195, b: 252 }     // Light purple #e0c3fc
-    },
-    male: {
-        secondary: { r: 33, g: 150, b: 243 },  // Blue #2196F3
-        accent: { r: 144, g: 202, b: 249 }     // Light blue #90caf9
-    },
-    female: {
-        secondary: { r: 255, g: 107, b: 157 }, // Pink #ff6b9d
-        accent: { r: 255, g: 214, b: 224 }     // Light pink #ffd6e0
-    },
-    nonbinary: {
-        secondary: { r: 156, g: 39, b: 176 },  // Purple #9c27b0
-        accent: { r: 206, g: 147, b: 216 }     // Light purple #ce93d8
-    }
-};
+// REMOVED: Theme system - no color transitions needed
 
 // Splash Screen Functions
 function initSplashScreen() {
@@ -219,6 +269,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Initialize Sarah's typing animation
     typewriterEffect();
+    
+    // Initialize live activity feed
+    initializeLiveActivityFeed();
     
     // Initialize splash screen
     initSplashScreen();
@@ -343,92 +396,22 @@ function startQuiz() {
     document.getElementById('quiz').classList.add('active');
     currentQuestionIndex = 0;
     answers = {};
-    userGender = null;
-    themeProgress = 0;
+    // REMOVED: userGender and themeProgress reset - no theme system
     loadQuestion();
 }
 
-// Dynamic Theme System
-function applyDynamicTheme() {
-    if (!userGender) {
-        console.log('🎨 No gender selected yet, keeping neutral theme');
-        return; // No theme change before gender is selected
-    }
-    
-    console.log('🎨 Applying theme for:', userGender, 'Progress:', themeProgress);
-    
-    // Calculate progress (0 to 1) - starts after Q1
-    if (currentQuestionIndex > 0) {
-        themeProgress = Math.min(currentQuestionIndex / questions.length, 1);
-    }
-    
-    // Get target theme based on gender
-    let targetTheme;
-    const genderLower = userGender.toLowerCase();
-    
-    if (genderLower === 'male') {
-        targetTheme = themes.male;
-        console.log('🎨 Target: BLUE');
-    } else if (genderLower === 'female') {
-        targetTheme = themes.female;
-        console.log('🎨 Target: PINK');
-    } else if (genderLower === 'non-binary') {
-        targetTheme = themes.nonbinary;
-        console.log('🎨 Target: PURPLE');
-    } else {
-        targetTheme = themes.neutral;
-        console.log('🎨 Target: NEUTRAL');
-    }
-    
-    // Interpolate between neutral and target theme
-    const currentSecondary = interpolateColor(themes.neutral.secondary, targetTheme.secondary, themeProgress);
-    const currentAccent = interpolateColor(themes.neutral.accent, targetTheme.accent, themeProgress);
-    
-    const secondaryRGB = `rgb(${currentSecondary.r}, ${currentSecondary.g}, ${currentSecondary.b})`;
-    const accentRGB = `rgb(${currentAccent.r}, ${currentAccent.g}, ${currentAccent.b})`;
-    
-    console.log('🎨 Setting secondary color to:', secondaryRGB);
-    console.log('🎨 Setting accent color to:', accentRGB);
-    
-    // Apply CSS variables
-    document.documentElement.style.setProperty('--secondary-color', secondaryRGB);
-    document.documentElement.style.setProperty('--accent-color', accentRGB);
-}
-
-// Color interpolation helper
-function interpolateColor(color1, color2, progress) {
-    return {
-        r: Math.round(color1.r + (color2.r - color1.r) * progress),
-        g: Math.round(color1.g + (color2.g - color1.g) * progress),
-        b: Math.round(color1.b + (color2.b - color1.b) * progress)
-    };
-}
-
-// Detect gender selection from Q1
-function detectGenderSelection(questionId, selectedValue) {
-    if (questionId === 1) { // Question 1 is gender
-        userGender = selectedValue;
-        console.log('🎨 Gender detected:', userGender);
-        console.log('🎨 Selected value:', selectedValue);
-        
-        // Force immediate theme update with a small progress to show change
-        themeProgress = 0.05; // 5% to show initial shift
-        
-        // Apply initial theme immediately
-        applyDynamicTheme();
-        
-        // Visual confirmation
-        console.log('🎨 Theme applied! Current secondary color:', 
-            getComputedStyle(document.documentElement).getPropertyValue('--secondary-color'));
-    }
-}
+// REMOVED: Dynamic theme system functions
+// applyDynamicTheme() - No longer needed
+// interpolateColor() - No longer needed  
+// detectGenderSelection() - No longer needed
+// Plain design uses consistent colors throughout
 
 function loadQuestion() {
     const question = questions[currentQuestionIndex];
     const quizContent = document.getElementById('quizContent');
     
-    // Show mid-quiz share banner at question 15
-    if (currentQuestionIndex === 14) { // Question 15 (0-indexed)
+    // IMPROVED: Mid-quiz share banner - only show once at Q15, less intrusive
+    if (currentQuestionIndex === 14 && !sessionStorage.getItem('midQuizShareShown')) {
         showMidQuizShareBanner();
     }
     
@@ -437,8 +420,7 @@ function loadQuestion() {
     document.getElementById('progressBar').style.width = progress + '%';
     document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
     
-    // Apply dynamic theme as quiz progresses
-    applyDynamicTheme();
+    // REMOVED: applyDynamicTheme() - no theme transitions
     
     // Determine if question is optional
     const isOptional = question.type === 'text' || question.id === 30;
@@ -531,25 +513,7 @@ function selectSingleOptionByIndex(questionId, optionIndex, autoAdvance = false)
     const option = question.options[optionIndex];
     answers[questionId] = option;
     
-    // 🎨 IMMEDIATE THEME CHANGE FOR Q1 (GENDER)
-    if (questionId === 1) {
-        const gender = option.toLowerCase();
-        console.log('🎨 GENDER SELECTED:', option);
-        
-        if (gender === 'female') {
-            document.documentElement.style.setProperty('--secondary-color', '#ff6b9d');
-            document.documentElement.style.setProperty('--accent-color', '#ffd6e0');
-            console.log('🎨 ✅ PINK APPLIED!');
-        } else if (gender === 'male') {
-            document.documentElement.style.setProperty('--secondary-color', '#2196F3');
-            document.documentElement.style.setProperty('--accent-color', '#90caf9');
-            console.log('🎨 ✅ BLUE APPLIED!');
-        } else if (gender === 'non-binary') {
-            document.documentElement.style.setProperty('--secondary-color', '#9c27b0');
-            document.documentElement.style.setProperty('--accent-color', '#ce93d8');
-            console.log('🎨 ✅ PURPLE APPLIED!');
-        }
-    }
+    // REMOVED: Immediate theme change for Q1 - no theme system
     
     // Update UI
     const options = document.querySelectorAll('.option');
@@ -702,8 +666,27 @@ function nextQuestion() {
     if (currentQuestionIndex < questions.length - 1) {
         currentQuestionIndex++;
         loadQuestion();
+        
+        // AUTO-SCROLL TO TOP OF QUESTION AFTER ANSWERING
+        scrollToQuestionTop();
     } else {
         submitQuiz();
+    }
+}
+
+// Function to scroll to question top
+function scrollToQuestionTop() {
+    const quizSection = document.querySelector('.quiz-section');
+    if (quizSection) {
+        // Scroll to top of quiz section (accounting for fixed header)
+        const headerHeight = 280; // Logo + header height
+        const yOffset = -headerHeight - 20; // Extra 20px padding
+        const y = quizSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        
+        window.scrollTo({
+            top: y,
+            behavior: 'smooth'
+        });
     }
 }
 
@@ -827,7 +810,7 @@ function checkEmailCaptureByDays(days) {
     return false;
 }
 
-// Show email capture modal
+// Show email capture modal - IMPROVED: No timeouts or debug buttons
 function showEmailCaptureModal() {
     console.log('📧 showEmailCaptureModal() called');
     const modal = document.getElementById('emailCaptureModal');
@@ -835,27 +818,11 @@ function showEmailCaptureModal() {
     
     if (modal) {
         modal.classList.add('active');
-        document.body.style.overflow = 'hidden'; // Prevent scrolling
-        console.log('✅ Email modal should now be visible');
+        document.body.style.overflow = 'hidden';
+        console.log('✅ Email modal visible');
         
-        // Show debug button after 5 seconds
-        setTimeout(() => {
-            if (modal.classList.contains('active')) {
-                const debugBtn = document.getElementById('debugProceedBtn');
-                if (debugBtn) {
-                    debugBtn.classList.add('visible');
-                    console.log('🚨 Debug button shown - modal still open after 5 seconds');
-                }
-            }
-        }, 5000);
-        
-        // Add a safety timeout - if modal is still showing after 30 seconds, auto-proceed
-        setTimeout(() => {
-            if (modal.classList.contains('active')) {
-                console.log('⚠️ Modal timeout - auto-proceeding to results');
-                skipEmailCapture();
-            }
-        }, 30000);
+        // REMOVED: Debug button and auto-proceed timeout
+        // Users must make a conscious choice to submit or skip
     } else {
         console.error('❌ Email capture modal not found in DOM!');
         // Proceed without email if modal not found
@@ -869,14 +836,9 @@ function hideEmailCaptureModal() {
     const modal = document.getElementById('emailCaptureModal');
     if (modal) {
         modal.classList.remove('active');
-        document.body.style.overflow = ''; // Restore scrolling
+        document.body.style.overflow = '';
     }
-    
-    // Hide debug button
-    const debugBtn = document.getElementById('debugProceedBtn');
-    if (debugBtn) {
-        debugBtn.classList.remove('visible');
-    }
+    // REMOVED: Debug button code - not needed in production
 }
 
 // Skip email capture and proceed to results
@@ -1073,6 +1035,90 @@ function animateLoadingSteps() {
     }
 }
 
+// Parse price from string to numeric value for sorting
+function parsePrice(priceString) {
+    if (!priceString || typeof priceString !== 'string') return null;
+    
+    // Remove currency symbols and extra text
+    const cleaned = priceString.replace(/[^0-9.,]/g, '');
+    
+    // Handle different decimal separators
+    const normalized = cleaned.replace(',', '.');
+    
+    // Extract first number
+    const match = normalized.match(/\d+\.?\d*/);
+    if (!match) return null;
+    
+    return parseFloat(match[0]);
+}
+
+// Render aggregated offers list with sorting and best deal highlighting
+function renderAggregatedOffers(retailerLinks) {
+    if (!retailerLinks || !Array.isArray(retailerLinks) || retailerLinks.length === 0) {
+        return '<div class="no-retailer-links">No retailer links available</div>';
+    }
+    
+    // Parse prices and sort offers
+    const offersWithPrices = retailerLinks.map(link => ({
+        ...link,
+        numericPrice: parsePrice(link.price)
+    }));
+    
+    // Sort by price (ascending) - offers without prices go to the end
+    offersWithPrices.sort((a, b) => {
+        if (a.numericPrice === null && b.numericPrice === null) return 0;
+        if (a.numericPrice === null) return 1;
+        if (b.numericPrice === null) return -1;
+        return a.numericPrice - b.numericPrice;
+    });
+    
+    // Determine best deal (lowest price)
+    const bestDealIndex = offersWithPrices.findIndex(offer => offer.numericPrice !== null);
+    
+    // Render offer rows
+    return offersWithPrices.map((link, index) => {
+        const isBestDeal = (index === bestDealIndex && link.numericPrice !== null);
+        const retailerEmoji = getRetailerEmoji(link.retailer);
+        
+        return `
+            <div class="offer-row ${isBestDeal ? 'best-deal' : ''}">
+                <div class="offer-retailer">
+                    <div class="retailer-logo-placeholder">${retailerEmoji}</div>
+                    <span class="retailer-name">${link.retailer}</span>
+                </div>
+                <div class="offer-price">
+                    ${link.price || '<span class="price-unavailable">See site</span>'}
+                </div>
+                <a href="${link.url}" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class="visit-btn"
+                   onclick="trackClick('${link.retailer}', '${link.brand || 'N/A'}', '${link.name || 'N/A'}')">
+                    Visit
+                </a>
+            </div>
+        `;
+    }).join('');
+}
+
+// Get retailer emoji/icon
+function getRetailerEmoji(retailerName) {
+    const name = retailerName.toLowerCase();
+    
+    if (name.includes('amazon')) return '🛒';
+    if (name.includes('sephora')) return '💎';
+    if (name.includes('ulta')) return '🌟';
+    if (name.includes('nordstrom')) return '🏬';
+    if (name.includes('macy')) return '🏢';
+    if (name.includes('bloomingdale')) return '🎀';
+    if (name.includes('neiman')) return '👑';
+    if (name.includes('target')) return '🎯';
+    if (name.includes('walgreens') || name.includes('cvs')) return '💊';
+    if (name.includes('fragrance') || name.includes('perfume')) return '🧴';
+    
+    return '🛍️'; // Default
+}
+
 function displayResults(perfumes) {
     document.getElementById('loading').classList.remove('active');
     document.getElementById('results').classList.add('active');
@@ -1159,9 +1205,24 @@ function displayResults(perfumes) {
         // Get match percentage (default to calculated value if not provided)
         const matchPercentage = perfume.matchPercentage || (98 - (index * 3));
 
+        // Get product image from retailer links if not directly available
+        const productImage = perfume.image || 
+                             (perfume.retailerLinks && perfume.retailerLinks.length > 0 ? perfume.retailerLinks[0].image : null);
+
         html += `
             <div class="perfume-item">
                 <div class="perfume-rank">${index + 1}</div>
+                
+                ${productImage ? `
+                    <div class="perfume-image-container">
+                        <img src="${productImage}" alt="${perfume.brand} ${perfume.name}" class="perfume-main-image">
+                    </div>
+                ` : `
+                    <div class="perfume-image-container placeholder">
+                        <i class="fas fa-bottle-vaial"></i>
+                    </div>
+                `}
+
                 <div class="perfume-content">
                     <div class="perfume-header">
                         <h3>${perfume.brand} - ${perfume.name}</h3>
@@ -1283,29 +1344,19 @@ function displayResults(perfumes) {
                     ` : ''}
 
                     ${perfume.retailerLinks && perfume.retailerLinks.length > 0 ? `
-                        <div class="disclaimer-notice">
-                            We don't sell directly. Choose your preferred retailer below.
-                        </div>
-                        
-                        <div class="retailer-cards">
-                            ${perfume.retailerLinks.map((link, linkIndex) => `
-                                <div class="retailer-card ${linkIndex === 0 ? 'best-deal' : ''}">
-                                    ${linkIndex === 0 ? '<span class="best-deal-badge">Best Deal</span>' : ''}
-                                    <div class="retailer-logo">${link.retailer}</div>
-                                    <div class="retailer-price">${link.price || 'Price available at retailer'}</div>
-                                    <div class="retailer-confidence">${link.confidence}% match confidence</div>
-                                    <a href="${link.url}" 
-                                       target="_blank" 
-                                       rel="noopener noreferrer"
-                                       class="retailer-cta">
-                                        Visit ${link.retailer}
-                                    </a>
-                                </div>
-                            `).join('')}
-                        </div>
-                        
-                        <div class="affiliate-disclosure">
-                            We may earn a commission from purchases made through these links. This helps support our service at no extra cost to you.
+                        <div class="offers-card">
+                            <div class="offers-header">
+                                <h3>Where to Buy</h3>
+                                <p>Compare prices and choose your preferred retailer</p>
+                            </div>
+                            
+                            <div class="offer-list">
+                                ${renderAggregatedOffers(perfume.retailerLinks)}
+                            </div>
+                            
+                            <div class="affiliate-disclosure">
+                                We may earn a commission when you purchase through our links. Your price remains the same.
+                            </div>
                         </div>
                     ` : amazonLink ? `
                         <a href="${amazonLink.url}"
@@ -1832,6 +1883,7 @@ function renderShareAppButtons() {
 
 /**
  * Show mid-quiz share banner at question 15
+ * IMPROVED: Only shows once per session, less intrusive
  */
 function showMidQuizShareBanner() {
     // Check if already shown in this session
@@ -1861,14 +1913,14 @@ function showMidQuizShareBanner() {
     // Mark as shown
     sessionStorage.setItem('midQuizShareShown', 'true');
     
-    // Auto-hide after 15 seconds
+    // IMPROVED: Auto-hide after 20 seconds (increased from 15)
     setTimeout(() => {
         const bannerEl = document.getElementById('midQuizShareBanner');
         if (bannerEl) {
             bannerEl.style.opacity = '0';
             setTimeout(() => bannerEl.remove(), 300);
         }
-    }, 15000);
+    }, 20000);
 }
 
 /**

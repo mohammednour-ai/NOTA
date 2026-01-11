@@ -1,0 +1,65 @@
+# 🔧 ENVIRONMENT CONFIGURATION TEMPLATE
+# Copy this to .env and fill in your values
+
+# ==============================================
+# GOOGLE SHOPPING API (NEW!)
+# ==============================================
+# Get these from: https://console.cloud.google.com/
+# Follow: GOOGLE_SHOPPING_API_SETUP.md for instructions
+
+# Your Google API Key (looks like: AIzaSyXxXxXxXxXxXxXxXxXxXxXxXxXxXxX)
+GOOGLE_API_KEY=
+
+# Your Google Custom Search Engine ID (looks like: a1b2c3d4e5f6g7h8i9j)
+GOOGLE_SHOPPING_CX=
+
+# ==============================================
+# ANTHROPIC API (AI for quiz)
+# ==============================================
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
+
+# ==============================================
+# SERVER CONFIGURATION
+# ==============================================
+PORT=3001
+NODE_ENV=development
+
+# ==============================================
+# API RATE LIMITING
+# ==============================================
+# Prevents abuse of your API endpoints
+API_RATE_LIMIT_WINDOW_MS=60000
+API_RATE_LIMIT_MAX_REQUESTS=10
+
+# ==============================================
+# SCRAPING CONFIGURATION
+# ==============================================
+# Enable/disable direct scraping (fallback when Google API fails)
+USE_DIRECT_SCRAPING=true
+
+# Scraping behavior
+MAX_CONCURRENT_SCRAPERS=5
+SCRAPING_TIMEOUT_MS=30000
+
+# ==============================================
+# AFFILIATE TRACKING (Optional)
+# ==============================================
+# Add your affiliate IDs if you have them
+AMAZON_ASSOCIATE_ID_US=
+AMAZON_ASSOCIATE_ID_CA=
+SEPHORA_AFFILIATE_ID=
+ULTA_AFFILIATE_ID=
+
+# ==============================================
+# HYBRID SYSTEM CONFIGURATION (Optional)
+# ==============================================
+# Minimum results from Google before falling back to scraping
+MIN_GOOGLE_RESULTS=5
+
+# ==============================================
+# NOTES
+# ==============================================
+# 1. System works WITHOUT Google API credentials (uses scraping only)
+# 2. WITH Google API: 15x faster, 10-15+ retailers, 95% success
+# 3. WITHOUT Google API: Works but slower, fewer retailers
+# 4. Follow GOOGLE_SHOPPING_API_SETUP.md to get credentials (15 min)

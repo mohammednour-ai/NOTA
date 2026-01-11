@@ -9,7 +9,7 @@ const { perfumeDatabase, findPerfume, generateAmazonSearchLink, generateAllMarke
 // Import new scraping system
 const searchRouter = require('./routes/search-api');
 const { normalizeProduct } = require('./lib/product-normalizer');
-const RetailerAggregator = require('./lib/retailer-aggregator');
+const GoogleOnlyRetailerAggregator = require('./lib/google-only-aggregator');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -502,42 +502,47 @@ Output ONLY valid JSON array, no other text. Format:
       recommendations = parseTextRecommendations(message.content[0].text);
     }
 
-    // NEW: Add retailer links via scraping
+    // NEW: Add retailer links via Google Shopping API only
     if (process.env.USE_DIRECT_SCRAPING !== 'false') {
       try {
-        console.log('\n📍 Starting multi-retailer scraping for recommendations...');
-        const aggregator = new RetailerAggregator();
+        console.log('\n📍 Starting Google Shopping API search for recommendations...');
+        const aggregator = new GoogleOnlyRetailerAggregator();
         
-        const recommendationsWithLinks = await Promise.all(
-          recommendations.map(async (perfume) => {
-            try {
-              // Normalize perfume for scraping
-              const searchQuery = `${perfume.brand} ${perfume.name} ${perfume.concentration || 'EDP'} 100ml`;
-              const normalized = normalizeProduct(searchQuery);
-              
-              // Search retailers
-              const retailerLinks = await aggregator.searchAllRetailers(normalized);
-              
-              return {
-                ...perfume,
-                retailerLinks: retailerLinks.slice(0, 6), // Top 6 results
-                normalized
-              };
-            } catch (error) {
-              console.error(`Error scraping ${perfume.brand} ${perfume.name}:`, error.message);
-              return {
-                ...perfume,
-                retailerLinks: []
-              };
-            }
-          })
-        );
-        
-        recommendations = recommendationsWithLinks;
-        console.log('✅ Scraping complete for all recommendations');
-        
+        // Check if API is configured
+        if (!aggregator.isConfigured()) {
+          console.warn('⚠️  Google Shopping API not configured - skipping retailer links');
+          console.warn('   Add GOOGLE_API_KEY and GOOGLE_SHOPPING_CX to .env file');
+        } else {
+          const recommendationsWithLinks = await Promise.all(
+            recommendations.map(async (perfume) => {
+              try {
+                // Normalize perfume for Google API search
+                const searchQuery = `${perfume.brand} ${perfume.name} ${perfume.concentration || 'EDP'} 100ml`;
+                const normalized = normalizeProduct(searchQuery);
+                
+                // Search retailers via Google Shopping API
+                const retailerLinks = await aggregator.searchAllRetailers(normalized);
+                
+                return {
+                  ...perfume,
+                  retailerLinks: retailerLinks.slice(0, 6), // Top 6 results
+                  normalized
+                };
+              } catch (error) {
+                console.error(`Error searching ${perfume.brand} ${perfume.name}:`, error.message);
+                return {
+                  ...perfume,
+                  retailerLinks: []
+                };
+              }
+            })
+          );
+          
+          recommendations = recommendationsWithLinks;
+          console.log('✅ Google Shopping API search complete for all recommendations');
+        }
       } catch (error) {
-        console.error('Error during scraping integration:', error);
+        console.error('Error during Google Shopping API integration:', error);
         // Continue without retailer links
       }
     }
