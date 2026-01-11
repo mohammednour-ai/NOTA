@@ -402,6 +402,13 @@ function init3DCarousel() {
 function startQuiz() {
     document.getElementById('hero').classList.remove('active');
     document.getElementById('quiz').classList.add('active');
+    
+    // Hide trust badges and partners sections during quiz
+    const trustBadges = document.querySelector('.trust-badges-section');
+    const partnersSection = document.querySelector('.partners-section');
+    if (trustBadges) trustBadges.style.display = 'none';
+    if (partnersSection) partnersSection.style.display = 'none';
+    
     currentQuestionIndex = 0;
     answers = {};
     // REMOVED: userGender and themeProgress reset - no theme system
@@ -1422,6 +1429,13 @@ function trackClick(platform, brand, name) {
 function restartQuiz() {
     document.getElementById('results').classList.remove('active');
     document.getElementById('hero').classList.add('active');
+    
+    // Show trust badges and partners sections when returning to hero
+    const trustBadges = document.querySelector('.trust-badges-section');
+    const partnersSection = document.querySelector('.partners-section');
+    if (trustBadges) trustBadges.style.display = 'grid';
+    if (partnersSection) partnersSection.style.display = 'block';
+    
     currentQuestionIndex = 0;
     answers = {};
     
@@ -1481,6 +1495,20 @@ function showSection(sectionId) {
     if (targetSection) {
         targetSection.classList.add('active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
+    // Show/hide trust badges and partners based on section
+    const trustBadges = document.querySelector('.trust-badges-section');
+    const partnersSection = document.querySelector('.partners-section');
+    
+    if (sectionId === 'hero') {
+        // Show on hero page only
+        if (trustBadges) trustBadges.style.display = 'grid';
+        if (partnersSection) partnersSection.style.display = 'block';
+    } else {
+        // Hide on all other pages
+        if (trustBadges) trustBadges.style.display = 'none';
+        if (partnersSection) partnersSection.style.display = 'none';
     }
     
     // Update share button visibility
