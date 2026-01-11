@@ -1,182 +1,92 @@
 [
   {
-    "id": 1,
-    "question": "What's your gender?",
+    "id": "identity_gender",
+    "question": "Who are we finding a scent for?",
     "type": "single",
     "options": ["Female", "Male", "Non-binary", "Prefer not to say"]
   },
   {
-    "id": 2,
-    "question": "What's your age range?",
+    "id": "identity_age",
+    "question": "Select the age range that best describes you.",
     "type": "single",
     "options": ["18-25", "26-35", "36-45", "46-55", "56+"]
   },
   {
-    "id": 3,
-    "question": "When will you primarily wear this perfume?",
+    "id": "identity_style",
+    "question": "How would you describe your personal style?",
     "type": "multiple",
-    "options": ["Daily wear", "Work/Office", "Evening events", "Special occasions", "Date nights", "Casual outings"]
+    "options": ["Elegant & Timeless", "Casual & Relaxed", "Bold & Edgy", "Romantic & Soft", "Minimalist"]
   },
   {
-    "id": 4,
-    "question": "Which season do you prefer fragrances for?",
+    "id": "vibe_mood",
+    "question": "What mood do you want your fragrance to evoke?",
     "type": "multiple",
-    "options": ["Spring", "Summer", "Fall", "Winter", "All seasons"]
+    "options": ["Confidence & Power", "Mystery & Allure", "Freshness & Energy", "Calm & Comfort", "Happiness & Joy"]
   },
   {
-    "id": 5,
-    "question": "What time of day will you wear it most?",
-    "type": "single",
-    "options": ["Morning", "Afternoon", "Evening", "Night", "All day"]
-  },
-  {
-    "id": 6,
-    "question": "How strong do you like your fragrance?",
-    "type": "single",
-    "options": ["Very light (subtle)", "Light", "Moderate", "Strong", "Very strong (bold)"]
-  },
-  {
-    "id": 7,
-    "question": "How long do you want the scent to last?",
-    "type": "single",
-    "options": ["2-4 hours", "4-6 hours", "6-8 hours", "8+ hours", "All day"]
-  },
-  {
-    "id": 8,
-    "question": "What's your preferred fragrance family?",
+    "id": "vibe_setting",
+    "question": "Where will you wear this most?",
     "type": "multiple",
-    "options": ["Floral", "Citrus", "Woody", "Oriental/Spicy", "Fresh/Aquatic", "Fruity"]
+    "options": ["Office/Professional", "Date Nights", "Casual Daily", "Special Events/Gala", "Outdoor Adventures"]
   },
   {
-    "id": 9,
-    "question": "Which floral notes appeal to you?",
+    "id": "vibe_season",
+    "question": "Which season's atmosphere do you want to capture?",
     "type": "multiple",
-    "options": ["Rose", "Jasmine", "Lavender", "Lily", "Peony", "Violet", "Orange Blossom", "None"]
+    "options": ["Spring Bloom", "Summer Heat", "Autumn Crisp", "Winter Cozy", "All Year Round"]
   },
   {
-    "id": 10,
-    "question": "Do you enjoy citrus notes?",
+    "id": "scent_profile",
+    "question": "Which 'Scent Story' draws you in?",
     "type": "multiple",
-    "options": ["Lemon", "Orange", "Bergamot", "Grapefruit", "Mandarin", "Lime", "Not a fan"]
+    "options": [
+      "The Morning Garden (Floral/Fresh)",
+      "The Spice Market (Warm/Spicy)",
+      "The Sun-Drenched Orchard (Citrus/Fruity)",
+      "The Deep Forest (Woody/Earthy)",
+      "The Patisserie (Sweet/Gourmand)"
+    ]
   },
   {
-    "id": 11,
-    "question": "How do you feel about woody notes?",
+    "id": "notes_love",
+    "question": "Which notes do you absolutely love? (Optional)",
     "type": "multiple",
-    "options": ["Sandalwood", "Cedar", "Oud", "Vetiver", "Patchouli", "Pine", "Not for me"]
+    "options": ["Rose", "Jasmine", "Sandalwood", "Oud", "Cotton Candy", "Honey", "Cardamom", "Vanilla", "Patchouli", "Bergamot"]
   },
   {
-    "id": 12,
-    "question": "Are you drawn to sweet notes?",
-    "type": "single",
-    "options": ["Yes, I love sweet scents", "Somewhat sweet", "Neutral", "No, prefer less sweet", "Absolutely not"]
-  },
-  {
-    "id": 13,
-    "question": "Which sweet notes do you like?",
+    "id": "notes_dislike",
+    "question": "Which notes do you prefer to avoid? (Optional)",
     "type": "multiple",
-    "options": ["Vanilla", "Caramel", "Honey", "Chocolate", "Sugar/Cotton candy", "Tonka bean", "None"]
+    "options": ["Rose", "Jasmine", "Sandalwood", "Oud", "Cotton Candy", "Honey", "Cardamom", "Vanilla", "Patchouli", "Bergamot"]
   },
   {
-    "id": 14,
-    "question": "Do you enjoy spicy notes?",
+    "id": "scent_intensity",
+    "question": "How do you like to announce your presence?",
+    "type": "single",
+    "options": ["A subtle whisper (Skin scent)", "A polite conversation (Moderate)", "A bold statement (Strong)"]
+  },
+  {
+    "id": "scent_longevity",
+    "question": "How long should the story last?",
+    "type": "single",
+    "options": ["A few golden hours", "From morning to sunset", "Through the night and beyond"]
+  },
+  {
+    "id": "budget",
+    "question": "What is your preferred investment range?",
+    "type": "single",
+    "options": ["Under $50", "$50-$100", "$100-$200", "$200-$300", "$300+", "No Limit"]
+  },
+  {
+    "id": "sensitivity",
+    "question": "Any notes or ingredients we should avoid?",
     "type": "multiple",
-    "options": ["Cinnamon", "Pepper", "Cardamom", "Clove", "Ginger", "Nutmeg", "Not really"]
+    "options": ["Alcohol", "Heavy Florals", "Strong Musk", "Spices", "Citrus", "None"]
   },
   {
-    "id": 15,
-    "question": "How about fresh/aquatic scents?",
-    "type": "single",
-    "options": ["Love them!", "Like them", "Neutral", "Not my favorite", "Dislike them"]
-  },
-  {
-    "id": 16,
-    "question": "Which fruity notes appeal to you?",
-    "type": "multiple",
-    "options": ["Berry (strawberry, raspberry)", "Apple", "Peach", "Pear", "Tropical fruits", "Plum", "None"]
-  },
-  {
-    "id": 17,
-    "question": "Do you like musky scents?",
-    "type": "single",
-    "options": ["Yes, love them", "Yes, in moderation", "Neutral", "Not really", "No"]
-  },
-  {
-    "id": 18,
-    "question": "How do you feel about powdery scents?",
-    "type": "single",
-    "options": ["Love them", "Like them", "Neutral", "Not a fan", "Dislike them"]
-  },
-  {
-    "id": 19,
-    "question": "Are you interested in gourmand (edible) scents?",
-    "type": "single",
-    "options": ["Yes, absolutely", "Yes, sometimes", "Maybe", "Not really", "No"]
-  },
-  {
-    "id": 20,
-    "question": "Do you prefer classic or modern fragrances?",
-    "type": "single",
-    "options": ["Classic/Timeless", "Mostly classic", "Mix of both", "Mostly modern", "Modern/Trendy"]
-  },
-  {
-    "id": 21,
-    "question": "What's your personal style?",
-    "type": "multiple",
-    "options": ["Elegant/Sophisticated", "Casual/Relaxed", "Sporty/Active", "Romantic/Feminine", "Bold/Edgy", "Minimalist"]
-  },
-  {
-    "id": 22,
-    "question": "Which celebrity/brand style resonates with you?",
-    "type": "single",
-    "options": ["Chanel/Dior (Classic Luxury)", "Tom Ford (Bold & Sexy)", "Jo Malone (Fresh & Simple)", "Yves Saint Laurent (Modern Chic)", "Gucci (Eclectic & Bold)", "Not sure"]
-  },
-  {
-    "id": 23,
-    "question": "What's your budget range?",
-    "type": "single",
-    "options": ["Under $50", "$50-$100", "$100-$200", "$200-$300", "$300+", "No budget limit"]
-  },
-  {
-    "id": 24,
-    "question": "Do you have any allergies or sensitivities?",
-    "type": "multiple",
-    "options": ["Alcohol", "Strong synthetic musks", "Heavy florals", "Cinnamon/Spice", "Citrus oils", "None"]
-  },
-  {
-    "id": 25,
-    "question": "Do you prefer natural or synthetic fragrances?",
-    "type": "single",
-    "options": ["All natural", "Mostly natural", "No preference", "Mostly synthetic", "All synthetic"]
-  },
-  {
-    "id": 26,
-    "question": "How important is brand reputation?",
-    "type": "single",
-    "options": ["Very important", "Important", "Somewhat important", "Not very important", "Not important at all"]
-  },
-  {
-    "id": 27,
-    "question": "Do you prefer niche or designer fragrances?",
-    "type": "single",
-    "options": ["Niche (unique, artisanal)", "Designer (mainstream brands)", "Both", "Not sure", "Don't care"]
-  },
-  {
-    "id": 28,
-    "question": "What mood do you want your perfume to evoke?",
-    "type": "multiple",
-    "options": ["Confident", "Romantic", "Energetic", "Calm/Relaxed", "Mysterious", "Happy/Cheerful", "Sophisticated"]
-  },
-  {
-    "id": 29,
-    "question": "Have you worn perfume before?",
-    "type": "single",
-    "options": ["Yes, regularly", "Yes, occasionally", "Rarely", "No, this is my first time", "Used to, but stopped"]
-  },
-  {
-    "id": 30,
-    "question": "If yes, what perfumes have you loved in the past?",
+    "id": "past_favorites",
+    "question": "Tell us about a perfume you’ve loved before (optional).",
     "type": "text",
-    "placeholder": "E.g., Chanel No. 5, Dior Sauvage, etc. (or write 'None' if not applicable)"
+    "placeholder": "E.g., Chanel No. 5, Dior Sauvage, etc."
   }
 ]

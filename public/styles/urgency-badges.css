@@ -1,0 +1,86 @@
+/* =====================================================
+   URGENCY & SCARCITY BADGES
+   ===================================================== */
+
+.urgency-badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+}
+
+.urgency-badges .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Viewer Badge */
+.urgency-badges .badge.viewers {
+    background: rgba(74, 143, 106, 0.15);
+    color: var(--success-color);
+    border: 1px solid rgba(74, 143, 106, 0.3);
+}
+
+/* Stock Warning Badge */
+.urgency-badges .badge.stock-low {
+    background: rgba(255, 140, 66, 0.15);
+    color: #ff8c42;
+    border: 1px solid rgba(255, 140, 66, 0.3);
+    animation: pulse-warning 2s ease-in-out infinite;
+}
+
+@keyframes pulse-warning {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Trending Badge */
+.urgency-badges .badge.trending {
+    background: rgba(255, 99, 71, 0.15);
+    color: #ff6347;
+    border: 1px solid rgba(255, 99, 71, 0.3);
+    animation: glow-trending 1.5s ease-in-out infinite;
+}
+
+@keyframes glow-trending {
+    0%, 100% { box-shadow: 0 0 5px rgba(255, 99, 71, 0.3); }
+    50% { box-shadow: 0 0 15px rgba(255, 99, 71, 0.6); }
+}
+
+/* Price Alert Badge */
+.urgency-badges .badge.price-alert {
+    background: rgba(212, 175, 112, 0.15);
+    color: var(--accent-gold);
+    border: 1px solid rgba(212, 175, 112, 0.3);
+}
+
+/* Limited Time Badge */
+.urgency-badges .badge.limited-time {
+    background: rgba(231, 76, 60, 0.15);
+    color: #e74c3c;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    animation: blink 1s ease-in-out infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .urgency-badges {
+        gap: 0.4rem;
+    }
+    
+    .urgency-badges .badge {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.7rem;
+    }
+}

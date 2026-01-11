@@ -1,0 +1,162 @@
+/* =====================================================
+   SOCIAL PROOF & TRUST SIGNALS
+   ===================================================== */
+
+/* Retailer Trust Section */
+.retailer-trust {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+/* Star Rating Display */
+.retailer-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.stars {
+    color: var(--accent-gold);
+    font-size: 1rem;
+    letter-spacing: 2px;
+}
+
+.review-count {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+/* Trust Badges */
+.trust-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.trust-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.35rem 0.7rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.trust-badge.fast-shipping {
+    border-color: rgba(74, 143, 106, 0.3);
+    color: var(--success-color);
+}
+
+.trust-badge.verified {
+    border-color: rgba(52, 152, 219, 0.3);
+    color: #3498db;
+}
+
+.trust-badge.rewards {
+    border-color: rgba(212, 175, 112, 0.3);
+    color: var(--accent-gold);
+}
+
+/* Testimonials Section */
+.testimonials-section {
+    background: var(--bg-surface);
+    padding: 3rem 2rem;
+    margin: 3rem 0;
+    border-radius: 16px;
+    text-align: center;
+}
+
+.testimonials-section h2 {
+    font-size: 2rem;
+    color: var(--text-primary);
+    margin-bottom: 2rem;
+    font-family: 'Playfair Display', serif;
+}
+
+.testimonial-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.testimonial-card {
+    background: var(--bg-primary);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-subtle);
+    transition: all 0.3s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(212, 175, 112, 0.2);
+    border-color: var(--accent-gold);
+}
+
+.testimonial-card .stars {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.testimonial-card p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    font-style: italic;
+}
+
+.testimonial-card span {
+    color: var(--accent-gold);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* Retailer Testimonial Snippet */
+.retailer-testimonial {
+    background: rgba(74, 143, 106, 0.1);
+    border-left: 3px solid var(--success-color);
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.retailer-testimonial cite {
+    display: block;
+    margin-top: 0.5rem;
+    font-style: normal;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.8rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .testimonials-section {
+        padding: 2rem 1rem;
+    }
+    
+    .testimonials-section h2 {
+        font-size: 1.6rem;
+    }
+    
+    .testimonial-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .trust-badges {
+        justify-content: center;
+    }
+}

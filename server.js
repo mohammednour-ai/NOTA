@@ -141,6 +141,7 @@ app.post('/api/share-image', async (req, res) => {
 app.post('/api/analyze', async (req, res) => {
   try {
     const { answers } = req.body;
+    console.log('DEBUG: Received answers:', JSON.stringify(answers, null, 2));
 
     // Create an advanced prompt for Claude with weighted algorithm
     const prompt = `## CONTEXT & ROLE
@@ -150,7 +151,7 @@ You are an expert perfume consultant with 15 years of experience matching fragra
 
 **THIS IS THE #1 PRIORITY - VIOLATING THIS REJECTS THE ENTIRE RECOMMENDATION**
 
-The user's gender is: ${answers[1] || 'Not specified'}
+The user's gender is: ${answers['identity_gender'] || 'Not specified'}
 
 **MANDATORY GENDER MATCHING RULES:**
 
@@ -176,13 +177,13 @@ The user's gender is: ${answers[1] || 'Not specified'}
 
 ### MATCHING RULES:
 
-**IF USER IS FEMALE (${answers[1] === 'Female' ? '← THIS USER' : ''}):**
+**IF USER IS FEMALE (${answers['identity_gender'] === 'Female' ? '← THIS USER' : ''}):**
 ✅ ONLY recommend perfumes marketed to women
 ❌ NEVER recommend perfumes from men's lines/departments
 ❌ If a perfume is sold in the men's section → DO NOT RECOMMEND
 ❌ If a perfume has "for men" or masculine marketing → DO NOT RECOMMEND
 
-**IF USER IS MALE (${answers[1] === 'Male' ? '← THIS USER' : ''}):**
+**IF USER IS MALE (${answers['identity_gender'] === 'Male' ? '← THIS USER' : ''}):**
 ✅ ONLY recommend cologne/perfumes marketed to men
 ❌ NEVER recommend perfumes from women's lines/departments
 ❌ If a perfume is sold in the women's section → DO NOT RECOMMEND
@@ -261,9 +262,14 @@ Ensure recommendations include:
 - One "safe" pick + one "adventurous" pick
 
 ### HARD EXCLUSIONS
-If user rejected certain note categories, NEVER include them:
-- If "Not for me" or "Not really" for woody notes: Exclude Sandalwood, Cedar, Oud, Vetiver
-- If "Not for me" or "Not really" for spicy notes: Exclude Cinnamon, Pepper, Cardamom, Clove
+If user rejected certain note categories or specific notes, NEVER include them:
+- Exclude any notes listed in: ${answers['notes_dislike'] || 'None'}
+- If "Not for me" or "Not really" was indicated for woody/spicy notes in lifestyle questions.
+- Sensitivity/Allergies: Exclude any notes listed in: ${answers['sensitivity'] || 'None'}
+
+### SOFT PREFERENCES
+Prioritize perfumes containing these notes if they match other criteria:
+- User loves these notes: ${answers['notes_love'] || 'None'}
 
 ## USER PREFERENCES
 ${JSON.stringify(answers, null, 2)}
@@ -390,11 +396,11 @@ Write as a knowledgeable friend:
 ## 🚨 FINAL VERIFICATION CHECKLIST - MANDATORY BEFORE OUTPUT 🚨
 
 **STEP 1: VERIFY GENDER (DO THIS FIRST!)**
-User's gender: ${answers[1] || 'CHECK ANSWERS'}
+User's gender: ${answers['identity_gender'] || 'CHECK ANSWERS'}
 
 Go through EACH of your 5 recommendations:
-1. ${answers[1] === 'Female' ? '❌ Is this Sauvage/Bleu de Chanel/Eros/male cologne? → REJECT!' : ''}
-   ${answers[1] === 'Male' ? '❌ Is this Flowerbomb/Daisy/Black Opium/female perfume? → REJECT!' : ''}
+1. ${answers['identity_gender'] === 'Female' ? '❌ Is this Sauvage/Bleu de Chanel/Eros/male cologne? → REJECT!' : ''}
+   ${answers['identity_gender'] === 'Male' ? '❌ Is this Flowerbomb/Daisy/Black Opium/female perfume? → REJECT!' : ''}
 2. Same check for recommendation #2
 3. Same check for recommendation #3
 4. Same check for recommendation #4
@@ -442,18 +448,20 @@ Output ONLY valid JSON array, no other text. Format:
         recommendations = JSON.parse(jsonMatch[0]);
         
         // 🚨 BACKEND GENDER FILTERING - Because Haiku doesn't follow instructions well
-        const userGender = answers[1];
+        const userGender = answers['identity_gender'];
+        console.log(`DEBUG: Filtering for gender: ${userGender}`);
         
         // Define known male fragrances
-        const maleBrands = ['Sauvage', 'Bleu de Chanel', 'Eros', 'Acqua di Gio', 'Oud Wood', '1 Million', 'Le Male', 'Armani Code', 'La Nuit'];
+        const maleBrands = ['sauvage', 'bleu de chanel', 'eros', 'acqua di gio', 'oud wood', '1 million', 'le male', 'armani code', 'la nuit'];
         
         // Define known female fragrances  
-        const femaleBrands = ['Flowerbomb', 'Daisy', 'Black Opium', 'Cloud', 'Idôle', 'Candy', 'J\'adore', 'Coco Mademoiselle', 'La Vie Est Belle'];
+        const femaleBrands = ['flowerbomb', 'daisy', 'black opium', 'cloud', 'idole', 'idôle', 'candy', 'j\'adore', 'jadore', 'coco mademoiselle', 'la vie est belle'];
         
+        const initialCount = recommendations.length;
         recommendations = recommendations.filter(perfume => {
-          const perfumeName = `${perfume.brand} ${perfume.name}`;
-          const isMaleFragrance = maleBrands.some(brand => perfumeName.includes(brand));
-          const isFemaleFragrance = femaleBrands.some(brand => perfumeName.includes(brand));
+          const perfumeName = `${perfume.brand} ${perfume.name}`.toLowerCase();
+          const isMaleFragrance = maleBrands.some(brand => perfumeName.includes(brand.toLowerCase()));
+          const isFemaleFragrance = femaleBrands.some(brand => perfumeName.includes(brand.toLowerCase()));
           
           // Filter based on user gender
           if (userGender === 'Female' && isMaleFragrance) {
@@ -470,7 +478,7 @@ Output ONLY valid JSON array, no other text. Format:
         });
         
         // Log filtering results
-        console.log(`✅ Gender filtering complete. ${recommendations.length} perfumes passed.`);
+        console.log(`✅ Gender filtering complete. ${recommendations.length}/${initialCount} perfumes passed.`);
         
         // Handle missing data fields gracefully
         recommendations = recommendations.map(perfume => ({

@@ -967,6 +967,27 @@ h1, h2, h3, h4 {
     margin-top: 1.5rem;
 }
 
+.options-container.mini-cards {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.75rem;
+}
+
+.options-container.mini-cards .option {
+    padding: 1rem;
+    min-height: 80px;
+    font-size: 0.9rem;
+}
+
+.options-container.mini-cards .option::before {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 0.25rem;
+}
+
+.options-container.mini-cards .option-text {
+    font-size: 0.9rem;
+}
+
 .option {
     padding: 1.5rem;
     border: 2px solid var(--border-subtle);
@@ -1913,6 +1934,35 @@ h1, h2, h3, h4 {
 .perfume-card.top-recommendation {
     border-color: var(--accent-gold);
     box-shadow: 0 8px 30px rgba(212, 175, 112, 0.4);
+    transform: scale(1.05);
+    animation: glow-top-match 3s ease-in-out infinite;
+    position: relative;
+}
+
+@keyframes glow-top-match {
+    0%, 100% {
+        box-shadow: 0 8px 30px rgba(212, 175, 112, 0.4);
+    }
+    50% {
+        box-shadow: 0 12px 40px rgba(212, 175, 112, 0.6), 0 0 60px rgba(212, 175, 112, 0.3);
+    }
+}
+
+.perfume-card.top-recommendation::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-gold), #ffb347, var(--accent-gold));
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
 }
 
 .top-recommendation-banner {
@@ -4078,6 +4128,177 @@ h1, h2, h3, h4 {
         width: 40px;
         height: 40px;
     }
+}
+
+/* =====================================================
+   CROSS-SELL SECTION
+   ===================================================== */
+
+.cross-sell-section {
+    background: var(--bg-surface);
+    padding: 3rem 2rem;
+    margin: 3rem 0;
+    border-radius: 16px;
+    border: 1px solid var(--border-subtle);
+}
+
+.cross-sell-section h3 {
+    font-size: 2rem;
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: 2rem;
+    font-family: 'Playfair Display', serif;
+}
+
+.cross-sell-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.cross-sell-item {
+    background: var(--bg-primary);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-subtle);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.cross-sell-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(212, 175, 112, 0.3);
+    border-color: var(--accent-gold);
+}
+
+.cross-sell-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.cross-sell-item h4 {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+}
+
+.cross-sell-price {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+    margin-bottom: 1rem;
+}
+
+.cross-sell-btn {
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--cta-primary);
+    color: var(--text-primary);
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cross-sell-btn:hover {
+    background: var(--cta-primary-hover);
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .cross-sell-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .cross-sell-item {
+        padding: 1rem;
+    }
+    
+    .cross-sell-icon {
+        font-size: 2rem;
+    }
+}
+
+/* =====================================================
+   EXPANDABLE SECTIONS (Progressive Disclosure)
+   ===================================================== */
+
+.expandable-section {
+    margin: 1rem 0;
+}
+
+.expand-toggle {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+}
+
+.expand-toggle:hover {
+    background: var(--bg-surface-hover);
+    border-color: var(--accent-gold);
+}
+
+.expand-toggle i {
+    transition: transform 0.3s ease;
+}
+
+.expand-toggle.active i {
+    transform: rotate(180deg);
+}
+
+.expand-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.expand-content.active {
+    max-height: 1000px;
+    padding: 1rem;
+}
+
+/* =====================================================
+   SAVE FOR LATER BUTTON
+   ===================================================== */
+
+.save-favorite {
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 2px solid var(--border-emphasis);
+    color: var(--text-primary);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.save-favorite:hover {
+    background: var(--accent-gold);
+    color: var(--bg-primary);
+    border-color: var(--accent-gold);
+}
+
+.save-favorite i {
+    transition: transform 0.3s ease;
+}
+
+.save-favorite:hover i {
+    transform: scale(1.2);
 }
 
 /* Animation for backdrop blur effect */

@@ -1,0 +1,109 @@
+/* =====================================================
+   RESULTS PAGE CELEBRATION HERO
+   ===================================================== */
+
+.results-hero {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, rgba(45, 95, 78, 0.2) 100%);
+    padding: 3rem 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    border-radius: 16px;
+    border: 2px solid var(--border-emphasis);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Celebration Animation */
+.celebration-animation {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: celebrate 2s ease-in-out infinite;
+}
+
+@keyframes celebrate {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    25% { transform: scale(1.2) rotate(-10deg); }
+    75% { transform: scale(1.2) rotate(10deg); }
+}
+
+.results-hero h1 {
+    font-size: 2.5rem;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+}
+
+/* Confidence Display */
+.confidence-display {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--accent-gold), #ffb347);
+    color: var(--bg-primary);
+    padding: 0.75rem 2rem;
+    border-radius: 30px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 15px rgba(212, 175, 112, 0.4);
+}
+
+/* Scent Profile Summary */
+.scent-profile-summary {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.scent-profile-summary span {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-size: 1rem;
+    border: 1px solid var(--border-subtle);
+}
+
+/* Quick Stats */
+.quick-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.quick-stats .stat {
+    background: var(--bg-surface);
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-emphasis);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--accent-gold);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .results-hero {
+        padding: 2rem 1rem;
+    }
+    
+    .results-hero h1 {
+        font-size: 1.8rem;
+    }
+    
+    .confidence-display {
+        font-size: 1.1rem;
+        padding: 0.6rem 1.5rem;
+    }
+    
+    .quick-stats {
+        gap: 1rem;
+    }
+    
+    .quick-stats .stat {
+        font-size: 0.95rem;
+        padding: 0.75rem 1.5rem;
+    }
+}

@@ -443,7 +443,10 @@ function loadQuestion() {
     // REMOVED: applyDynamicTheme() - no theme transitions
     
     // Determine if question is optional
-    const isOptional = question.type === 'text' || question.id === 30;
+    const isOptional = question.type === 'text' || 
+                      question.id === 'past_favorites' || 
+                      question.id === 'notes_love' || 
+                      question.id === 'notes_dislike';
     
     // Build question HTML
     let html = `<h2 class="question-title">
@@ -474,15 +477,18 @@ function loadQuestion() {
                      aria-pressed="${isSelected}"
                      data-question-id="${question.id}"
                      data-option-index="${index}"
-                     onclick="selectSingleOptionByIndex(${question.id}, ${index}, true)"
-                     onkeypress="handleOptionKeyPress(event, ${question.id}, ${index}, true)">
+                     onclick="selectSingleOptionByIndex('${question.id}', ${index}, true)"
+                     onkeypress="handleOptionKeyPress(event, '${question.id}', ${index}, true)">
                     <span class="option-text">${option}</span>
                 </div>
             `;
         });
         html += '</div>';
     } else if (question.type === 'multiple') {
-        html += '<div class="options-container multiple-choice">';
+        const isMiniCards = question.id === 'notes_love' || 
+                           question.id === 'notes_dislike' || 
+                           question.id === 'sensitivity';
+        html += `<div class="options-container multiple-choice ${isMiniCards ? 'mini-cards' : ''}">`;
         html += '<div class="multiple-choice-hint"><i class="fas fa-check-double"></i> <strong>Select all that apply</strong></div>';
         question.options.forEach((option, index) => {
             const isSelected = answers[question.id] && answers[question.id].includes(option);
@@ -495,7 +501,7 @@ function loadQuestion() {
                      aria-pressed="${isSelected}"
                      data-question-id="${question.id}"
                      data-option-index="${index}"
-                     onclick="selectMultipleOptionByIndex(${question.id}, ${index})">
+                     onclick="selectMultipleOptionByIndex('${question.id}', ${index})">
                     <input 
                         type="checkbox" 
                         ${isSelected ? 'checked' : ''}
@@ -540,9 +546,9 @@ function selectSingleOptionByIndex(questionId, optionIndex, autoAdvance = false)
     options.forEach(opt => {
         opt.classList.remove('selected', 'confirming');
         const optDataIndex = parseInt(opt.getAttribute('data-option-index'));
-        const optDataQuestionId = parseInt(opt.getAttribute('data-question-id'));
+        const optDataQuestionId = opt.getAttribute('data-question-id');
         
-        if (optDataQuestionId === questionId && optDataIndex === optionIndex) {
+        if (optDataQuestionId == questionId && optDataIndex === optionIndex) {
             opt.classList.add('selected');
             
             // Add visual confirmation with checkmark
@@ -676,7 +682,10 @@ function nextQuestion() {
     
     // Validate answer
     const question = questions[currentQuestionIndex];
-    const isOptional = question.type === 'text' || question.id === 30;
+    const isOptional = question.type === 'text' || 
+                      question.id === 'past_favorites' || 
+                      question.id === 'notes_love' || 
+                      question.id === 'notes_dislike';
     
     if (!isOptional && (!answers[question.id] || (Array.isArray(answers[question.id]) && answers[question.id].length === 0))) {
         showErrorMessage('Please answer the question before continuing.');
@@ -999,13 +1008,17 @@ async function proceedWithQuizSubmission() {
         const affiliateData = await affiliateResponse.json();
         console.log('✅ Affiliate data received:', affiliateData);
         
-        // Use recommendations even if affiliate search fails
-        const results = affiliateData.results || analyzeData.recommendations.map(p => ({
-            ...p,
-            affiliateLinks: []
-        }));
+        // IMPORTANT: Merge affiliate data WITH original recommendations to preserve retailerLinks
+        const results = analyzeData.recommendations.map((perfume, index) => {
+            const affiliateResult = affiliateData.results?.[index];
+            return {
+                ...perfume,  // Keep original data including retailerLinks
+                affiliateLinks: affiliateResult?.affiliateLinks || []  // Add affiliateLinks if available
+            };
+        });
         
-        console.log('🎯 Final results:', results);
+        console.log('🎯 Final merged results:', results);
+        console.log('🔍 First perfume has retailerLinks?', results[0]?.retailerLinks?.length || 0);
         
         // Display results
         displayResults(results);
@@ -1073,7 +1086,7 @@ function parsePrice(priceString) {
 }
 
 // Render aggregated offers list with sorting and best deal highlighting
-function renderAggregatedOffers(retailerLinks) {
+function renderAggregatedOffers(retailerLinks, perfumeBrand, perfumeName, perfumeImage) {
     if (!retailerLinks || !Array.isArray(retailerLinks) || retailerLinks.length === 0) {
         return '<div class="no-retailer-links">No retailer links available</div>';
     }
@@ -1092,29 +1105,68 @@ function renderAggregatedOffers(retailerLinks) {
         return a.numericPrice - b.numericPrice;
     });
     
-    // Determine best deal (lowest price)
+    // Determine best deal (lowest price) and runner-up
     const bestDealIndex = offersWithPrices.findIndex(offer => offer.numericPrice !== null);
+    const runnerUpIndex = bestDealIndex !== -1 ? bestDealIndex + 1 : -1;
     
     // Render offer rows
     return offersWithPrices.map((link, index) => {
         const isBestDeal = (index === bestDealIndex && link.numericPrice !== null);
+        const isRunnerUp = (index === runnerUpIndex && link.numericPrice !== null);
         const retailerEmoji = getRetailerEmoji(link.retailer);
         
+        // Generate urgency badges
+        const urgencyBadges = window.resultsEnhancements ? 
+            window.resultsEnhancements.generateUrgencyBadges(perfumeName, link.retailer) : '';
+        
+        // Generate trust signals
+        const trustSignals = window.resultsEnhancements ? 
+            window.resultsEnhancements.generateTrustSignals(link.retailer) : '';
+        
+        // Generate price display with anchoring
+        let priceDisplay = '';
+        if (link.price && window.resultsEnhancements) {
+            priceDisplay = window.resultsEnhancements.generatePriceDisplay(link.price, link.retailer);
+        } else {
+            priceDisplay = `<div class="offer-price">${link.price || '<span class="price-unavailable">See site</span>'}</div>`;
+        }
+        
         return `
-            <div class="offer-row ${isBestDeal ? 'best-deal' : ''}">
+            <div class="offer-row ${isBestDeal ? 'best-deal' : ''} ${isRunnerUp ? 'runner-up' : ''}"
+                 data-retailer="${link.retailer}"
+                 data-price="${link.numericPrice || 0}">
+                
+                ${perfumeImage ? `<img src="${perfumeImage}" class="offer-product-thumb" alt="${perfumeBrand} ${perfumeName}">` : ''}
+                
+                ${urgencyBadges}
+                
                 <div class="offer-retailer">
                     <div class="retailer-logo-placeholder">${retailerEmoji}</div>
                     <span class="retailer-name">${link.retailer}</span>
                 </div>
-                <div class="offer-price">
-                    ${link.price || '<span class="price-unavailable">See site</span>'}
-                </div>
+                
+                ${priceDisplay}
+                
+                ${trustSignals}
+                
                 <a href="${link.url}" 
                    target="_blank" 
                    rel="noopener noreferrer"
-                   class="visit-btn"
-                   onclick="trackClick('${link.retailer}', '${link.brand || 'N/A'}', '${link.name || 'N/A'}')">
-                    Visit
+                   class="view-retailer-btn"
+                   data-event="affiliate-click"
+                   data-retailer="${link.retailer}"
+                   data-perfume-brand="${perfumeBrand || 'N/A'}"
+                   data-perfume-name="${perfumeName || 'N/A'}"
+                   data-price="${link.numericPrice || 0}"
+                   onclick="trackClick('${link.retailer}', '${perfumeBrand || 'N/A'}', '${perfumeName || 'N/A'}')"
+                   aria-label="View ${perfumeBrand} ${perfumeName} on ${link.retailer}">
+                    ${isBestDeal ? 'Get Best Deal' : isRunnerUp ? 'View Offer' : 'See Price'}
+                </a>
+            </div>
+        `;
+    }).join('');
+}>
+                    View in ${link.retailer}
                 </a>
             </div>
         `;
@@ -1174,7 +1226,24 @@ function displayResults(perfumes) {
         return;
     }
     
+    // ===== DEBUG: Check what data we're receiving =====
+    console.log('🔍 DEBUG: Total perfumes received:', perfumes.length);
+    perfumes.forEach((perfume, index) => {
+        console.log(`\n📦 Perfume ${index + 1}: ${perfume.brand} - ${perfume.name}`);
+        console.log('   Has retailerLinks?', perfume.hasOwnProperty('retailerLinks'));
+        console.log('   retailerLinks value:', perfume.retailerLinks);
+        console.log('   retailerLinks length:', perfume.retailerLinks?.length || 0);
+        console.log('   Has affiliateLinks?', perfume.hasOwnProperty('affiliateLinks'));
+        console.log('   All keys:', Object.keys(perfume));
+    });
+    // ===== END DEBUG =====
+    
     let html = '';
+    
+    // Add Results Hero Section (NEW)
+    if (window.resultsEnhancements) {
+        html += window.resultsEnhancements.generateResultsHero(perfumes.length, matchedProfile);
+    }
     
     // Display personality profile if matched
     if (matchedProfile) {
@@ -1362,6 +1431,10 @@ function displayResults(perfumes) {
                             <strong>Similar vibes:</strong> ${perfume.similarTo}
                         </div>
                     ` : ''}
+                    
+                    <button class="save-favorite" onclick="window.resultsEnhancements && window.resultsEnhancements.savePerfumeForLater('${perfume.brand}-${perfume.name}', '${perfume.brand} ${perfume.name}')">
+                        <i class="far fa-heart"></i> Save for Later
+                    </button>
 
                     ${perfume.retailerLinks && perfume.retailerLinks.length > 0 ? `
                         <div class="offers-card">
@@ -1371,12 +1444,18 @@ function displayResults(perfumes) {
                             </div>
                             
                             <div class="offer-list">
-                                ${renderAggregatedOffers(perfume.retailerLinks)}
+                                ${renderAggregatedOffers(perfume.retailerLinks, perfume.brand, perfume.name, productImage)}
                             </div>
                             
                             <div class="affiliate-disclosure">
                                 We may earn a commission when you purchase through our links. Your price remains the same.
                             </div>
+                            
+                            ${index === 0 ? `
+                                <button class="compare-prices-btn" onclick="window.resultsEnhancements && window.resultsEnhancements.showComparisonModal({brand: '${perfume.brand}', name: '${perfume.name}', retailerLinks: ${JSON.stringify(perfume.retailerLinks).replace(/'/g, "\\'")}})">
+                                    📊 Compare All Prices
+                                </button>
+                            ` : ''}
                         </div>
                     ` : amazonLink ? `
                         <a href="${amazonLink.url}"
@@ -1413,7 +1492,22 @@ function displayResults(perfumes) {
         </div>
     `;
     
+    // Add Cross-Sell Section (after first perfume only)
+    if (window.resultsEnhancements && perfumes.length > 0) {
+        html += window.resultsEnhancements.generateCrossSellSection(perfumes[0]);
+    }
+    
+    // Add Testimonials Section
+    if (window.resultsEnhancements) {
+        html += window.resultsEnhancements.generateTestimonialsSection();
+    }
+    
     resultsContent.innerHTML = html;
+    
+    // Initialize exit intent and other enhancements
+    if (window.resultsEnhancements) {
+        window.resultsEnhancements.initResultsEnhancements();
+    }
     
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1460,7 +1554,7 @@ function restartQuiz() {
 // Handle text input updates
 document.addEventListener('input', (e) => {
     if (e.target.classList.contains('text-input')) {
-        const questionId = parseInt(e.target.id.replace('answer-', ''));
+        const questionId = e.target.id.replace('answer-', '');
         answers[questionId] = e.target.value;
     }
 });
@@ -1872,8 +1966,8 @@ function storeUserResultsForSharing(perfumes, matchedProfile = null) {
         personality: personality,
         personalityDescription: personalityDescription,
         personalityProfile: matchedProfile,
-        userName: answers[30] || '', // Question 30 is typically name
-        gender: answers[1] // Question 1 is gender
+        userName: answers['past_favorites'] || '', // Used to be question 30
+        gender: answers['identity_gender'] // Used to be question 1
     };
     
     console.log('✅ Results stored for sharing:', currentUserResults);
