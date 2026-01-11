@@ -284,6 +284,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize splash screen
     initSplashScreen();
     
+    // Initialize side ads panel
+    initializeSideAds();
+    
     // Detect user's country
     await detectUserCountry();
     
@@ -403,11 +406,13 @@ function startQuiz() {
     document.getElementById('hero').classList.remove('active');
     document.getElementById('quiz').classList.add('active');
     
-    // Hide trust badges and partners sections during quiz
+    // Hide trust badges, partners sections, and side ads during quiz
     const trustBadges = document.querySelector('.trust-badges-section');
     const partnersSection = document.querySelector('.partners-section');
+    const sideAdsPanel = document.querySelector('.side-ads-panel');
     if (trustBadges) trustBadges.style.display = 'none';
     if (partnersSection) partnersSection.style.display = 'none';
+    if (sideAdsPanel) sideAdsPanel.style.display = 'none';
     
     currentQuestionIndex = 0;
     answers = {};
@@ -1430,11 +1435,13 @@ function restartQuiz() {
     document.getElementById('results').classList.remove('active');
     document.getElementById('hero').classList.add('active');
     
-    // Show trust badges and partners sections when returning to hero
+    // Show trust badges, partners sections, and side ads when returning to hero
     const trustBadges = document.querySelector('.trust-badges-section');
     const partnersSection = document.querySelector('.partners-section');
+    const sideAdsPanel = document.querySelector('.side-ads-panel');
     if (trustBadges) trustBadges.style.display = 'grid';
     if (partnersSection) partnersSection.style.display = 'block';
+    if (sideAdsPanel) sideAdsPanel.style.display = 'flex';
     
     currentQuestionIndex = 0;
     answers = {};
@@ -1497,18 +1504,21 @@ function showSection(sectionId) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     
-    // Show/hide trust badges and partners based on section
+    // Show/hide trust badges, partners, and side ads based on section
     const trustBadges = document.querySelector('.trust-badges-section');
     const partnersSection = document.querySelector('.partners-section');
+    const sideAdsPanel = document.querySelector('.side-ads-panel');
     
     if (sectionId === 'hero') {
         // Show on hero page only
         if (trustBadges) trustBadges.style.display = 'grid';
         if (partnersSection) partnersSection.style.display = 'block';
+        if (sideAdsPanel) sideAdsPanel.style.display = 'flex';
     } else {
         // Hide on all other pages
         if (trustBadges) trustBadges.style.display = 'none';
         if (partnersSection) partnersSection.style.display = 'none';
+        if (sideAdsPanel) sideAdsPanel.style.display = 'none';
     }
     
     // Update share button visibility
@@ -1529,6 +1539,39 @@ function updateShareButtonVisibility() {
         headerShare.style.display = 'block';
     } else {
         headerShare.style.display = 'none';
+    }
+}
+
+// =============================================
+// SIDE ADS PANEL MANAGEMENT
+// =============================================
+
+function closeSideAd(adId) {
+    const ad = document.getElementById(adId);
+    if (!ad) return;
+    
+    // Add closing animation
+    ad.classList.add('closing');
+    
+    // Remove from DOM after animation
+    setTimeout(() => {
+        ad.style.display = 'none';
+        // Store in session to not show again
+        sessionStorage.setItem(`ad_${adId}_closed`, 'true');
+    }, 300);
+}
+
+// Check if ads should be shown based on session storage
+function initializeSideAds() {
+    const baccaratAd = document.getElementById('baccaratAd');
+    const mensAd = document.getElementById('mensAd');
+    
+    // Hide ads that were previously closed
+    if (sessionStorage.getItem('ad_baccaratAd_closed') === 'true' && baccaratAd) {
+        baccaratAd.style.display = 'none';
+    }
+    if (sessionStorage.getItem('ad_mensAd_closed') === 'true' && mensAd) {
+        mensAd.style.display = 'none';
     }
 }
 
