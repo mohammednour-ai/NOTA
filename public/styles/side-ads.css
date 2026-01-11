@@ -73,14 +73,16 @@
     text-decoration: none;
 }
 
-.side-ad-image {
+.side-ad-image,
+.side-ad-video {
     width: 100%;
     height: auto;
     display: block;
     transition: transform 0.3s ease;
 }
 
-.side-ad-card:hover .side-ad-image {
+.side-ad-card:hover .side-ad-image,
+.side-ad-card:hover .side-ad-video {
     transform: scale(1.05);
 }
 
